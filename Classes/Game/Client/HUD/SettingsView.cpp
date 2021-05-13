@@ -102,21 +102,23 @@ void SettingsView::tableCellTouched(cocos2d::extension::TableView* table, cocos2
 void SettingsView::onSettingToggle(const ssize_t idx)
 {
     auto& values = m_gameSettings->getValues();
-    if (idx <= values.size())
+    if (idx >= values.size())
     {
-        auto it = values.begin();
-        std::advance(it, idx);
-        auto& value = it->second;
-        if (value.getType() != cocos2d::Value::Type::BOOLEAN)
-        {
-            return;
-        }
-        auto newVal = cocos2d::Value(!value.asBool());
-        m_gameSettings->setValue(it->first, newVal);
-        
-        SettingCell* cell = static_cast<SettingCell*>(m_settingsTable->cellAtIndex(idx));
-        cell->setup(it->first, newVal);
+        return;
     }
+
+    auto it = values.begin();
+    std::advance(it, idx);
+    auto& value = it->second;
+    if (value.getType() != cocos2d::Value::Type::BOOLEAN)
+    {
+        return;
+    }
+    auto newVal = cocos2d::Value(!value.asBool());
+    m_gameSettings->setValue(it->first, newVal);
+    
+    SettingCell* cell = static_cast<SettingCell*>(m_settingsTable->cellAtIndex(idx));
+    cell->setup(it->first, newVal);
 }
 
 void SettingsView::editBoxEditingDidEndWithAction(cocos2d::ui::EditBox* editBox,
@@ -124,16 +126,42 @@ void SettingsView::editBoxEditingDidEndWithAction(cocos2d::ui::EditBox* editBox,
 {
     int idx = editBox->getTag();
     auto& values = m_gameSettings->getValues();
-    if (idx <= values.size())
+    if (idx >= values.size())
     {
-        auto it = values.begin();
-        std::advance(it, idx);
-        auto& value = it->second;
-//        if (value.getType() != cocos2d::Value::Type::BOOLEAN)
-//        {
-//            return;
-//        }
-        
-        
+        return;
+    }
+    
+    auto it = values.begin();
+    std::advance(it, idx);
+    auto& value = it->second;
+    
+    if (value.getType() == cocos2d::Value::Type::STRING)
+    {
+        const std::string input = editBox->getText();
+        m_gameSettings->setValue(it->first, cocos2d::Value(input));
+        return;
+    }
+    if (value.getType() == cocos2d::Value::Type::FLOAT)
+    {
+        const std::string input = editBox->getText();
+        const float val = std::stof(input);
+        m_gameSettings->setValue(it->first, cocos2d::Value(val));
+        return;
+    }
+    if (value.getType() == cocos2d::Value::Type::DOUBLE)
+    {
+        const std::string input = editBox->getText();
+        const double val = std::stod(input);
+        m_gameSettings->setValue(it->first, cocos2d::Value(val));
+        return;
+    }
+    if (value.getType() == cocos2d::Value::Type::UNSIGNED ||
+        value.getType() == cocos2d::Value::Type::INTEGER ||
+        value.getType() == cocos2d::Value::Type::BYTE)
+    {
+        const std::string input = editBox->getText();
+        const int val = std::stoi(input);
+        m_gameSettings->setValue(it->first, cocos2d::Value(val));
+        return;
     }
 }
