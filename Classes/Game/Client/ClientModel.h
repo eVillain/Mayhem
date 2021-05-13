@@ -3,6 +3,8 @@
 
 #include "NetworkMessages.h"
 #include <stdint.h>
+#include <vector>
+#include <map>
 
 enum ClientMode {
     CLIENT_MODE_LOCAL = 0,
@@ -43,6 +45,9 @@ public:
     float getLastPlayerActionTime() const { return m_lastPlayerActionTime; }
 
     std::vector<std::shared_ptr<ClientInputMessage>>& getInputData() { return m_inputData; }
+    
+    void setPlayerName(uint8_t playerID, const std::string name) { m_playerNames[playerID] = name; }
+    const std::map<uint8_t, std::string>& getPlayerNames() const { return m_playerNames; }
 
 private:
     ClientMode m_mode;
@@ -55,6 +60,7 @@ private:
     bool m_recordSnapshots;
     float m_lastPlayerActionTime;
     std::vector<std::shared_ptr<ClientInputMessage>> m_inputData;
+    std::map<uint8_t, std::string> m_playerNames;
 };
 
 #endif /* ClientModel_h */

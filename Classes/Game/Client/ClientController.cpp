@@ -430,6 +430,18 @@ void ClientController::onPlayerDeathReceived(const std::shared_ptr<Net::Message>
     {
         CCLOG("ClientController::onPlayerDeathReceived %i killed by %i with %i",
               deathMessage->deadPlayerID, deathMessage->killerEntityID, deathMessage->killerType);
+        
+        std::string deadPlayerName = "DEAD_PLAYER";
+        std::string killerPlayerName = "KILLER_PLAYER";
+        const auto& names = m_clientModel->getPlayerNames();
+        if (names.find(deathMessage->deadPlayerID) != names.end())
+        {
+            deadPlayerName = names.at(deathMessage->deadPlayerID);
+        }
+        m_hudView->getKillFeed()->onPlayerKilled(deadPlayerName,
+                                                 killerPlayerName,
+                                                 deathMessage->killerType,
+                                                 deathMessage->headshot);
     }
     else
     {

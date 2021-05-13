@@ -2,6 +2,7 @@
 #define HUDView_h
 
 #include "HUDWeapon.h"
+#include "KillFeed.h"
 #include "cocos2d.h"
 #include "cocos-ext.h"
 
@@ -34,6 +35,8 @@ public:
 
     std::shared_ptr<CrosshairView> getCrosshairView() { return m_crosshair; }
 
+    const cocos2d::RefPtr<KillFeed>& getKillFeed() const { return m_killFeed; }
+
     void setViewLayer(std::shared_ptr<ViewLayer> layer);
     std::shared_ptr<ViewLayer> getViewLayer();
     void removeViewLayer();
@@ -60,6 +63,8 @@ private:
     std::shared_ptr<CrosshairView> m_crosshair;
     
     std::vector<cocos2d::RefPtr<HUDWeapon>> m_weaponSlots;
+    
+    cocos2d::RefPtr<KillFeed> m_killFeed;
     
     bool m_blockInput;
 };

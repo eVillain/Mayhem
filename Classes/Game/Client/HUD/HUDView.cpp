@@ -7,6 +7,7 @@
 #include "Core/Injector.h"
 #include "InventoryLayer.h"
 #include "ViewLayer.h"
+#include "KillFeed.h"
 
 static const cocos2d::Size HEALTH_BAR_SIZE = cocos2d::Size(200.f, 26.f);
 
@@ -22,6 +23,8 @@ HUDView::HUDView()
 , m_playersAliveLabel(nullptr)
 , m_highlightLabel(nullptr)
 , m_crosshair(nullptr)
+, m_killFeed(nullptr)
+, m_blockInput(false)
 {
 }
 
@@ -65,6 +68,8 @@ void HUDView::initialize()
     m_crosshair = std::make_shared<CrosshairView>();
     m_crosshair->initialize();
     
+    m_killFeed = KillFeed::create();
+    
     m_root->addChild(m_healthBarBG);
     m_root->addChild(m_healthBar);
     
@@ -84,6 +89,8 @@ void HUDView::initialize()
     m_root->addChild(m_drawNode);
     m_root->addChild(m_highlightLabel, 100);
     m_root->addChild(m_crosshair->getCrossHair(), 200);
+    
+    m_root->addChild(m_killFeed);
     
     setHealth(100.f);
     updatePositions();    

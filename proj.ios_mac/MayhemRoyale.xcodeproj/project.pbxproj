@@ -67,6 +67,8 @@
 		D92ACF672544457D006351A7 /* MasterServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92ACF642544457D006351A7 /* MasterServer.cpp */; };
 		D92ACF682544457D006351A7 /* MasterServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92ACF642544457D006351A7 /* MasterServer.cpp */; };
 		D92ACF692544458B006351A7 /* MasterServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92ACF642544457D006351A7 /* MasterServer.cpp */; };
+		D92C7DF9264DDFA700AA7096 /* KillFeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92C7DF7264DDFA700AA7096 /* KillFeed.cpp */; };
+		D92C7DFA264DDFA700AA7096 /* KillFeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92C7DF7264DDFA700AA7096 /* KillFeed.cpp */; };
 		D94AFA81262B9B6B00278953 /* BackButtonPressedEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D94AFA7F262B9B6B00278953 /* BackButtonPressedEvent.cpp */; };
 		D94AFA82262B9BE900278953 /* BackButtonPressedEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D94AFA7F262B9B6B00278953 /* BackButtonPressedEvent.cpp */; };
 		D94AFA85262C223F00278953 /* FollowNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D94AFA84262C223F00278953 /* FollowNode.cpp */; };
@@ -463,6 +465,8 @@
 		D92ACF6225444566006351A7 /* MasterServerConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterServerConnection.h; sourceTree = "<group>"; };
 		D92ACF632544457D006351A7 /* MasterServerConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MasterServerConnection.cpp; sourceTree = "<group>"; };
 		D92ACF642544457D006351A7 /* MasterServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MasterServer.cpp; sourceTree = "<group>"; };
+		D92C7DF7264DDFA700AA7096 /* KillFeed.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KillFeed.cpp; sourceTree = "<group>"; };
+		D92C7DF8264DDFA700AA7096 /* KillFeed.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KillFeed.h; sourceTree = "<group>"; };
 		D94AFA7F262B9B6B00278953 /* BackButtonPressedEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackButtonPressedEvent.cpp; sourceTree = "<group>"; };
 		D94AFA83262C223F00278953 /* FollowNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowNode.h; sourceTree = "<group>"; };
 		D94AFA84262C223F00278953 /* FollowNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FollowNode.cpp; sourceTree = "<group>"; };
@@ -1300,6 +1304,8 @@
 				D96CBD092531C3AD006DF3A4 /* InputModel.h */,
 				D96CBD0E2531C3AF006DF3A4 /* InventoryLayer.cpp */,
 				D96CBD162531C3B2006DF3A4 /* InventoryLayer.h */,
+				D92C7DF7264DDFA700AA7096 /* KillFeed.cpp */,
+				D92C7DF8264DDFA700AA7096 /* KillFeed.h */,
 				D96CBD312531C3B9006DF3A4 /* LevelView.cpp */,
 				D96CBD282531C3B7006DF3A4 /* LevelView.h */,
 				D96CBD132531C3B1006DF3A4 /* ParticleConstants.h */,
@@ -1608,6 +1614,7 @@
 				D96CBD412531C3BB006DF3A4 /* InitLocalServerCommand.cpp in Sources */,
 				D9B250FA24C48EA500EAFA5B /* BitPacker.cpp in Sources */,
 				D9B251A824C789A400EAFA5B /* ReplayEditorController.cpp in Sources */,
+				D92C7DF9264DDFA700AA7096 /* KillFeed.cpp in Sources */,
 				D9B250D024C48EA500EAFA5B /* NetworkChatView.cpp in Sources */,
 				D96CBCE82531C356006DF3A4 /* GameController.cpp in Sources */,
 				D9B2516E24C48EA500EAFA5B /* BackToMainMenuEvent.cpp in Sources */,
@@ -1814,6 +1821,7 @@
 				D96CBD4C2531C3BB006DF3A4 /* GameView.cpp in Sources */,
 				D96CBD602531C3BB006DF3A4 /* ToggleSlowMotionEvent.cpp in Sources */,
 				D9B250E124C48EA500EAFA5B /* Socket.cpp in Sources */,
+				D92C7DFA264DDFA700AA7096 /* KillFeed.cpp in Sources */,
 				D9B250AD24C48EA500EAFA5B /* GameTableView.cpp in Sources */,
 				D96CBD562531C3BB006DF3A4 /* CameraController.cpp in Sources */,
 				D96CBD4E2531C3BB006DF3A4 /* InventoryLayer.cpp in Sources */,
