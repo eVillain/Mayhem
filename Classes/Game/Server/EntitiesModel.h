@@ -43,7 +43,8 @@ public:
     std::map<uint32_t, EntitySnapshot> getSnapshot() const;
     std::map<uint32_t, EntitySnapshot> getDiff(const std::map<uint32_t, EntitySnapshot>& snapshot) const;
 
-    const std::vector<std::shared_ptr<Entity>> getNearEntities(const cocos2d::Vec2 position, const float radius) const;
+    const std::vector<std::shared_ptr<Entity>> getEntitiesNearPosition(const cocos2d::Vec2 position, const float radius) const;
+    const std::vector<std::shared_ptr<Player>> getPlayersNearPosition(const cocos2d::Vec2 position, const float radius) const;
 
 private:
     std::map<uint32_t, std::shared_ptr<Entity>> m_entities;

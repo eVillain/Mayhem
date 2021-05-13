@@ -1,24 +1,28 @@
 #ifndef BaseAI_h
 #define BaseAI_h
 
+#include "EntityConstants.h"
 #include <stdint.h>
 #include <memory>
 
 class ClientInputMessage;
 class EntitiesModel;
+class Entity;
+class Player;
 
 class BaseAI
 {
 public:
     enum State {
-        SEEK_TARGET,
-        DO_ACTION,
+        MOVE_TO_TARGET,
+        PERFORM_ACTION,
     };
     enum TargetType {
         NONE,
         WEAPON,
         AMMO,
         ENEMY,
+        THREAT,
     };
     
     BaseAI();
@@ -33,11 +37,15 @@ public:
     const TargetType getTargetType() const { return m_targetType; }
     const float getUpdateAccumulator() const { return m_updateAccumulator; }
     
-private:    
+private:
+    static const float AI_UPDATE_INTERVAL;
+    static const float AI_AWARENESS_RADIUS;
+
     State m_state;
     TargetType m_targetType;
     float m_updateAccumulator;
-    
+    float m_updateTime;
+
     float m_directionX;
     float m_directionY;
     float m_aimPointX;
@@ -49,8 +57,17 @@ private:
     bool m_changeWeapon;
     uint8_t m_slot;
 
+    void refreshState(const uint8_t playerID,
+                      const std::shared_ptr<EntitiesModel>& entityModel);
     void updateState(const uint8_t playerID,
                      const std::shared_ptr<EntitiesModel>& entityModel);
+    void resetState();
+    
+    cocos2d::Vec2 getClosestOfType(const TargetType type,
+                                   const cocos2d::Vec2& position,
+                                   const uint16_t ignoreEntityID,
+                                   const std::vector<std::shared_ptr<Entity>>& entities,
+                                   EntityType ammoType) const;
 
 };
 

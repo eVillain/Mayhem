@@ -127,8 +127,8 @@ const std::shared_ptr<Player> EntitiesModel::getPlayerByEntityID(const uint16_t 
     return nullptr;
 }
 
-const std::vector<std::shared_ptr<Entity>> EntitiesModel::getNearEntities(const cocos2d::Vec2 position,
-                                                                          const float radius) const
+const std::vector<std::shared_ptr<Entity>> EntitiesModel::getEntitiesNearPosition(const cocos2d::Vec2 position,
+                                                                                  const float radius) const
 {
     std::vector<std::shared_ptr<Entity>> nearEntities;
     const float radiusSq = radius * radius;
@@ -141,4 +141,22 @@ const std::vector<std::shared_ptr<Entity>> EntitiesModel::getNearEntities(const 
     }
     
     return nearEntities;
+}
+
+const std::vector<std::shared_ptr<Player>> EntitiesModel::getPlayersNearPosition(const cocos2d::Vec2 position,
+                                                                                 const float radius) const
+{
+    std::vector<std::shared_ptr<Player>> nearPlayers;
+    const float radiusSq = radius * radius;
+    for (auto playerPair : m_players)
+    {
+        const int16_t entityID = playerPair.second->getEntityID();
+        auto entity = m_entities.at(entityID);
+        if (entity->getPosition().distanceSquared(position) <= radiusSq)
+        {
+            nearPlayers.push_back(playerPair.second);
+        }
+    }
+    
+    return nearPlayers;
 }
