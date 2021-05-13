@@ -301,54 +301,22 @@ void ServerController::checkForShots(uint8_t playerID, const std::shared_ptr<Cli
                                                                                      player->getFlipX());
         if (itemData.weapon.damageType == DamageType::Damage_Type_Hitscan)
         {
-            const float RAY_LENGTH = itemData.weapon.type == WeaponType::Weapon_Type_Shotgun ? 128 : 512.f;
-            if (itemData.weapon.type == WeaponType::Weapon_Type_Shotgun)
-            {
-                const cocos2d::Vec2 shotEnd = data.projectilePosition + (aimPoint - data.projectilePosition).getNormalized() * RAY_LENGTH;
-                const cocos2d::Vec2 offset = (data.projectilePosition - shotEnd).getNormalized().getPerp();
+            const int numShots = itemData.weapon.type == WeaponType::Weapon_Type_Shotgun ? 8 : 1;
 
-                for (int shot = -4; shot < 4; shot++)
-                {
-                    const cocos2d::Vec2 shotOffset = offset * shot * 2.f;
-                    const RayElement raycastResult = fireHitScanWeapon(data.projectilePosition,
-                                                                       shotEnd + shotOffset,
-                                                                       player->getEntityID(),
-                                                                       heldItemType,
-                                                                       itemData.weapon.damageAmount);
-                    const auto& hitEntity = m_gameController->getEntitiesModel()->getEntities().at(raycastResult.hitEntityID);
-                    if (raycastResult.hitEntityID == 0 ||
-                        hitEntity->getEntityType() != PlayerEntity)
-                    {
-                        FrameHitData hit;
-                        hit.hitterEntityID = player->getEntityID();
-                        hit.hitEntityID = raycastResult.hitEntityID;
-                        hit.damage = 0.f;
-                        hit.hitPosX = raycastResult.shotEndPoint.x;
-                        hit.hitPosY = raycastResult.shotEndPoint.y;
-                        hit.headShot = false;
-                        m_frameHitData.push_back(hit);
-                    }
-                }
-            }
-            else
+            const float RAY_LENGTH = itemData.weapon.type == WeaponType::Weapon_Type_Shotgun ? 128 : 512.f;
+
+            const cocos2d::Vec2 shotEnd = data.projectilePosition + (aimPoint - data.projectilePosition).getNormalized() * RAY_LENGTH;
+            const cocos2d::Vec2 offset = (data.projectilePosition - shotEnd).getNormalized().getPerp() * 2.f;
+
+            for (int shot = 0; shot < numShots; shot++)
             {
-                FrameHitData hit;
-                hit.hitterEntityID = player->getEntityID();
-                hit.hitEntityID = 0;
-                const cocos2d::Vec2 shotEnd = data.projectilePosition + (aimPoint - data.projectilePosition).getNormalized() * RAY_LENGTH;
-                const RayElement raycastResult = fireHitScanWeapon(data.projectilePosition, shotEnd, player->getEntityID(), heldItemType, itemData.weapon.damageAmount);
-                if (raycastResult.hitEntityID == 0 ||
-                    m_gameController->getEntitiesModel()->getEntities().at(raycastResult.hitEntityID)->getEntityType() != PlayerEntity)
-                {
-                    FrameHitData hit;
-                    hit.hitterEntityID = player->getEntityID();
-                    hit.hitEntityID = 0;
-                    hit.damage = 0.f;
-                    hit.hitPosX = raycastResult.shotEndPoint.x;
-                    hit.hitPosY = raycastResult.shotEndPoint.y;
-                    hit.headShot = false;
-                    m_frameHitData.push_back(hit);
-                }
+                const int shotOffsetRanged = shot - (numShots/2);
+                const cocos2d::Vec2 shotOffset = numShots == 1 ? cocos2d::Vec2:: ZERO : offset * shotOffsetRanged;
+                const RayElement raycastResult = fireHitScanWeapon(data.projectilePosition,
+                                                                    shotEnd + shotOffset,
+                                                                    player->getEntityID(),
+                                                                    heldItemType,
+                                                                    itemData.weapon.damageAmount);
             }
         }
         else if (itemData.weapon.damageType == DamageType::Damage_Type_Projectile)
@@ -402,8 +370,8 @@ const RayElement ServerController::fireHitScanWeapon(const cocos2d::Vec2& shotSt
             std::shared_ptr<Player> hitPlayer = std::dynamic_pointer_cast<Player>(hitEntity);
             if (!hitPlayer->getIsRemoved())
             {
-                
                 applyDamage(hitPlayer, damage, raycastResult.shotEndPoint, entityID, weaponType, raycastResult.hitShapeIndex);
+                return raycastResult;
             }
         }
     }
@@ -685,7 +653,7 @@ void ServerController::onProjectileDestroyed(const std::shared_ptr<Projectile>& 
             if (dist < EXPLOSION_RADIUS &&
                 !player->getIsRemoved())
             {
-                // TODO: Check for objects blocking path by raycast
+                // TODO: Check for objects blocking explosion path by raycast
                 const float damageMultilpier = (dist <= 16.f) ? 1.f : (dist / EXPLOSION_RADIUS);
                 const float damage = itemData.weapon.damageAmount * damageMultilpier;
                 applyDamage(player, damage, projectile->getPosition(), ownerEntityID, EntityType::ExplosionEntity, 0);
