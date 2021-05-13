@@ -1036,9 +1036,12 @@ void GameViewController::updateCursor(const SnapshotData& snapshot)
                 m_cameraModel->setTargetZoom(targetZoom);
             }
         }
-
-        const cocos2d::Vec2 playerPosition = cocos2d::Vec2(entitySnapshot.positionX, entitySnapshot.positionY);
-        const cocos2d::Vec2 aimPosition = cocos2d::Vec2(playerState.aimPointX, playerState.aimPointY);
+        
+        auto& entityView = m_entityViews[playerState.entityID];
+        const cocos2d::Vec2 playerPosition = entityView ? entityView->getSprite()->getPosition() : cocos2d::Vec2(entitySnapshot.positionX, entitySnapshot.positionY);
+        const cocos2d::Vec2 aimPosition = getAimPosition(m_inputModel->getMouseCoord());
+//
+//        const cocos2d::Vec2 aimPosition = cocos2d::Vec2(playerState.aimPointX, playerState.aimPointY);
         uint32_t entityUnderCursorID = 0;
         bool itemsInRange = false;
         for (const auto& entityPair : snapshot.entityData)
