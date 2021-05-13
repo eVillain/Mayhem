@@ -1221,9 +1221,10 @@ void GameViewController::renderPostProcess(const SnapshotData& snapshot)
 
 void GameViewController::renderDebug()
 {
-    const cocos2d::Vec2 viewPos = m_gameView->getView()->getPosition();
-    const cocos2d::Value& deferredRenderSetting = m_gameSettings->getValue(GameView::SETTING_RENDER_DEFERRED, cocos2d::Value(true));
-    const float viewScale = deferredRenderSetting.asBool() ? m_gameView->getRenderTexture()->getSprite()->getScale() : m_gameView->getView()->getScale();
+//    const cocos2d::Vec2 viewPos = m_gameView->getView()->getPosition();
+//    const cocos2d::Value& deferredRenderSetting = m_gameSettings->getValue(GameView::SETTING_RENDER_DEFERRED, cocos2d::Value(true));
+//    const float viewScale = deferredRenderSetting.asBool() ? m_gameView->getRenderTexture()->getSprite()->getScale() : m_gameView->getView()->getScale();
+    // TODO: Toggle these loops below with some settings
 //
 //    // Debug render local entities collision boxes
 //    const auto& entities = m_entitiesModel->getEntities();
@@ -1241,72 +1242,10 @@ void GameViewController::renderDebug()
 //                                                     cocos2d::Color4F(1.f,1.f,1.f,0.5f));
 //        }
 //    }
-
-        // Debug intersections
-//        auto localPlayer = m_entitiesModel->getPlayer(localPlayerID);
-//        cocos2d::Vec2 rayStart = localPlayer->getPosition();
-//        cocos2d::Vec2 rayEnd = localPlayer->getAimPosition();
-//        m_gameView->getDebugDrawNode()->drawLine(m_gameView->toViewPosition(rayStart), m_gameView->toViewPosition(rayEnd), cocos2d::Color4F::BLUE);
-//
-//        RayElement raycastResult = RaycastUtil::rayCast(rayStart, rayEnd, localPlayer->getEntityID(), m_entitiesModel->getEntities(),
-//m_levelModel->getStaticRects());
-//        m_gameView->getDebugDrawNode()->drawSolidCircle(m_gameView->toViewPosition(raycastResult.shotEndPoint), 4.f, 0.f, 8, 1.f, 1.f, cocos2d::Color4F::RED);
-//        if (raycastResult.hitEntity)
-//        {
-//            m_gameView->getDebugDrawNode()->drawCircle(m_gameView->toViewPosition(raycastResult.hitEntity->getPosition()), 8.f, 0.f, 8, false, 1.f, 1.f, cocos2d::Color4F::MAGENTA);
-//        }
-    
-//    const cocos2d::Rect rect = cocos2d::Rect(cocos2d::Vec2(200, 200), cocos2d::Size(100, 100));
-//    const cocos2d::Rect rect2 = cocos2d::Rect(cocos2d::Vec2(170, 170), cocos2d::Size(20, 20));
-//    const cocos2d::Rect minkowskiDifference = CollisionUtils::minkowskiDifference(rect, rect2);
-//    if (minkowskiDifference.getMinX() < 0.f &&
-//        minkowskiDifference.getMaxX() > 0.f &&
-//        minkowskiDifference.getMinY() < 0.f &&
-//        minkowskiDifference.getMaxY() > 0.f)
-//    {
-//        // AABBs already intersect, use discrete collision detection / separation
-//        const cocos2d::Vec2 penetrationVector = CollisionUtils::closestPointOnBoundsToPoint(cocos2d::Vec2::ZERO, minkowskiDifference);
-//
-//        m_gameView->getDebugDrawNode()->drawRect(rect.origin,
-//                                                 rect.origin + rect.size,
-//                                                 cocos2d::Color4F::GREEN);
-//        m_gameView->getDebugDrawNode()->drawRect(rect2.origin,
-//                                                 rect2.origin + rect2.size,
-//                                                 cocos2d::Color4F::RED);
-//        m_gameView->getDebugDrawNode()->drawRect(rect2.origin - penetrationVector,
-//                                                 rect2.origin - penetrationVector + rect2.size,
-//                                                 cocos2d::Color4F::YELLOW);
-//        m_gameView->getDebugDrawNode()->drawLine(rect2.origin, rect2.origin - penetrationVector, cocos2d::Color4F::MAGENTA);
-//        m_gameView->getDebugDrawNode()->drawPoint(rect2.origin - penetrationVector, 15.f, cocos2d::Color4F::MAGENTA);
-//    }
-//    else
-//    {
-//        m_gameView->getDebugDrawNode()->drawRect(rect.origin,
-//                                                 rect.origin + rect.size,
-//                                                 cocos2d::Color4F::BLUE);
-//        m_gameView->getDebugDrawNode()->drawRect(rect2.origin,
-//                                                 rect2.origin + rect2.size,
-//                                                 cocos2d::Color4F::YELLOW);
-//        const cocos2d::Vec2 relativeMotion = cocos2d::Vec2(-30.f, -30.f);
-//        // ray-cast the relativeMotion vector against the Minkowski AABB
-//        float h = CollisionUtils::getRayIntersectionFraction(cocos2d::Vec2::ZERO, relativeMotion, minkowskiDifference);
-//        if (h != std::numeric_limits<float>::max())
-//        {
-//            m_gameView->getDebugDrawNode()->drawRect(rect2.origin - (relativeMotion * h),
-//                                                     rect2.origin + rect2.size - (relativeMotion * h) ,
-//                                                     cocos2d::Color4F::MAGENTA);
-//        }
-//        else
-//        {
-//            m_gameView->getDebugDrawNode()->drawRect(rect2.origin + relativeMotion,
-//                                                     rect2.origin + relativeMotion + rect2.size,
-//                                                     cocos2d::Color4F::ORANGE);
-//        }
-//    }
         // Debug render static level collision boxes
-        const auto& walls = m_levelModel->getStaticRects();
-        for (const auto& rect : walls)
-        {
+//        const auto& walls = m_levelModel->getStaticRects();
+//        for (const auto& rect : walls)
+//        {
 //            cocos2d::Vec2 intersect = CollisionUtils::closestPointOnBoundsToPoint(rayEnd, rect);
 //            if (rect.containsPoint(intersect))
 //            {
@@ -1325,12 +1264,12 @@ void GameViewController::renderDebug()
 //                cocos2d::Vec2 ray = (rayEnd - rayStart) * h;
 //                m_gameView->getPixelDrawNode()->drawCircle(rayStart + ray, 2.f, 0.f, 8.f, false, 1.f, 1.f, cocos2d::Color4F::RED);
 //            }
-            
-            const cocos2d::Rect viewRect = cocos2d::Rect(rect.origin * viewScale, rect.size * viewScale);
-            m_gameView->getDebugDrawNode()->drawRect(viewRect.origin + viewPos,
-                                                     cocos2d::Vec2(viewRect.getMaxX(), viewRect.getMaxY()) + viewPos,
-                                                     cocos2d::Color4F(0.0f, 0.5f, 0.5f, 1.f));
-        }
+//
+//            const cocos2d::Rect viewRect = cocos2d::Rect(rect.origin * viewScale, rect.size * viewScale);
+//            m_gameView->getDebugDrawNode()->drawRect(viewRect.origin + viewPos,
+//                                                     cocos2d::Vec2(viewRect.getMaxX(), viewRect.getMaxY()) + viewPos,
+//                                                     cocos2d::Color4F(0.0f, 0.5f, 0.5f, 1.f));
+//        }
 }
 
 void GameViewController::renderPlayerDeath(const cocos2d::Vec2& position,
