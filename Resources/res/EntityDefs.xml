@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<entities>
+		<entity type="0" name ="Player" sprite="White1px.png">
+			<rect x="0" y="0" width="2" height="2"/>
+		</entity>
+        <entity type="1" name ="Reserved" sprite="White1px.png">
+            <rect x="0" y="0" width="2" height="2"/>
+        </entity>
+        
+		<entity type="2" name ="Deagle" sprite="Weapon-Deagle.png">
+			<rect x="-5" y="-4" width="10" height="7"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="pistol" sound="SFX_Gun_Deagle.wav">
+                <holdOffset x="6" y="1.5"/>
+                <projectileOffset x="11" y="3.5"/>
+                <damage type="hitscan" amount="70"/>
+                <recoil amount="10"/>
+                <time shot="0.25" reload="3.0"/>
+                <fireMode single="1" burst ="0" auto="0"/>
+            </weapon>
+            <ammo type="45ACP" amount="8"/>
+		</entity>
+        <entity type="3" name ="Revolver" sprite="Weapon-Revolver.png">
+            <rect x="-6" y="-3" width="12" height="6"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="pistol" sound="SFX_Gun_Pistol.wav">
+                <holdOffset x="5" y="0.5"/>
+                <projectileOffset x="11" y="2.5"/>
+                <damage type="hitscan" amount="75"/>
+                <recoil amount="10"/>
+                <time shot="0.25" reload="3.0"/>
+                <fireMode single="1" burst ="0" auto="0"/>
+            </weapon>
+            <ammo type="762" amount="6"/>
+        </entity>
+        
+		<entity type="4" name ="UZI" sprite="Weapon-Uzi.png">
+			<rect x="-5" y="-3" width="10" height="6"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="smg" sound="SFX_Gun_SMG.wav">
+                <holdOffset x="3" y="1"/>
+                <projectileOffset x="8" y="2.5"/>
+                <damage type="hitscan" amount="26"/>
+                <recoil amount="10"/>
+                <time shot="0.048" reload="3.1"/>
+                <fireMode single="1" burst ="0" auto="1"/>
+            </weapon>
+            <ammo type="9MM" amount="25"/>
+		</entity>
+		<entity type="5" name ="Vector" sprite="Weapon-Vector.png">
+			<rect x="-8" y="-3" width="16" height="6"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="smg" sound="SFX_Gun_SMG.wav">
+                <holdOffset x="3.5" y="0.5"/>
+                <projectileOffset x="11" y="0.5"/>
+                <damage type="hitscan" amount="34"/>
+                <recoil amount="10"/>
+                <time shot="0.054" reload="3.1"/>
+                <fireMode single="1" burst ="1" auto="1"/>
+            </weapon>
+            <ammo type="45ACP" amount="33"/>
+		</entity>
+        <entity type="6" name ="AKM" sprite="Weapon-AKM.png">
+            <rect x="-11" y="-4" width="22" height="8"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="ar" sound="SFX_Gun_AK.wav">
+                <holdOffset x="5" y="1"/>
+                <projectileOffset x="16" y="3"/>
+                <damage type="hitscan" amount="49"/>
+                <recoil amount="10"/>
+                <time shot="0.1" reload="3.1"/>
+                <fireMode single="1" burst ="0" auto="1"/>
+            </weapon>
+            <ammo type="762" amount="30"/>
+        </entity>
+        <entity type="7" name ="M416" sprite="Weapon-M416.png">
+            <rect x="-11" y="-4" width="22" height="8"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="ar" sound="SFX_Gun_Pistol.wav">
+                <holdOffset x="5" y="1"/>
+                <projectileOffset x="16" y="2.5"/>
+                <damage type="hitscan" amount="49"/>
+                <recoil amount="10"/>
+                <time shot="0.1" reload="3.1"/>
+                <fireMode single="1" burst ="0" auto="1"/>
+            </weapon>
+            <ammo type="556" amount="30"/>
+        </entity>
+        <entity type="8" name ="Sawed-Off" sprite="Weapon-SawedOff.png">
+            <rect x="-7" y="-3" width="13" height="6"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="shotgun" sound="SFX_Gun_Shotgun1.wav">
+                <holdOffset x="7" y="1.5"/>
+                <projectileOffset x="14" y="3.5"/>
+                <damage type="hitscan" amount="15"/>
+                <recoil amount="10"/>
+                <time shot="0.25" reload="3.0"/>
+                <fireMode single="1" burst ="0" auto="0"/>
+            </weapon>
+            <ammo type="Shells" amount="2"/>
+        </entity>
+        <entity type="9" name ="AWM" sprite="Weapon-AWM.png">
+            <rect x="-14" y="-4" width="28" height="7"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="sniper" sound="SFX_Gun_AWM.wav">
+                <holdOffset x="11" y="2.5"/>
+                <projectileOffset x="25" y="3"/>
+                <damage type="projectile" amount="0" projectileType="93"/>
+                <recoil amount="10"/>
+                <time shot="1.5" reload="4.0"/>
+                <fireMode single="1" burst ="0" auto="0"/>
+            </weapon>
+            <ammo type="762" amount="5"/>
+        </entity>
+        <entity type="10" name ="RPG-7" sprite="Weapon-RPG.png">
+            <rect x="-10" y="-2" width="20" height="5"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="launcher" sound="SFX_Gun_Rocket.wav">
+                <holdOffset x="2" y="2.5"/>
+                <projectileOffset x="14" y="3"/>
+                <damage type="projectile" amount="0" projectileType="94"/>
+                <recoil amount="10"/>
+                <time shot="1.5" reload="4.0"/>
+                <fireMode single="1" burst ="0" auto="0"/>
+            </weapon>
+            <ammo type="RPG Ammo" amount="100"/>
+        </entity>
+        <entity type="11" name ="Railgun" sprite="Weapon-Railgun.png">
+            <rect x="-10" y="-4" width="20" height="9"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="sniper" sound="SFX_Gun_Railgun.wav">
+                <holdOffset x="2" y="2.5"/>
+                <projectileOffset x="14" y="3"/>
+                <damage type="hitscan" amount="80"/>
+                <recoil amount="10"/>
+                <time shot="1.0" reload="1.0"/>
+                <fireMode single="1" burst ="0" auto="0"/>
+            </weapon>
+            <ammo type="Slugs" amount="10"/>
+        </entity>
+        <entity type="12" name ="Kar98" sprite="Weapon-Kar98.png">
+            <rect x="-14" y="-4" width="28" height="7"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="sniper" sound="SFX_Gun_AWM.wav">
+                <holdOffset x="11" y="2.5"/>
+                <projectileOffset x="25" y="3"/>
+                <damage type="projectile" amount="0" projectileType="93"/>
+                <recoil amount="10"/>
+                <time shot="1.5" reload="4.0"/>
+                <fireMode single="1" burst ="0" auto="0"/>
+            </weapon>
+            <ammo type="762" amount="5"/>
+        </entity>
+        
+        <entity type="17" name ="Frag Grenade" sprite="Weapon-NadeFrag.png">
+            <rect x="-2" y="-3" width="4" height="6"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="throwable" sound="SFX_SwingFist1.wav">
+                <holdOffset x="3" y="1"/>
+                <projectileOffset x="12" y="0"/>
+                <damage type="projectile" amount="0" projectileType="95"/>
+                <recoil amount="0"/>
+                <time shot="2.0" reload="3.0"/>
+            </weapon>
+            <ammo type="FRAG" amount="1"/>
+        </entity>
+        <entity type="18" name ="Smoke Grenade" sprite="Weapon-NadeSmoke.png">
+            <rect x="-2" y="-3" width="4" height="6"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="throwable" sound="SFX_SwingFist2.wav">
+                <holdOffset x="3" y="1"/>
+                <projectileOffset x="12" y="0"/>
+                <damage type="projectile" amount="0" projectileType="96"/>
+                <recoil amount="0"/>
+                <time shot="2.0" reload="3.0"/>
+            </weapon>
+            <ammo type="SMOKE" amount="1"/>
+        </entity>
+        
+        <entity type="71" name ="Helmet Level 2" sprite="Helmet-Level2.png">
+            <rect x="-9" y="-2" width="12" height="5"/>
+            <anchor x="0.5" y="0.5"/>
+            <armor type="helmet" level ="2" amount="100"/>
+        </entity>
+        <entity type="72" name ="Helmet Level 3" sprite="Helmet-Level3.png">
+            <rect x="-6" y="-6" width="12" height="11"/>
+            <anchor x="0.5" y="0.5"/>
+            <armor type="helmet" level ="3" amount="200"/>
+        </entity>
+        
+        <entity type="80" name ="9mm Ammo" sprite="Ammo-9mm.png">
+            <rect x="-2" y="-1" width="5" height="3"/>
+            <anchor x="0.5" y="0.5"/>
+            <ammo type="9mm" amount="30"/>
+        </entity>
+        <entity type="81" name ="45ACP Ammo" sprite="Ammo-45ACP.png">
+            <rect x="-2" y="-1" width="5" height="3"/>
+            <anchor x="0.5" y="0.5"/>
+            <ammo type="45ACP" amount="30"/>
+        </entity>
+        <entity type="82" name ="5.56 Ammo" sprite="Ammo-556.png">
+            <rect x="-2" y="-1" width="5" height="3"/>
+            <anchor x="0.5" y="0.5"/>
+            <ammo type="556" amount="30"/>
+        </entity>
+        <entity type="83" name ="7.62 Ammo" sprite="Ammo-762.png">
+            <rect x="-2" y="-1" width="5" height="3"/>
+            <anchor x="0.5" y="0.5"/>
+            <ammo type="762" amount="30"/>
+        </entity>
+        <entity type="84" name ="Shotgun Shells" sprite="Ammo-Shells.png">
+            <rect x="-2" y="-2" width="5" height="5"/>
+            <anchor x="0.5" y="0.5"/>
+            <ammo type="Shells" amount="10"/>
+        </entity>
+        <entity type="85" name ="RPG Ammo" sprite="Projectile-RPG.png">
+            <rect x="-5" y="-2" width="10" height="3"/>
+            <anchor x="0.5" y="0.5"/>
+            <ammo type="RPG" amount="1"/>
+        </entity>
+        <entity type="86" name ="Slugs" sprite="Ammo-Slugs.png">
+            <rect x="-2" y="-3" width="5" height="6"/>
+            <anchor x="0.5" y="0.5"/>
+            <ammo type="Slugs" amount="10"/>
+        </entity>
+        
+        <entity type="93" name ="AWM Bullet" sprite="Projectile-Bullet.png">
+            <rect x="-2" y="-2" width="3" height="5"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="projectile" sound="SFX_Explosion1.wav">
+                <holdOffset x="3" y="1"/>
+                <projectileOffset x="12" y="0"/>
+                <damage type="projectile" amount="80"/>
+                <recoil amount="0"/>
+                <time shot="2.0" reload="5.0"/>
+            </weapon>
+        </entity>
+        <entity type="94" name ="RPG" sprite="Projectile-RPG.png">
+            <rect x="-2" y="-2" width="3" height="5"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="projectile" sound="SFX_Explosion1.wav">
+                <holdOffset x="3" y="1"/>
+                <projectileOffset x="12" y="0"/>
+                <damage type="explosion" amount="100"/>
+                <recoil amount="0"/>
+                <time shot="2.0" reload="5.0"/>
+            </weapon>
+        </entity>
+        <entity type="95" name ="Frag (Primed)" sprite="Weapon-NadeFrag.png">
+            <rect x="-2" y="-2" width="3" height="5"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="projectile" sound="SFX_Explosion1.wav">
+                <holdOffset x="3" y="1"/>
+                <projectileOffset x="12" y="0"/>
+                <damage type="explosion" amount="200"/>
+                <recoil amount="0"/>
+                <time shot="2.0" reload="5.0"/>
+            </weapon>
+        </entity>
+        <entity type="96" name ="Smoke (Primed)" sprite="Weapon-NadeSmoke.png">
+            <rect x="-2" y="-2" width="3" height="5"/>
+            <anchor x="0.5" y="0.5"/>
+            <weapon type="projectile" sound="SFX_SwingFist1.wav">
+                <holdOffset x="3" y="1"/>
+                <projectileOffset x="12" y="0"/>
+                <damage type="none" amount="0"/>
+                <recoil amount="0"/>
+                <time shot="2.0" reload="5.0"/>
+            </weapon>
+        </entity>
+        <entity type="100" name ="Loot" sprite="LootBox.png">
+            <rect x="4" y="-2" width="8" height="5"/>
+            <anchor x="0.5" y="0.5"/>
+        </entity>
+	</entities>
+</xml>

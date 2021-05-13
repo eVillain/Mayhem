@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>RenderDeferred</key>
+	<true/>
+	<key>RenderPostProcess</key>
+	<true/>
+	<key>RenderLineOfSight</key>
+	<false/>
+	<key>RenderLighting</key>
+	<false/>
+	<key>UsePositionalAudio</key>
+	<false/>
+	<key>SaveSettingsOnExit</key>
+	<true/>
+	<key>SaveReplay</key>
+	<false/>
+	<key>NetworkEnabled</key>
+	<true/>
+	<key>NetworkType</key>
+	<string>IP</string>
+	<key>NetworkProtocolID</key>
+	<integer>666666</integer>
+	<key>NetworkMeshPort</key>
+	<integer>30001</integer>
+	<key>NetworkServerPort</key>
+	<integer>30002</integer>
+	<key>NetworkClientPort</key>
+	<integer>30003</integer>
+	<key>NetworkMeshSendRate</key>
+	<integer>5</integer>
+	<key>NetworkTimeout</key>
+	<integer>10</integer>
+	<key>NetworkMaxNodes</key>
+	<integer>100</integer>
+	<key>MasterServerAddress</key>
+	<string>127.0.0.1:12345</string>
+	<key>MasterServerConnectPort</key>
+	<integer>12346</integer>
+</dict>
+</plist>

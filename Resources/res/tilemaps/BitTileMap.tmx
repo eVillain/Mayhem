@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="BitTiles" tilewidth="16" tileheight="16" spacing="2" margin="2">
+  <image source="BitTiles.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="197" name="BitTilesMeta" tilewidth="16" tileheight="16" spacing="1" margin="1">
+  <image source="BitTilesMeta.png" width="35" height="35"/>
+  <tile id="0">
+   <properties>
+    <property name="Collidable" value="True"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="Breakable" value="True"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="Stairs" value="Up"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="Stairs" value="Down"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="201" name="Neon" tilewidth="16" tileheight="16" spacing="2">
+  <image source="BitNeon.png" width="256" height="256"/>
+ </tileset>
+ <layer name="Background" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztm01T2zAQhjUFM9zaUs5MUpdTBzKEE5CEcmo75dqhcC0fvfYX5K/XHrITscjyrrSy1nEP7xgniqRHu/paiaUxZjlwbXeoAr3Hlr/FVFnpU6VDJfyxojDPrL9PKk0rnVr8Ox2qEM6Pa//LSl8qXVn83Dyw5gJ55BDw3yvWjwR5XiP+NwPTnYP/nUOfGz7vUkcJ6uHid+lcga3OE9QD839D+o74vzrSpBSU7+KXqMsfxI/HxRvE/9ORxqcRMz2eq395+Ll1oYz/8D5p4Y+d50qzXnv50uXil7J/k+y115D4x6unvfbqE/9v87wOuRYsWzv/20oHld6b9frgTrBs7fx1mX+tsoH/eIP5YZ9Y85+tmC8GZH+Y326s8kBD4Af7P5rXa6Yns1435ebfWwnS7yFRP+fs/0fmpY9gScUAjgn8UrGj0PhHgdq1ELR9Lbv/aeT/YNZxvPq530N+O/4bwg/s24if2wf7yt93+8f2fxzT1coPeYbyT9B76vGfw79gss+E7J9aUvZvsnsu/mXLM5S/iVMD/8LzHe5bVP6m/CT5PyZulxj/5/D72iDE/jNm+hT+T+Vv8wEp/x8L5JGbP1VcY8RMPxfkp/r/fYeinGc+CPJTxj8c69CkLvhzn3H6dDFw+4MPhI5/ofN/rS7PPHGsDZ+B2vxNe2lpftdYuuV4j7GBrYWVN54DQtb/sfwQ53AxpuC321oLfxNjKD91HaCFvzTPZ9agwwh+ThtR+PF+3tWXYvnrM+tdS6eR/Fr8nxL/s/mnAvxUaeQPtX+on2jhhzsLoKsM/LZ8/NyygD9kPdEl/y3ilyor5v73Jtlfoj+F1Mn3nesMGu7ubQK/TynaOpZ/3lBWKvtLtqu0/V3159aRwt/229LQ7lNK8nP9MyU/9T6lj53DH9I3fXNrLD/1PmWI/V124rLH+EaI73DXMW32T8Ud0zck65Pj/982nZ+y7wa1+asmfl+sIYd/aLX/f345ScW5c/BrblfMP2T9A19CP0k=
+  </data>
+ </layer>
+ <layer name="Foreground" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztm8lKBDEURXvvF/hRCq4VXCs4LFqcFRxxWDhPO2d3zu6c+su8BVkURVLp3H6VTsocuJh+0IUJb7ikuxuNRDdZ7vY/kPj39Hhch0ivx3UikUgkePqg/oIGiHisDEJDBQ0T8VgZgUYLGiPiLLp88plT09AMNKuUreeJOIsun2w5JVmD69AGtKmUrbeIOIsun2w5JVmDh9ARNKeUrU+JOEsTmlJ/m4XXJiRr8BK6go6hE7W+JeIsK9CqRmsl75GswUfoCbqGbtT6lYiz7EH7Gh2UvEeyBj+hL+gZelHrXyLuE+kazPiGfgTikpj6vHQNSjIOTRQ0ST7L1Oela1CSBWixoCXyWaY+H0INmtiGdgraJZ9l6/M+atCVFnQGnUMX6nWLfJa01/JBttc76B56aHS2/yr6fNVke32D3qGPRmf7D7nPm2gZxBByn/dByH3eJ1X2+brdZ7lSt/ssV6Tvs2JD+j4rNmL0WJLE6LEkidFjSZI8lqzHitVPSHksxk/EemY6GD9RJw/G+Ik6eTDGT9TJgzF+InYPlv/eKeMnYvdg+f0zfqLdMwt1TuT3z/iJds/M55zo9Kxd/ES7Z+ZzTnRjJtvOzOecYM+6yu/gl80J6d4Q4kwumxPS+RriTC6bE9K9IcSZXDYnbPnqWh8h3ouUzQlbvrrWh4uP8f27I92csOWra33E9tmTLV/Zfh7idwx02PI1xH4uiS1fQ+znVWDK1xD7uU/SPXdc/bwqYunnedLvmuPgD6UskVg=
+  </data>
+ </layer>
+ <layer name="StaticLights" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJzt2EsKgCAUBVD3v7NqAdUC3EdOc2ID8dc5IApOBC/viSEAf3Y0XI/obrgGYBxbGnvvQ3R0pnH1PsQiZEmW/mz1/MfCvvzDGvJaNvo/Rm15LfOP8VbqBbNbvZeX6OVQTyzMzMn9fSP/AADMyHsVAAAAAGB8Dz5FK28=
+  </data>
+ </layer>
+ <layer name="SelfLit" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJzt1sENgCAMBVAGUAbQ/feUCagHk0p5L2k4cGnCT0trAACwl2PUmd1EomvUnd1EEbIkSzurnv8e3Ms/1FB9lkXMsrloF6xO/uUfvtKDkzV5v3fkHwCAFfmvAgAAAAD83wNHUwIv
+  </data>
+ </layer>
+ <layer name="Meta" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJzt1lEOhCAMRVH3vy/35ReJMQKBtpTS+xIzyYzCO6AT7+u67uSHZzzn38HvGfz48ecNfvz44+Wk97+Z4Pf1e69lRL/meuHHjx+/l1+zs8aYs99b+Hdc+1osuuGP4bfq1hvL213i5d8p+PHjtxnzz9/7XB3LvVkxtvQe2/nebCWqX+v+j+rXCn78+PHj1/FHemd9R9pT4o+6Zu/gx48/p79nxz93/ex5q3Oif3Su7+8j3U70S+bU6qTRZdRv+Ty2Ommvjcf+Szrhx9/qK3me8bfPX/Hf9zdfrcOp+9+Ktv97ndZ5VrHyj87vlez+klqPLP5a8Of2l1j1tPRHWtfMxwPM9hTz
+  </data>
+ </layer>
+ <objectgroup name="Objects" width="64" height="64" visible="0">
+  <object name="SpawnPoint" x="389" y="411" width="27" height="33"/>
+ </objectgroup>
+ <objectgroup name="Lights" width="64" height="64">
+  <object name="Light1" type="Light" x="0" y="0" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light2" type="Light" x="256" y="0" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light3" type="Light" x="512" y="0" width="256" height="256">
+   <properties>
+    <property name="Blue" value="0"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light4" type="Light" x="768" y="0" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light5" type="Light" x="0" y="256" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light6" type="Light" x="256" y="256" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light7" type="Light" x="512" y="256" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light8" type="Light" x="768" y="256" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light9" type="Light" x="0" y="512" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light10" type="Light" x="256" y="512" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light11" type="Light" x="512" y="512" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light12" type="Light" x="768" y="512" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light13" type="Light" x="0" y="768" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light14" type="Light" x="256" y="768" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light15" type="Light" x="512" y="768" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+  <object name="Light16" type="Light" x="768" y="768" width="256" height="256">
+   <properties>
+    <property name="Blue" value="255"/>
+    <property name="Green" value="255"/>
+    <property name="Red" value="255"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
