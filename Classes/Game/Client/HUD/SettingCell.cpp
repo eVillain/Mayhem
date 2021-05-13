@@ -9,6 +9,7 @@ SettingCell::SettingCell()
 : m_name(nullptr)
 , m_value(nullptr)
 , m_toggleButton(nullptr)
+, m_editBox(nullptr)
 {
 }
 
@@ -44,6 +45,9 @@ void SettingCell::setup(const std::string& name,
     description.erase(std::remove(description.begin(), description.end(), '\n'), description.end());
     m_value->setString(description);
     
+    removeToggleButton();
+    removeEditBox();
+
     switch (value.getType())
     {
         case Value::Type::NONE:
@@ -51,24 +55,23 @@ void SettingCell::setup(const std::string& name,
         case Value::Type::BYTE:
         case Value::Type::INTEGER:
         case Value::Type::UNSIGNED:
+            addEditBox(cocos2d::ui::EditBox::InputMode::NUMERIC);
+            break;
         case Value::Type::FLOAT:
         case Value::Type::DOUBLE:
-            // Number types
+            addEditBox(cocos2d::ui::EditBox::InputMode::DECIMAL);
             break;
         case Value::Type::BOOLEAN:
             addToggleButton();
             break;
         case Value::Type::STRING:
-//            ret << v.asString() << "\n";
+            addEditBox(cocos2d::ui::EditBox::InputMode::SINGLE_LINE);
             break;
         case Value::Type::VECTOR:
-//            ret << visitVector(v.asValueVector(), depth);
             break;
         case Value::Type::MAP:
-//            ret << visitMap(v.asValueMap(), depth);
             break;
         case Value::Type::INT_KEY_MAP:
-//            ret << visitMap(v.asIntKeyMap(), depth);
             break;
         default:
             CCASSERT(false, "Invalid type!");
@@ -90,9 +93,15 @@ void SettingCell::refreshPositions()
     m_name->setPosition(NAME_POS);
     if (m_toggleButton)
     {
-        const cocos2d::Vec2 BUTTON_POS = cocos2d::Vec2(getContentSize().width - (PADDING + m_toggleButton->getContentSize().width),
+        const cocos2d::Vec2 BUTTON_POS = cocos2d::Vec2(getContentSize().width - (PADDING + m_toggleButton->getContentSize().width * 0.5f),
                                                        getContentSize().height * 0.5f);
         m_toggleButton->setPosition(BUTTON_POS);
+    }
+    if (m_editBox)
+    {
+        const cocos2d::Vec2 BUTTON_POS = cocos2d::Vec2(getContentSize().width - (PADDING + m_editBox->getContentSize().width * 0.5f),
+                                                       getContentSize().height * 0.5f);
+        m_editBox->setPosition(BUTTON_POS);
     }
 }
 
@@ -108,5 +117,45 @@ void SettingCell::addToggleButton()
     else
     {
         m_toggleButton->getTitleLabel()->setString(m_value->getString());
+    }
+}
+
+void SettingCell::removeToggleButton()
+{
+    if (m_toggleButton)
+    {
+        m_toggleButton->removeFromParent();
+        m_toggleButton = nullptr;
+    }
+}
+
+void SettingCell::addEditBox(cocos2d::ui::EditBox::InputMode mode)
+{
+    if (!m_editBox)
+    {
+        m_editBox = cocos2d::ui::EditBox::create(GameViewConstants::EDIT_BOX_SIZE_SETTING,
+                                                 GameViewConstants::HUD_SCALE9_BUTTON);
+        m_editBox->setInputMode(mode);
+        m_editBox->setFont(GameViewConstants::FONT_5X7.c_str(),
+                           GameViewConstants::FONT_SIZE_SMALL);
+        m_editBox->setFontColor(cocos2d::Color3B::BLACK);
+        m_editBox->setPlaceHolder(m_value->getString().c_str());
+        m_editBox->setPlaceholderFont(GameViewConstants::FONT_5X7.c_str(),
+                                      GameViewConstants::FONT_SIZE_SMALL);
+        addChild(m_editBox);
+    }
+    else
+    {
+        m_editBox->setPlaceHolder(m_value->getString().c_str());
+    }
+    m_editBox->setTag((int)getIdx());
+}
+
+void SettingCell::removeEditBox()
+{
+    if (m_editBox)
+    {
+        m_editBox->removeFromParent();
+        m_editBox = nullptr;
     }
 }

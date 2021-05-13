@@ -9,6 +9,7 @@ class GameSettings;
 class SettingsView
 : public cocos2d::extension::TableViewDataSource
 , public cocos2d::extension::TableViewDelegate
+, public cocos2d::ui::EditBoxDelegate
 {
 public:
     SettingsView(std::shared_ptr<GameSettings> gameSettings);
@@ -26,7 +27,10 @@ public:
     ssize_t numberOfCellsInTableView(cocos2d::extension::TableView *table) override;
     // TableViewDelegate
     void tableCellTouched(cocos2d::extension::TableView* table, cocos2d::extension::TableViewCell* cell) override;
-    
+    // EditBoxDelegate
+    void editBoxReturn(cocos2d::ui::EditBox* editBox) override {};
+    void editBoxEditingDidEndWithAction(cocos2d::ui::EditBox* editBox,
+                                        EditBoxEndAction action) override;
 private:
     std::shared_ptr<GameSettings> m_gameSettings;
     

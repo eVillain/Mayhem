@@ -35,6 +35,7 @@ namespace GameViewConstants
     static const cocos2d::Size CHAT_BOX_SIZE_MESSAGE = cocos2d::Size(EDITBOX_DEFAULT_WIDTH, 200.f);
     static const cocos2d::Size EDIT_BOX_SIZE_MESSAGE = cocos2d::Size(EDITBOX_DEFAULT_WIDTH - BUTTON_SIZE_SEND.width, EDITBOX_DEFAULT_HEIGHT);
     static const cocos2d::Size EDIT_BOX_HEADER_SIZE_MESSAGE = cocos2d::Size(EDITBOX_DEFAULT_WIDTH, 24);
+    static const cocos2d::Size EDIT_BOX_SIZE_SETTING = cocos2d::Size(160, 24);
     static const cocos2d::Color3B EDITBOX_COLOR = cocos2d::Color3B(194, 194, 227);
     
     static const float TABLEVIEW_CELL_DEFAULT_WIDTH = 160;

@@ -84,6 +84,7 @@ cocos2d::extension::TableViewCell* SettingsView::tableCellAtIndex(cocos2d::exten
         {
             cell->getToggleButton()->addClickEventListener(std::bind(&SettingsView::onSettingToggle, this, idx));
         }
+        
     }
     
     return cell;
@@ -96,7 +97,6 @@ ssize_t SettingsView::numberOfCellsInTableView(cocos2d::extension::TableView* ta
 
 void SettingsView::tableCellTouched(cocos2d::extension::TableView* table, cocos2d::extension::TableViewCell* cell)
 {
-
 }
 
 void SettingsView::onSettingToggle(const ssize_t idx)
@@ -116,5 +116,24 @@ void SettingsView::onSettingToggle(const ssize_t idx)
         
         SettingCell* cell = static_cast<SettingCell*>(m_settingsTable->cellAtIndex(idx));
         cell->setup(it->first, newVal);
+    }
+}
+
+void SettingsView::editBoxEditingDidEndWithAction(cocos2d::ui::EditBox* editBox,
+                                                  EditBoxEndAction action)
+{
+    int idx = editBox->getTag();
+    auto& values = m_gameSettings->getValues();
+    if (idx <= values.size())
+    {
+        auto it = values.begin();
+        std::advance(it, idx);
+        auto& value = it->second;
+//        if (value.getType() != cocos2d::Value::Type::BOOLEAN)
+//        {
+//            return;
+//        }
+        
+        
     }
 }
