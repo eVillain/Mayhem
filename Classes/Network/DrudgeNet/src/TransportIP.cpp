@@ -591,6 +591,9 @@ namespace Net
         {
             m_masterServerConnectionCallback(false);
         }
+        
+        m_masterServerConnection->disconnect();
+        m_masterServerConnection->connect(m_config.masterServerAddress);
     }
 }
 

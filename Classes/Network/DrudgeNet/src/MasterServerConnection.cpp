@@ -19,7 +19,12 @@ MasterServerConnection::MasterServerConnection(const Mode mode,
 , m_writeStream(nullptr)
 , m_readBuffer(nullptr)
 , m_writeBuffer(nullptr)
+, m_connectCallback(nullptr)
+, m_disconnectCallback(nullptr)
 , m_infoCallback(nullptr)
+, m_hostListCallback(nullptr)
+, m_clientConnectCallback(nullptr)
+, m_hostConnectCallback(nullptr)
 , m_mode(mode)
 , m_state(State::DISCONNECTED)
 , m_port(serverPort)
@@ -69,6 +74,8 @@ void MasterServerConnection::disconnect()
     onInfo("MasterServerConnection: disconnecting");
     m_socket->Close();
     m_state = State::DISCONNECTED;
+    m_timeSinceUpdateReceived = 0.f;
+    m_timeSinceUpdateSent = 0.f;
 }
 
 void MasterServerConnection::update(const float deltaTime)
@@ -128,7 +135,7 @@ void MasterServerConnection::readSocketData()
     while (true)
     {
         Net::Address sender;
-        const int receivedBytes = m_socket->Receive(sender, m_readBuffer, Net::BUFFER_SIZE_BYTES);
+        const int receivedBytes = (int)m_socket->Receive(sender, m_readBuffer, Net::BUFFER_SIZE_BYTES);
         if (receivedBytes == 0)
         {
             break;
@@ -162,13 +169,6 @@ void MasterServerConnection::processReceivedData(const Net::Address& sender,
         }
     }
     
-//    std::cout << "MasterServerConnection read: ";
-//    for (int i = 0; i < receivedBytes; i++)
-//    {
-//        std::cout << std::to_string(m_readBuffer[i]) << ", ";
-//    }
-//    std::cout << "\n";
-
     m_timeSinceUpdateReceived = 0.f;
     
     Net::MessageType messageType = 0;
@@ -226,12 +226,13 @@ void MasterServerConnection::updateConnection(const float deltaTime)
     {
         if (m_timeSinceUpdateReceived >= m_timeout)
         {
+            disconnect();
             if (m_disconnectCallback)
             {
                 onInfo("MasterServerConnection: disconnected from master server " + m_serverAddress.GetString());
                 m_disconnectCallback();
-                return;
             }
+            return;
         }
         
         const float UPDATE_SEND_RATE = 2.f;
