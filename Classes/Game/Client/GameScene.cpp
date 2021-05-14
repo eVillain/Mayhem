@@ -1,10 +1,8 @@
 #include "GameScene.h"
+
 #include "Game/Client/ClientController.h"
 #include "Game/Server/ServerController.h"
 #include "Core/Injector.h"
-
-// Only for debugging
-#include "Game/Client/SnapshotModel.h"
 
 USING_NS_CC;
 
@@ -55,16 +53,5 @@ void GameScene::update(float deltaTime)
     if (m_serverController)
     {
         m_serverController->update(deltaTime);
-        
-//            bool compareSnapshots = true; // Debug to see if local prediction matches truth on server
-//            if (compareSnapshots)
-//            {
-//                const auto& snapshotModel = Injector::globalInjector().getInstance<SnapshotModel>();
-//                const float targetTime = m_clientController->getCurrentTime() - m_clientController->getInterpolationLatency();
-//                size_t targetTimeSnapshotIndex = snapshotModel->getSnapshotIndexForTime(targetTime);
-//                auto clientSnapshot = snapshotModel->getSnapshotIndexForTime(targetTimeSnapshotIndex);
-        //        auto serverSnapshot = m_serverController->get
-//                
-//            }
     }
 }

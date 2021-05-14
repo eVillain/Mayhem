@@ -9,7 +9,6 @@
 class BaseAI;
 class GameController;
 class LevelModel;
-class FakeNet;
 class FrameCache;
 class InputCache;
 class Entity;
@@ -45,7 +44,6 @@ public:
     void initDebugStuff();
 
 private:    
-friend class ClientController;
     std::shared_ptr<GameController> m_gameController;
     std::shared_ptr<LevelModel> m_levelModel;
     std::shared_ptr<GameModel> m_gameModel;

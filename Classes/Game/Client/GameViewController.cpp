@@ -390,7 +390,7 @@ void GameViewController::renderShot(const uint32_t shooterEntityID,
         auto weaponSprite = m_entityViews.at(shooterEntityID)->getSecondarySprites()[EntityView::WEAPON_INDEX];
         if (!weaponSprite)
         {
-            
+            assert(false); // Why is there no weapon sprite? This needs to be caught and fixed (seems to occur in replays)
         }
         Dispatcher::globalDispatcher().dispatch(AddLightEvent({data.projectilePosition, 64.f, cocos2d::Color4F::WHITE, 0.06f}));
         Dispatcher::globalDispatcher().dispatch(SpawnParticlesAttachedEvent(ParticleConstants::MUZZLE_FLASH,

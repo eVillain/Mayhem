@@ -6,7 +6,6 @@
 #include "EntitiesModel.h"
 #include "Entity.h"
 #include "EntityDataModel.h"
-#include "FakeNet.h"
 #include "FrameCache.h"
 #include "Game/Client/InputModel.h"
 #include "GameController.h"
@@ -869,13 +868,11 @@ void ServerController::onClientStateMessageReceived(const std::shared_ptr<Net::M
     {
         if (stateMessage->state == ClientState::LEVEL_LOADED)
         {
-            // TODO: collect all of these messages before responding
+            // TODO: collect all of these messages before responding, if such a setting is set
             std::shared_ptr<ServerStartGameMessage> startGameMessage = std::make_shared<ServerStartGameMessage>();
             startGameMessage->playerID = playerID;
             std::shared_ptr<Net::Message> message = startGameMessage;
             m_networkController->sendMessage(playerID, message);
-            CCLOG("ServerController::onClientStateMessageReceived sending player start to %i", playerID);
-
             m_clientStates[playerID] = ClientPlayerState::CONNECTED;
 
             const auto players = m_gameController->getEntitiesModel()->getPlayers();
@@ -903,13 +900,10 @@ void ServerController::onInputMessageReceived(const std::shared_ptr<Net::Message
         if (m_inputCache->hasReceivedSequence(playerID) &&
             m_inputCache->getLastReceivedSequence(playerID) >= inputMessage->inputSequence)
         {
-            CCLOG("ServerController::onInputMessageReceived player %i, input older than last (%u vs %u)",
+            CCLOG("ServerController::onInputMessageReceived player %i, discarding input older than last (%u vs %u)",
                   playerID, inputMessage->inputSequence, m_inputCache->getLastReceivedSequence(playerID));
-            return;     // Discard inputs older than last received input
+            return;
         }
-        
-//        CCLOG("ServerController::onInputDataReceived player %i, input %u, previous %u",
-//              playerID, inputMessage->inputSequence, m_inputCache->getLastReceivedSequence(playerID));
 
         const float networkLatency = m_networkController->GetRoundTripTime(playerID) * 0.5f; // half because only one-way latency counts here
         const float inputGameTime = m_gameModel->getCurrentTime() - networkLatency;
@@ -959,6 +953,7 @@ std::shared_ptr<ServerSnapshotMessage> ServerController::getFullWorldState(const
 
 std::shared_ptr<ServerSnapshotMessage> ServerController::getWorldStateDiff(const Net::NodeID playerID)
 {
+    // TODO: This requires us to keep track of which server tick snapshot was last confirmed received by the client node
 //    const uint32_t lastClientTick = m_inputCache->getLastReceivedSequence(playerID);
     
     return nullptr;

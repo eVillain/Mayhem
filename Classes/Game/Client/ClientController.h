@@ -13,7 +13,6 @@ class ClientModel;
 class Entity;
 class EntityView;
 class Event;
-class FakeNet;
 class LevelModel;
 class GameView;
 class GameViewController;
@@ -94,8 +93,6 @@ private:
     std::shared_ptr<ServerController> m_serverController; // Only for local games
 
     bool m_stopping;
-    
-    float getTimeAlpha(const float targetTime, const uint32_t fromTick, const uint32_t toTick) const;
 };
 
 #endif /* ClientController_h */

@@ -5,7 +5,6 @@
 
 class ClientController;
 class ServerController;
-class FakeNet;
 
 class GameScene : public cocos2d::Scene
 {
@@ -25,7 +24,6 @@ public:
 private:
     std::shared_ptr<ClientController> m_clientController;
     std::shared_ptr<ServerController> m_serverController;
-    std::shared_ptr<FakeNet> m_fakeNet;
 };
 
 #endif // __GAME_SCENE_H__

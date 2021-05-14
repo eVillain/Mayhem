@@ -6,8 +6,6 @@
 #include "CrosshairView.h"
 #include "Core/Dispatcher.h"
 #include "EntityDataModel.h"
-#include "FakeNet.h"
-#include "FrameCache.h"
 #include "GameView.h"
 #include "GameViewController.h"
 #include "HUDView.h"
@@ -90,21 +88,17 @@ void ClientController::setMode(const ClientMode mode)
     m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_PLAYER_DEATH,
                                             std::bind(&ClientController::onPlayerDeathReceived, this,
                                                       std::placeholders::_1, std::placeholders::_2));
+    m_networkController->setNodeDisconnectedCallback(std::bind(&ClientController::onNodeDisconnected, this,
+                                                               std::placeholders::_1));
 
-    if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_NETWORK)
+    if (m_networkController->getTransport())
     {
-        m_networkController->setNodeDisconnectedCallback(std::bind(&ClientController::onNodeDisconnected, this,
-                                                                   std::placeholders::_1));
-        if (m_networkController->getTransport())
-        {
-            m_networkController->getTransport()->setDisconnectedCallback(std::bind(&ClientController::onDisconnected, this));
-        }
+        m_networkController->getTransport()->setDisconnectedCallback(std::bind(&ClientController::onDisconnected, this));
     }
-    else
+
+    if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_LOCAL)
     {
         m_serverController = Injector::globalInjector().getInstance<ServerController>();
-        m_serverController->onNodeConnected(0);
-        m_clientModel->setGameStarted(true);
         m_gameViewController->setCameraFollowPlayerID(0);
     }
     
@@ -138,10 +132,12 @@ void ClientController::stop()
 
 void ClientController::update(const float deltaTime)
 {
+    m_networkController->receiveMessages();
+
     if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_NETWORK)
     {
-        m_networkController->receiveMessages();
-        m_networkController->update(deltaTime);
+        m_networkController->update(deltaTime); // Fake net has its own update
+
         if (m_stopping)
         {
             return;
@@ -171,24 +167,14 @@ void ClientController::update(const float deltaTime)
             // Save copy of inputs for local prediction
             m_clientModel->getInputData().push_back(currentInput);
 
-            if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_NETWORK)
-            {
-                m_networkController->sendMessage(0, networkData);
-            }
-            else
-            {
-                m_serverController->onInputMessageReceived(networkData, 0);
-            }
-            
+            m_networkController->sendMessage(0, networkData);
+
             processInput = true;
         }
     }
 
-    if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_NETWORK)
-    {
-        m_networkController->sendMessages();
-    }
-    
+    m_networkController->sendMessages();
+
     if (m_clientModel->getGameStarted())
     {
         m_gameModel->setDeltaAccumulator(deltaAccumulator);
@@ -270,23 +256,6 @@ void ClientController::updateGame(const float deltaTime, const bool processInput
                                  toSnapshot,
                                  reachedNextSnapshot,
                                  m_clientModel->getPredictBullets());
-
-//    if (m_gameView->getDebugDrawNode()->isVisible())
-//    {
-//        m_gameView->addDebugLabel("INTERP", "Clienttime: " + std::to_string(m_clientModel->getCurrentTime()) +
-//                                  " Target: " + std::to_string(targetTime)+
-//                                  ") Alpha: " + std::to_string(alphaTime) +
-//                                  " Tick: " + std::to_string(m_clientModel->getCurrentTick()) +
-//                                  " From: " + std::to_string(fromSnapshot.serverTick) + " To: " + std::to_string(toSnapshot.serverTick));
-//        
-//        if (Injector::globalInjector().hasMapping<ServerController>())
-//        {
-//            const auto& serverController = Injector::globalInjector().getInstance<ServerController>();
-//            m_gameView->addDebugLabel("SERVER", serverController->getDebugInfo());
-//        }
-//        
-//        debugSnapshots(1, alphaTime);
-//    }
 }
 
 void ClientController::predictLocalMovement(SnapshotData& toSnapshot,
@@ -568,14 +537,4 @@ std::shared_ptr<ClientInputMessage> ClientController::getInputData() const
     m_inputModel->setChangeWeapon(false);
     
     return data;
-}
-
-float ClientController::getTimeAlpha(const float targetTime,
-                                     const uint32_t fromTick,
-                                     const uint32_t toTick) const
-{
-    const float fromTime = fromTick * m_gameModel->getFrameTime();
-    const float toTime = toTick * m_gameModel->getFrameTime();
-    const float alpha = ((targetTime - fromTime) / (toTime - fromTime));
-    return alpha;
 }

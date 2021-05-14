@@ -39,6 +39,10 @@ void FakeNetworkController::initialize(const NetworkMode mode)
     }
     else
     {
+        if (m_onNodeConnectedCallback)
+        {
+            m_onNodeConnectedCallback(0);
+        }
         m_fakeNet->setServerDataCallback(std::bind(&FakeNetworkController::onServerDataReceived,
                                                    this, std::placeholders::_1, std::placeholders::_2));
     }
