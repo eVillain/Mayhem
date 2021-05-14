@@ -43,6 +43,10 @@ std::shared_ptr<Net::Message> NetworkMessageFactory::create(const Net::MessageTy
     {
         return std::make_shared<ServerPlayerDeathMessage>();
     }
+    else if (type == MESSAGE_TYPE_SERVER_TILE_DEATH)
+    {
+        return std::make_shared<ServerTileDeathMessage>();
+    }
     assert(false);
 
     return nullptr;

@@ -6,6 +6,8 @@ GameMode::GameMode(std::shared_ptr<EntitiesController> entitiesController,
 : m_entitiesController(entitiesController)
 , m_entitiesModel(entitiesModel)
 , m_levelModel(levelModel)
+, m_maxPlayers(2)
+, m_playersPerTeam(1)
+, m_tileDeathCallback(nullptr)
 {
 }
-

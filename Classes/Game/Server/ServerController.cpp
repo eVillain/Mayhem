@@ -50,6 +50,9 @@ ServerController::ServerController(std::shared_ptr<GameController> gameControlle
     m_networkController->setNodeConnectedCallback(std::bind(&ServerController::onNodeConnected, this, std::placeholders::_1));
     m_networkController->setNodeDisconnectedCallback(std::bind(&ServerController::onNodeDisconnected, this, std::placeholders::_1));
     m_frameCache->setMaxRollbackFrames(((m_maxPingThreshold + DEFAULT_INTERPOLATION_LATENCY) / m_gameModel->getFrameTime()) + 10);
+    
+    m_gameController->getGameMode()->setTileDeathCallback(std::bind(&ServerController::onTileDeath, this,
+                                                                    std::placeholders::_1, std::placeholders::_2));
 }
 
 ServerController::~ServerController()
@@ -664,6 +667,22 @@ void ServerController::onProjectileDestroyed(const std::shared_ptr<Projectile>& 
     m_gameController->getEntitiesController()->destroyEntity(projectile->getEntityID());
 }
 
+void ServerController::onTileDeath(const int tileX, const int tileY)
+{
+    std::shared_ptr<ServerTileDeathMessage> deathMessage = std::make_shared<ServerTileDeathMessage>();
+    deathMessage->tileX = tileX;
+    deathMessage->tileY = tileY;
+    std::shared_ptr<Net::Message> message = std::dynamic_pointer_cast<Net::Message>(deathMessage);
+    for (const auto& clientState : m_clientStates)
+    {
+        const uint8_t playerID = clientState.first;
+        if (clientState.second == ClientPlayerState::CONNECTED)
+        {
+            m_networkController->sendMessage(playerID, message);
+        }
+    }
+}
+
 void ServerController::applyDamage(const std::shared_ptr<Player>& player,
                                    const float damage,
                                    const cocos2d::Vec2 position,
@@ -745,10 +764,37 @@ void ServerController::applyDamage(const std::shared_ptr<Player>& player,
         std::shared_ptr<Net::Message> message = std::dynamic_pointer_cast<Net::Message>(deathMessage);
         m_networkController->sendMessage(playerID, message);
         
-        const auto& killerPlayer = m_gameController->getEntitiesModel()->getPlayerByEntityID(damagerID);
+        const std::shared_ptr<Player> killerPlayer = m_gameController->getEntitiesModel()->getPlayerByEntityID(damagerID);
         if (killerPlayer)
         {
             m_networkController->sendMessage(killerPlayer->getPlayerID(), message);
+        }
+        else
+        {
+            const auto& entities = m_gameController->getEntitiesModel()->getEntities();
+            auto it = entities.find(damagerID);
+            if (it != entities.end())
+            {
+                const auto& damagerEntity = it->second;
+                if (EntityDataModel::isItemType(damagerEntity->getEntityType()))
+                {
+                    auto item = std::dynamic_pointer_cast<Item>(damagerEntity);
+                    const std::shared_ptr<Player> ownerPlayer = m_gameController->getEntitiesModel()->getPlayerByEntityID(item->getOwnerID());
+                    if (ownerPlayer)
+                    {
+                        m_networkController->sendMessage(ownerPlayer->getPlayerID(), message);
+                    }
+                }
+                else if (EntityDataModel::isProjectileType(damagerEntity->getEntityType()))
+                {
+                    auto projectile = std::dynamic_pointer_cast<Projectile>(damagerEntity);
+                    const std::shared_ptr<Player> ownerPlayer = m_gameController->getEntitiesModel()->getPlayerByEntityID(projectile->getOwnerID());
+                    if (ownerPlayer)
+                    {
+                        m_networkController->sendMessage(ownerPlayer->getPlayerID(), message);
+                    }
+                }
+            }
         }
     }
 }
@@ -881,12 +927,15 @@ void ServerController::onClientStateMessageReceived(const std::shared_ptr<Net::M
                 return;
             }
             onPlayerJoined(playerID);
+            m_gameController->getGameMode()->onPlayerReady(playerID);
         }
         else if (stateMessage->state == ClientState::PLAYER_RESPAWN)
         {
-            if (!m_gameController->getEntitiesModel()->getPlayer(playerID))
+            if (m_gameController->getGameMode()->allowRespawn() &&
+                !m_gameController->getEntitiesModel()->getPlayer(playerID))
             {
                 onPlayerJoined(playerID);
+                m_gameController->getGameMode()->onPlayerReady(playerID);
             }
         }
     }

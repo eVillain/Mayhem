@@ -56,6 +56,7 @@ void GameModeDM::spawnThings()
                 const cocos2d::Vec2 chunkMiddle = cocos2d::Vec2(CHUNK_SIZE * 0.5f, CHUNK_SIZE * 0.5f);
                 const cocos2d::Vec2 position = (((cocos2d::Vec2(x, y) * CHUNK_SIZE) + chunkMiddle) * scaling.width) + random;
                 spawnRandomGunWithAmmo(position);
+                
             }
         }
     }
@@ -107,16 +108,11 @@ void GameModeDM::spawnRandomGunWithAmmo(const cocos2d::Vec2& position)
     m_entitiesModel->incrementNextEntityID();
     
     const auto& itemData = EntityDataModel::getStaticEntityData((EntityType)randomWeapon);
-    
-    printf("Spawned random weapon: %i, %s, %i\n", randomWeapon, itemData.name.c_str(), m_entitiesModel->getNextEntityID() - 1);
-
-    
+        
     const int randomAmmoCount = cocos2d::random(1, 3);
     for (int i = 0; i < randomAmmoCount; i++)
     {
         const cocos2d::Vec2 random = cocos2d::Vec2(cocos2d::random(-16, 16), cocos2d::random(-16, 16));
-
-        printf("Spawned random ammo: %i, %s, %i\n", itemData.ammo.type, itemData.name.c_str(), m_entitiesModel->getNextEntityID());
 
         m_entitiesController->createItem(m_entitiesModel->getNextEntityID(),
                                      (EntityType)itemData.ammo.type,

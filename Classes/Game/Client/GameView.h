@@ -24,6 +24,8 @@ public:
     cocos2d::RefPtr<cocos2d::Node> getGameRootNode() const { return m_gameRootNode; }
     cocos2d::RefPtr<cocos2d::Node> getBackgroundNode() const { return m_backgroundNode; }
     cocos2d::RefPtr<cocos2d::Node> getOccluderNode() const { return m_occluderNode; }
+    cocos2d::RefPtr<cocos2d::TMXLayer> getBGTilesNode() const { return m_bgTilesNode; }
+    cocos2d::RefPtr<cocos2d::TMXLayer> getFGTilesNode() const { return m_fgTilesNode; }
     cocos2d::RefPtr<cocos2d::TMXLayer> getStaticLightingNode() const { return m_staticLightingNode; }
     cocos2d::RefPtr<cocos2d::Node> getSelfLightingNode() const { return m_selfLightingNode; }
 

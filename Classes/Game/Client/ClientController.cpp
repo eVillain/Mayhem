@@ -88,6 +88,9 @@ void ClientController::setMode(const ClientMode mode)
     m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_PLAYER_DEATH,
                                             std::bind(&ClientController::onPlayerDeathReceived, this,
                                                       std::placeholders::_1, std::placeholders::_2));
+    m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_TILE_DEATH,
+                                            std::bind(&ClientController::onTileDeathReceived, this,
+                                                      std::placeholders::_1, std::placeholders::_2));
     m_networkController->setNodeDisconnectedCallback(std::bind(&ClientController::onNodeDisconnected, this,
                                                                std::placeholders::_1));
 
@@ -416,7 +419,34 @@ void ClientController::onPlayerDeathReceived(const std::shared_ptr<Net::Message>
     {
         CCLOG("ClientController::onPlayerDeathReceived fail");
     }
+}
 
+void ClientController::onTileDeathReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID)
+{
+    if (auto deathMessage = std::dynamic_pointer_cast<ServerTileDeathMessage>(data))
+    {
+//        CCLOG("ClientController::onTileDeathReceived at: %i, %i",
+//              deathMessage->tileX, deathMessage->tileY);
+        
+        const cocos2d::Vec2 tile = cocos2d::Vec2(deathMessage->tileX, deathMessage->tileY);
+        cocos2d::TMXLayer* foreground = m_gameView->getFGTilesNode();
+        cocos2d::TMXLayer* background = m_gameView->getBGTilesNode();
+        cocos2d::Sprite* foregroundSprite = foreground->getTileAt(tile);
+        cocos2d::Sprite* backgroundSprite = background->getTileAt(tile);
+
+        if (foregroundSprite)
+        {
+            foregroundSprite->runAction(cocos2d::FadeOut::create(1.f));
+        }
+        if (backgroundSprite)
+        {
+            backgroundSprite->runAction(cocos2d::FadeOut::create(1.f));
+        }
+    }
+    else
+    {
+        CCLOG("ClientController::onTileDeathReceived fail");
+    }
 }
 
 void ClientController::debugSnapshots(const size_t targetIndex, const float newAlpha)

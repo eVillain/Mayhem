@@ -70,6 +70,7 @@ private:
     void onSnapshotReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
     void onSnapshotDiffReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
     void onPlayerDeathReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
+    void onTileDeathReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
     void onToggleClientPredictionEvent(const Event& event);
 
     void debugSnapshots(const size_t targetIndex, const float newAlpha);

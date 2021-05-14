@@ -77,7 +77,7 @@ void MainMenuController::startGameCallback(cocos2d::Ref* ref,
 
     removeChild(m_view);
 
-    const GameMode::Config config = {GameModeType::GAME_MODE_DEATHMATCH, 20, 20, 1, "BitTileMap.tmx"};
+    const GameMode::Config config = {GameModeType::GAME_MODE_BATTLEROYALE, 20, 20, 1, "BitTileMap.tmx"};
     InitClientCommand initGame(InitClientCommand::Mode::FAKE_CLIENT, config);
     initGame.run();
 }

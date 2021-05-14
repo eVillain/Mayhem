@@ -65,6 +65,8 @@ public:
     uint8_t getPlayersPerTeam() const { return m_playersPerTeam; }
     void setPlayersPerTeam(uint8_t players) { m_playersPerTeam = players; }
     
+    void setTileDeathCallback(std::function<void(int, int)> cb) { m_tileDeathCallback = cb; }
+
 protected:
     std::shared_ptr<EntitiesController> m_entitiesController;
     std::shared_ptr<EntitiesModel> m_entitiesModel;
@@ -73,6 +75,8 @@ protected:
     uint8_t m_maxPlayers;
     uint8_t m_playersPerTeam;
     std::vector<TeamData> m_teams;
+    
+    std::function<void(int, int)> m_tileDeathCallback;
 };
 
 #endif /* GameMode_h */

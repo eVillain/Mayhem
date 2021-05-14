@@ -1,6 +1,7 @@
 #include "GameModeBR.h"
 #include "Game/Shared/EntityConstants.h"
 
+#include "LevelModel.h"
 #include "EntitiesModel.h"
 #include "EntitiesController.h"
 
@@ -17,17 +18,12 @@ GameModeBR::GameModeBR(std::shared_ptr<EntitiesController> entitiesController,
 
 void GameModeBR::update(const float deltaTime)
 {
-    const float DEAD_TILE_REMOVE_PERIOD = 0.1f;
+    static const float DEAD_TILE_REMOVE_PERIOD = 0.2f;
     m_tileUpdateAccumulator += deltaTime;
     
     while (m_tileUpdateAccumulator > DEAD_TILE_REMOVE_PERIOD)
     {
         m_tileUpdateAccumulator -= DEAD_TILE_REMOVE_PERIOD;
-        
-        if (m_deadTiles.empty())
-        {
-            fillDeadTiles();
-        }
         
         removeNextDeadTile();
     }
@@ -38,6 +34,8 @@ void GameModeBR::onLevelLoaded(const bool isHost)
     if (isHost)
     {
         spawnThings();
+        
+        fillDeadTiles();
     }
 }
 
@@ -89,47 +87,55 @@ void GameModeBR::spawnThings()
 
 void GameModeBR::fillDeadTiles()
 {
-//    const cocos2d::Size mapSize = m_tileMap->getMapSize();
-//    const int rightRow = (mapSize.width - 1) - m_tileUpdateLayer;
-//    const int topRow = (mapSize.height - 1) - m_tileUpdateLayer;
-//    for (int x = m_tileUpdateLayer; x < rightRow; x++) {
-//        m_deadTiles.push_back(cocos2d::Vec2(x, m_tileUpdateLayer)); // Top row tile
-//        m_deadTiles.push_back(cocos2d::Vec2(x, topRow)); // Bottom row tile
-//    }
-//    for (int y = m_tileUpdateLayer; y < topRow; y++) {
-//        m_deadTiles.push_back(cocos2d::Vec2(m_tileUpdateLayer, y)); // Left row tile
-//        m_deadTiles.push_back(cocos2d::Vec2(rightRow, y)); // Right row tile
-//    }
-//    m_tileUpdateLayer++;
+    const cocos2d::Size mapSize = m_levelModel->getTileMap()->getMapSize();
+    const cocos2d::Vec2 centerTile = cocos2d::Vec2((mapSize.width / 2) - 1, (mapSize.height / 2) - 1);
+    const int numRings = std::max((mapSize.width / 2), (mapSize.height / 2));
+    
+    for (int ring = 1; ring < numRings; ring++)
+    {
+        const cocos2d::Vec2 bottomLeft = cocos2d::Vec2(std::max(centerTile.x - (ring), 0.f),
+                                                       std::max(centerTile.y - (ring), 0.f));
+        const int ringWidth = (ring + 1) * 2;
+        for (int x = 0; x < ringWidth; x++)
+        {
+            if (bottomLeft.x + x >= mapSize.width)
+            {
+                continue;
+            }
+            else if (bottomLeft.x + x < 0)
+            {
+                continue;
+            }
+            const cocos2d::Vec2 posTop = bottomLeft + cocos2d::Vec2(x, ringWidth - 1);
+            const cocos2d::Vec2 posBottom = bottomLeft + cocos2d::Vec2(x, 0);
+            m_deadTiles.push_back(posTop);
+            m_deadTiles.push_back(posBottom);
+        }
+        for (int y = 0; y < ringWidth; y++)
+        {
+            if (bottomLeft.y + y >= mapSize.height)
+            {
+                continue;
+            }
+            else if (bottomLeft.y + y < 0)
+            {
+                continue;
+            }
+            const cocos2d::Vec2 posLeft = bottomLeft + cocos2d::Vec2(0, y);
+            const cocos2d::Vec2 posRight = bottomLeft + cocos2d::Vec2(ringWidth - 1, y);
+            m_deadTiles.push_back(posLeft);
+            m_deadTiles.push_back(posRight);
+        }
+    }
 }
 
 void GameModeBR::removeNextDeadTile()
 {
-//    const int randomIndex = cocos2d::random(0, (int)(m_deadTiles.size() - 1));
-//    const cocos2d::Vec2 tile = m_deadTiles.at(randomIndex);
-    
-//    for (const auto& tile : m_deadTiles)
-//    {
-//        cocos2d::TMXLayer* foreground = m_tileMap->getLayer("Foreground");
-//        cocos2d::TMXLayer* background = m_tileMap->getLayer("Background");
-//        cocos2d::Sprite* foregroundSprite = foreground->getTileAt(tile);
-//        cocos2d::Sprite* backgroundSprite = background->getTileAt(tile);
-//
-//        if (foregroundSprite)
-//        {
-//            foregroundSprite->runAction(cocos2d::FadeOut::create(1.f));
-//        }
-//        if (backgroundSprite)
-//        {
-//            backgroundSprite->runAction(cocos2d::FadeOut::create(1.f));
-//        }
-//        if (!foregroundSprite && !backgroundSprite)
-//        {
-//            printf("fail\n");
-//        }
-//    }
-    
-//    m_deadTiles.clear();
+    const cocos2d::Vec2 tile = m_deadTiles.back();
+    m_deadTiles.pop_back();
 
-//    m_deadTiles.erase(m_deadTiles.begin() + randomIndex);
+    if (m_tileDeathCallback)
+    {
+        m_tileDeathCallback(tile.x, tile.y);
+    }
 }

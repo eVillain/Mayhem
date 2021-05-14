@@ -17,6 +17,7 @@ enum MessageTypes {
     MESSAGE_TYPE_SERVER_SNAPSHOT,
     MESSAGE_TYPE_SERVER_SNAPSHOT_DIFF,
     MESSAGE_TYPE_SERVER_PLAYER_DEATH,
+    MESSAGE_TYPE_SERVER_TILE_DEATH,
     MESSAGE_TYPES_COUNT
 };
 
@@ -813,5 +814,32 @@ public:
     bool serialize(Net::ReadStream& stream) override { return serializeInternal(stream); }
     bool serialize(Net::MeasureStream& stream) override { return serializeInternal(stream); }
 };
+
+class ServerTileDeathMessage : public Net::Message {
+public:
+    uint32_t tileX;
+    uint32_t tileY;
+
+    ServerTileDeathMessage()
+    : Message(MESSAGE_TYPE_SERVER_TILE_DEATH) {}
+
+    template <typename Stream> bool serializeInternal(Stream& stream)
+    {
+        if (stream.IsReading())
+        {
+            tileX = 0;
+            tileY = 0;
+        }
+        stream.SerializeInteger(tileX);
+        stream.SerializeInteger(tileY);
+        
+        return true;
+    }
+    
+    bool serialize(Net::WriteStream& stream) override { return serializeInternal(stream); }
+    bool serialize(Net::ReadStream& stream) override { return serializeInternal(stream); }
+    bool serialize(Net::MeasureStream& stream) override { return serializeInternal(stream); }
+};
+
 
 #endif /* NetworkMessages_h */
