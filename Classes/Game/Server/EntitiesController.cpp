@@ -1,17 +1,11 @@
 #include "EntitiesController.h"
+
 #include "EntitiesModel.h"
 #include "EntityDataModel.h"
 #include "Entity.h"
 #include "Player.h"
 #include "Item.h"
 #include "LootBox.h"
-#include "Core/Injector.h"
-#include "Core/Dispatcher.h"
-#include "SpawnPlayerEvent.h"
-#include "SpawnHumanEvent.h"
-#include "SpawnProjectileEvent.h"
-#include "SpawnExplosionEvent.h"
-#include "DestroyEntityEvent.h"
 #include "Projectile.h"
 
 EntitiesController::EntitiesController(std::shared_ptr<EntitiesModel> entitiesModel)
@@ -25,10 +19,6 @@ EntitiesController::~EntitiesController()
 
 void EntitiesController::initialize()
 {
-    Dispatcher::globalDispatcher().addListener(SpawnPlayerEvent::descriptor,
-                                               std::bind(&EntitiesController::onSpawnPlayer,
-                                                         this,
-                                                         std::placeholders::_1));
 }
 
 void EntitiesController::update(const float deltaTime)
@@ -126,22 +116,5 @@ std::shared_ptr<Projectile> EntitiesController::createProjectile(const uint16_t 
 
 void EntitiesController::destroyEntity(const uint16_t entityID)
 {
-    printf("EntitiesController::destroyEntity %i\n", entityID);
     m_deadEntities.push_back(entityID);
 }
-
-void EntitiesController::onSpawnPlayer(const Event& event)
-{
-    const SpawnPlayerEvent& spawnPlayerEvent = static_cast<const SpawnPlayerEvent&>(event);
-    /*auto player =*/ createPlayer(spawnPlayerEvent.getPlayerID(),
-                                   spawnPlayerEvent.getEntityID(),
-                                   spawnPlayerEvent.getPosition(),
-                                   spawnPlayerEvent.getRotation());
-}
-
-void EntitiesController::onDestroyEntity(const Event& event)
-{
-    const DestroyEntityEvent& destroyEvent = static_cast<const DestroyEntityEvent&>(event);
-    destroyEntity(destroyEvent.getEntityID());
-}
-

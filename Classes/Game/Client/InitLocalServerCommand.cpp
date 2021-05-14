@@ -11,7 +11,6 @@
 #include "FakeNetworkController.h"
 #include "FakeNet.h"
 #include "Core/Dispatcher.h"
-#include "SpawnPlayerEvent.h"
 #include "LevelModel.h"
 #include "LoadStaticEntityDataCommand.h"
 #include "EntityDataModel.h"

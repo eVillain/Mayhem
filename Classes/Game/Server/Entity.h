@@ -4,7 +4,6 @@
 #include "cocos2d.h"
 #include "Game/Shared/EntityConstants.h"
 
-
 class Entity
 {
 public:

@@ -21,7 +21,6 @@ public:
     
     void update(const float deltaTime);
     
-    // Only public for local debugging
     std::shared_ptr<Player> createPlayer(const uint8_t playerID,
                                          const uint16_t entityID,
                                          const cocos2d::Vec2& position,
@@ -40,14 +39,6 @@ public:
     void destroyEntity(const uint16_t entityID);
 
 private:
-//    std::shared_ptr<Player> createPlayer(const uint16_t entityID,
-//                                         const cocos2d::Vec2& position,
-//                                         const float rotation);
-
-    
-    void onSpawnPlayer(const Event& event);
-    void onDestroyEntity(const Event& event);
-
     void removeDeadEntities();
     
     std::shared_ptr<EntitiesModel> m_model;

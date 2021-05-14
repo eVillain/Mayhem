@@ -10,13 +10,6 @@ class EntitiesModel;
 class LevelModel;
 class Entity;
 
-//struct CollisionData {
-//    uint16_t entityID;
-//    uint16_t colliderID;
-//    bool isStaticCollider;
-//    size_t hitShapeIndex;
-//};
-
 class GameController
 {
 public:

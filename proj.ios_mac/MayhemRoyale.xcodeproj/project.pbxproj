@@ -93,8 +93,6 @@
 		D96CBCD12531C356006DF3A4 /* GameModeBR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCA52531C34D006DF3A4 /* GameModeBR.cpp */; };
 		D96CBCD22531C356006DF3A4 /* EntitiesModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCA92531C34D006DF3A4 /* EntitiesModel.cpp */; };
 		D96CBCD32531C356006DF3A4 /* EntitiesModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCA92531C34D006DF3A4 /* EntitiesModel.cpp */; };
-		D96CBCD42531C356006DF3A4 /* SpawnExplosionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCAB2531C34E006DF3A4 /* SpawnExplosionEvent.cpp */; };
-		D96CBCD52531C356006DF3A4 /* SpawnExplosionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCAB2531C34E006DF3A4 /* SpawnExplosionEvent.cpp */; };
 		D96CBCD62531C356006DF3A4 /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCAC2531C34E006DF3A4 /* Entity.cpp */; };
 		D96CBCD72531C356006DF3A4 /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCAC2531C34E006DF3A4 /* Entity.cpp */; };
 		D96CBCD82531C356006DF3A4 /* LootBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCAE2531C34E006DF3A4 /* LootBox.cpp */; };
@@ -103,28 +101,18 @@
 		D96CBCDB2531C356006DF3A4 /* Item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCB12531C34F006DF3A4 /* Item.cpp */; };
 		D96CBCDC2531C356006DF3A4 /* InputCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCB22531C34F006DF3A4 /* InputCache.cpp */; };
 		D96CBCDD2531C356006DF3A4 /* InputCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCB22531C34F006DF3A4 /* InputCache.cpp */; };
-		D96CBCDE2531C356006DF3A4 /* DestroyEntityEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCB32531C34F006DF3A4 /* DestroyEntityEvent.cpp */; };
-		D96CBCDF2531C356006DF3A4 /* DestroyEntityEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCB32531C34F006DF3A4 /* DestroyEntityEvent.cpp */; };
 		D96CBCE02531C356006DF3A4 /* FrameCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCB62531C350006DF3A4 /* FrameCache.cpp */; };
 		D96CBCE12531C356006DF3A4 /* FrameCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCB62531C350006DF3A4 /* FrameCache.cpp */; };
 		D96CBCE22531C356006DF3A4 /* Projectile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCB92531C351006DF3A4 /* Projectile.cpp */; };
 		D96CBCE32531C356006DF3A4 /* Projectile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCB92531C351006DF3A4 /* Projectile.cpp */; };
 		D96CBCE42531C356006DF3A4 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCBB2531C351006DF3A4 /* Player.cpp */; };
 		D96CBCE52531C356006DF3A4 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCBB2531C351006DF3A4 /* Player.cpp */; };
-		D96CBCE62531C356006DF3A4 /* StateMachine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCBC2531C351006DF3A4 /* StateMachine.cpp */; };
-		D96CBCE72531C356006DF3A4 /* StateMachine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCBC2531C351006DF3A4 /* StateMachine.cpp */; };
 		D96CBCE82531C356006DF3A4 /* GameController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCBD2531C351006DF3A4 /* GameController.cpp */; };
 		D96CBCE92531C356006DF3A4 /* GameController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCBD2531C351006DF3A4 /* GameController.cpp */; };
 		D96CBCEA2531C356006DF3A4 /* ServerController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCBE2531C352006DF3A4 /* ServerController.cpp */; };
 		D96CBCEB2531C356006DF3A4 /* ServerController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCBE2531C352006DF3A4 /* ServerController.cpp */; };
-		D96CBCEC2531C356006DF3A4 /* SpawnHumanEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCBF2531C352006DF3A4 /* SpawnHumanEvent.cpp */; };
-		D96CBCED2531C356006DF3A4 /* SpawnHumanEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCBF2531C352006DF3A4 /* SpawnHumanEvent.cpp */; };
 		D96CBCEE2531C356006DF3A4 /* BaseAI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCC42531C354006DF3A4 /* BaseAI.cpp */; };
 		D96CBCEF2531C356006DF3A4 /* BaseAI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCC42531C354006DF3A4 /* BaseAI.cpp */; };
-		D96CBCF02531C356006DF3A4 /* SpawnPlayerEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCC52531C354006DF3A4 /* SpawnPlayerEvent.cpp */; };
-		D96CBCF12531C356006DF3A4 /* SpawnPlayerEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCC52531C354006DF3A4 /* SpawnPlayerEvent.cpp */; };
-		D96CBCF22531C356006DF3A4 /* SpawnProjectileEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCC62531C354006DF3A4 /* SpawnProjectileEvent.cpp */; };
-		D96CBCF32531C356006DF3A4 /* SpawnProjectileEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCC62531C354006DF3A4 /* SpawnProjectileEvent.cpp */; };
 		D96CBCF42531C356006DF3A4 /* GameMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCCA2531C355006DF3A4 /* GameMode.cpp */; };
 		D96CBCF52531C356006DF3A4 /* GameMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCCA2531C355006DF3A4 /* GameMode.cpp */; };
 		D96CBCF62531C356006DF3A4 /* EntitiesController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCCC2531C356006DF3A4 /* EntitiesController.cpp */; };
@@ -495,38 +483,26 @@
 		D96CBCA72531C34D006DF3A4 /* LootBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LootBox.h; sourceTree = "<group>"; };
 		D96CBCA82531C34D006DF3A4 /* ServerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerController.h; sourceTree = "<group>"; };
 		D96CBCA92531C34D006DF3A4 /* EntitiesModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EntitiesModel.cpp; sourceTree = "<group>"; };
-		D96CBCAA2531C34E006DF3A4 /* DestroyEntityEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DestroyEntityEvent.h; sourceTree = "<group>"; };
-		D96CBCAB2531C34E006DF3A4 /* SpawnExplosionEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpawnExplosionEvent.cpp; sourceTree = "<group>"; };
 		D96CBCAC2531C34E006DF3A4 /* Entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cpp; sourceTree = "<group>"; };
-		D96CBCAD2531C34E006DF3A4 /* SpawnPlayerEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpawnPlayerEvent.h; sourceTree = "<group>"; };
 		D96CBCAE2531C34E006DF3A4 /* LootBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LootBox.cpp; sourceTree = "<group>"; };
 		D96CBCAF2531C34E006DF3A4 /* GameModeBR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameModeBR.h; sourceTree = "<group>"; };
-		D96CBCB02531C34F006DF3A4 /* SpawnHumanEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpawnHumanEvent.h; sourceTree = "<group>"; };
 		D96CBCB12531C34F006DF3A4 /* Item.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Item.cpp; sourceTree = "<group>"; };
 		D96CBCB22531C34F006DF3A4 /* InputCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputCache.cpp; sourceTree = "<group>"; };
-		D96CBCB32531C34F006DF3A4 /* DestroyEntityEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DestroyEntityEvent.cpp; sourceTree = "<group>"; };
 		D96CBCB42531C34F006DF3A4 /* GameModeDM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameModeDM.h; sourceTree = "<group>"; };
-		D96CBCB52531C350006DF3A4 /* SpawnExplosionEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpawnExplosionEvent.h; sourceTree = "<group>"; };
 		D96CBCB62531C350006DF3A4 /* FrameCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameCache.cpp; sourceTree = "<group>"; };
 		D96CBCB72531C350006DF3A4 /* Explosion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Explosion.h; sourceTree = "<group>"; };
 		D96CBCB82531C350006DF3A4 /* BaseAI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseAI.h; sourceTree = "<group>"; };
 		D96CBCB92531C351006DF3A4 /* Projectile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Projectile.cpp; sourceTree = "<group>"; };
 		D96CBCBA2531C351006DF3A4 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		D96CBCBB2531C351006DF3A4 /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
-		D96CBCBC2531C351006DF3A4 /* StateMachine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StateMachine.cpp; sourceTree = "<group>"; };
 		D96CBCBD2531C351006DF3A4 /* GameController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameController.cpp; sourceTree = "<group>"; };
 		D96CBCBE2531C352006DF3A4 /* ServerController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ServerController.cpp; sourceTree = "<group>"; };
-		D96CBCBF2531C352006DF3A4 /* SpawnHumanEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpawnHumanEvent.cpp; sourceTree = "<group>"; };
 		D96CBCC02531C352006DF3A4 /* GameMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameMode.h; sourceTree = "<group>"; };
 		D96CBCC12531C353006DF3A4 /* EntitiesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntitiesController.h; sourceTree = "<group>"; };
-		D96CBCC22531C353006DF3A4 /* SpawnProjectileEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpawnProjectileEvent.h; sourceTree = "<group>"; };
 		D96CBCC32531C353006DF3A4 /* GameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameController.h; sourceTree = "<group>"; };
 		D96CBCC42531C354006DF3A4 /* BaseAI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseAI.cpp; sourceTree = "<group>"; };
-		D96CBCC52531C354006DF3A4 /* SpawnPlayerEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpawnPlayerEvent.cpp; sourceTree = "<group>"; };
-		D96CBCC62531C354006DF3A4 /* SpawnProjectileEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpawnProjectileEvent.cpp; sourceTree = "<group>"; };
 		D96CBCC72531C354006DF3A4 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
 		D96CBCC82531C355006DF3A4 /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
-		D96CBCC92531C355006DF3A4 /* StateMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StateMachine.h; sourceTree = "<group>"; };
 		D96CBCCA2531C355006DF3A4 /* GameMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameMode.cpp; sourceTree = "<group>"; };
 		D96CBCCB2531C355006DF3A4 /* InputCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputCache.h; sourceTree = "<group>"; };
 		D96CBCCC2531C356006DF3A4 /* EntitiesController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EntitiesController.cpp; sourceTree = "<group>"; };
@@ -1193,8 +1169,6 @@
 			children = (
 				D96CBCC42531C354006DF3A4 /* BaseAI.cpp */,
 				D96CBCB82531C350006DF3A4 /* BaseAI.h */,
-				D96CBCB32531C34F006DF3A4 /* DestroyEntityEvent.cpp */,
-				D96CBCAA2531C34E006DF3A4 /* DestroyEntityEvent.h */,
 				D96CBCCC2531C356006DF3A4 /* EntitiesController.cpp */,
 				D96CBCC12531C353006DF3A4 /* EntitiesController.h */,
 				D96CBCA92531C34D006DF3A4 /* EntitiesModel.cpp */,
@@ -1225,16 +1199,6 @@
 				D96CBCA32531C34C006DF3A4 /* Projectile.h */,
 				D96CBCBE2531C352006DF3A4 /* ServerController.cpp */,
 				D96CBCA82531C34D006DF3A4 /* ServerController.h */,
-				D96CBCAB2531C34E006DF3A4 /* SpawnExplosionEvent.cpp */,
-				D96CBCB52531C350006DF3A4 /* SpawnExplosionEvent.h */,
-				D96CBCBF2531C352006DF3A4 /* SpawnHumanEvent.cpp */,
-				D96CBCB02531C34F006DF3A4 /* SpawnHumanEvent.h */,
-				D96CBCC52531C354006DF3A4 /* SpawnPlayerEvent.cpp */,
-				D96CBCAD2531C34E006DF3A4 /* SpawnPlayerEvent.h */,
-				D96CBCC62531C354006DF3A4 /* SpawnProjectileEvent.cpp */,
-				D96CBCC22531C353006DF3A4 /* SpawnProjectileEvent.h */,
-				D96CBCBC2531C351006DF3A4 /* StateMachine.cpp */,
-				D96CBCC92531C355006DF3A4 /* StateMachine.h */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -1587,7 +1551,6 @@
 				D9B2510A24C48EA500EAFA5B /* PitchBGMEvent.cpp in Sources */,
 				D94AFA85262C223F00278953 /* FollowNode.cpp in Sources */,
 				D9B2518C24C48EA500EAFA5B /* HUDView.cpp in Sources */,
-				D96CBCDE2531C356006DF3A4 /* DestroyEntityEvent.cpp in Sources */,
 				D9B250E024C48EA500EAFA5B /* Socket.cpp in Sources */,
 				D96CBC9E2531C342006DF3A4 /* EntityDataModel.cpp in Sources */,
 				D9B2510E24C48EA500EAFA5B /* PlayAudioEvent.cpp in Sources */,
@@ -1634,7 +1597,6 @@
 				D9B250C424C48EA500EAFA5B /* NetworkView.cpp in Sources */,
 				D9B250D824C48EA500EAFA5B /* ChannelUnreliable.cpp in Sources */,
 				D9B250EA24C48EA500EAFA5B /* DrudgeNet.cpp in Sources */,
-				D96CBCEC2531C356006DF3A4 /* SpawnHumanEvent.cpp in Sources */,
 				D96CBD632531C3BB006DF3A4 /* ToggleClientPredictionEvent.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				D9B2517424C48EA500EAFA5B /* InitMainMenuCommand.cpp in Sources */,
@@ -1644,7 +1606,6 @@
 				D9B250A424C48EA500EAFA5B /* Timer.cpp in Sources */,
 				D96CBD472531C3BB006DF3A4 /* Pseudo3DSprite.cpp in Sources */,
 				D9B250A224C48EA500EAFA5B /* Injector.cpp in Sources */,
-				D96CBCE62531C356006DF3A4 /* StateMachine.cpp in Sources */,
 				D96CBCCE2531C356006DF3A4 /* Explosion.cpp in Sources */,
 				D9B250C224C48EA500EAFA5B /* NetworkHostGameModeCell.cpp in Sources */,
 				D9B2510224C48EA500EAFA5B /* StopBGMEvent.cpp in Sources */,
@@ -1684,10 +1645,8 @@
 				D9B250D624C48EA500EAFA5B /* Mesh.cpp in Sources */,
 				D9B250B624C48EA500EAFA5B /* NetworkController.cpp in Sources */,
 				D96CBC962531C342006DF3A4 /* LoadLevelCommand.cpp in Sources */,
-				D96CBCD42531C356006DF3A4 /* SpawnExplosionEvent.cpp in Sources */,
 				D9B250EC24C48EA500EAFA5B /* ReliableConnection.cpp in Sources */,
 				D96CBD672531C3BB006DF3A4 /* GameScene.cpp in Sources */,
-				D96CBCF02531C356006DF3A4 /* SpawnPlayerEvent.cpp in Sources */,
 				D9B2509A24C48EA500EAFA5B /* RemoveLightEvent.cpp in Sources */,
 				D96CBCD62531C356006DF3A4 /* Entity.cpp in Sources */,
 				D96CBD392531C3BB006DF3A4 /* ShowInventoryEvent.cpp in Sources */,
@@ -1707,7 +1666,6 @@
 				D96CBD4F2531C3BB006DF3A4 /* SpawnParticlesEvent.cpp in Sources */,
 				D96CBCD22531C356006DF3A4 /* EntitiesModel.cpp in Sources */,
 				D96CBC942531C342006DF3A4 /* PlayerLogic.cpp in Sources */,
-				D96CBCF22531C356006DF3A4 /* SpawnProjectileEvent.cpp in Sources */,
 				D9B250BE24C48EA500EAFA5B /* FakeNetworkController.cpp in Sources */,
 				D96CBCEE2531C356006DF3A4 /* BaseAI.cpp in Sources */,
 				D98BEDDA2649904000125847 /* GameModel.cpp in Sources */,
@@ -1730,7 +1688,6 @@
 				D96CBCF52531C356006DF3A4 /* GameMode.cpp in Sources */,
 				D9B250A324C48EA500EAFA5B /* Injector.cpp in Sources */,
 				D9B250BF24C48EA500EAFA5B /* FakeNetworkController.cpp in Sources */,
-				D96CBCF32531C356006DF3A4 /* SpawnProjectileEvent.cpp in Sources */,
 				D92ACF5F254444F4006351A7 /* TransportIP.cpp in Sources */,
 				D9B250E324C48EA500EAFA5B /* WriteStream.cpp in Sources */,
 				D98DFA8A24E80E23007A1997 /* RaycastUtil.cpp in Sources */,
@@ -1756,10 +1713,8 @@
 				D96CBCE12531C356006DF3A4 /* FrameCache.cpp in Sources */,
 				D9B250AF24C48EA500EAFA5B /* ActionUtils.cpp in Sources */,
 				D96CBD6A2531C3BB006DF3A4 /* Pseudo3DItem.cpp in Sources */,
-				D96CBCF12531C356006DF3A4 /* SpawnPlayerEvent.cpp in Sources */,
 				D9B250B924C48EA500EAFA5B /* InitNetworkClientCommand.cpp in Sources */,
 				D96CBCD92531C356006DF3A4 /* LootBox.cpp in Sources */,
-				D96CBCD52531C356006DF3A4 /* SpawnExplosionEvent.cpp in Sources */,
 				D9B2509D24C48EA500EAFA5B /* AddLightEvent.cpp in Sources */,
 				D96CBD5E2531C3BB006DF3A4 /* SpawnTextBlimpEvent.cpp in Sources */,
 				D96CBC972531C342006DF3A4 /* LoadLevelCommand.cpp in Sources */,
@@ -1768,7 +1723,6 @@
 				D9B250CD24C48EA500EAFA5B /* NetworkHostGameLevelCell.cpp in Sources */,
 				D9B2519924C4B13100EAFA5B /* InitReplayEditorCommand.cpp in Sources */,
 				D96CBC9D2531C342006DF3A4 /* GameSettings.cpp in Sources */,
-				D96CBCED2531C356006DF3A4 /* SpawnHumanEvent.cpp in Sources */,
 				D96CBD682531C3BB006DF3A4 /* GameScene.cpp in Sources */,
 				D9B250A524C48EA500EAFA5B /* Timer.cpp in Sources */,
 				D9B250D324C48EA500EAFA5B /* ReliabilitySystem.cpp in Sources */,
@@ -1806,7 +1760,6 @@
 				D96CBD5A2531C3BB006DF3A4 /* Pseudo3DParticle.cpp in Sources */,
 				D9B2516924C48EA500EAFA5B /* ReplayEditorView.cpp in Sources */,
 				D96CBD4A2531C3BB006DF3A4 /* EntityView.cpp in Sources */,
-				D96CBCE72531C356006DF3A4 /* StateMachine.cpp in Sources */,
 				D9B250DD24C48EA500EAFA5B /* TransportLAN.cpp in Sources */,
 				D9B250D724C48EA500EAFA5B /* Mesh.cpp in Sources */,
 				D9B2511124C48EA500EAFA5B /* PlayBGMEvent.cpp in Sources */,
@@ -1832,7 +1785,6 @@
 				D9B2518F24C48EA500EAFA5B /* SettingCell.cpp in Sources */,
 				D9B2510924C48EA500EAFA5B /* StopAudioEvent.cpp in Sources */,
 				D96CBD642531C3BB006DF3A4 /* ToggleClientPredictionEvent.cpp in Sources */,
-				D96CBCDF2531C356006DF3A4 /* DestroyEntityEvent.cpp in Sources */,
 				D96CBD722531C3BB006DF3A4 /* ClientController.cpp in Sources */,
 				D9B2510524C48EA500EAFA5B /* ToggleMuteBGMEvent.cpp in Sources */,
 				D9B2517124C48EA500EAFA5B /* MainMenuView.cpp in Sources */,
