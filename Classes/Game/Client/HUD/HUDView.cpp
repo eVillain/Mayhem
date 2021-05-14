@@ -219,6 +219,8 @@ void HUDView::updatePositions()
         weaponSlot->setPosition(cocos2d::Vec2(windowSize.width - GameViewConstants::HUD_WEAPON_SIZE.width, 100 - (i * 20)));
     }
     
+    m_killFeed->setPosition(cocos2d::Vec2(PADDING, windowSize.height * 0.5));
+    
     if (m_viewLayer)
     {
         m_viewLayer->update(0.f);
