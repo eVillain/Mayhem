@@ -290,5 +290,5 @@ void ReplayEditorController::updateView(const float time)
                                  false);
     
     // Update timeline view
-    m_view->getTimeLineView()->update(m_currentFrameIndex, snapshots.size(), m_gameModel->getTickRate(), m_playbackSpeed);
+    m_view->getTimeLineView()->update(targetFrame, snapshots.size(), m_gameModel->getTickRate(), m_playbackSpeed, snapshots);
 }

@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 #include "cocos-ext.h"
 
+#include "NetworkMessages.h"
+
 class TimeLineView : public cocos2d::Node
 {
 public:
@@ -23,7 +25,8 @@ public:
     void update(const ssize_t currentFrame,
                 const ssize_t totalFrames,
                 const uint32_t tickRate,
-                const float speed);
+                const float speed,
+                const std::vector<SnapshotData>& snapshots);
 
     void setMinTime(float time) { m_minTime = time; }
     void setMaxTime(float time) { m_maxTime = time; }
@@ -58,7 +61,8 @@ private:
     float m_maxTime;
     float m_currentTime;
     
-    void drawTimeLine();
+    void drawTimeLine(const std::vector<SnapshotData>& snapshots,
+                      const uint32_t tickRate);
 };
 
 #endif /* TimeLineView_h */
