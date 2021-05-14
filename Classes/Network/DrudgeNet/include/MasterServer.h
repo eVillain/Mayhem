@@ -56,9 +56,9 @@ private:
 
     void readSocketData();
     void processReceivedData(const Net::Address& sender,
-                             const ssize_t receivedBytes);
+                             const int64_t receivedBytes);
     void updateConnections(const float deltaTime);
-    bool validateDataHeader(const ssize_t receivedBytes);
+    bool validateDataHeader(const int64_t receivedBytes);
     void writeHeaderData(const int dataBytes);
     void sendMessage(const std::shared_ptr<Net::Message>& message, const Net::Address& address);
     void sendPing(const Net::Address& address, const bool isPong);

@@ -13,9 +13,6 @@
     <ClCompile Include="..\..\Classes\MasterServer\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Classes\MasterServer\MasterServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Classes\Network\DrudgeNet\src\ReadStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -31,12 +28,15 @@
     <ClCompile Include="..\..\Classes\Network\DrudgeNet\src\BitPacker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Classes\Network\DrudgeNet\src\MasterServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Classes\MasterServer\MasterServerMessages.h">
+    <ClInclude Include="..\..\Classes\Network\DrudgeNet\include\MasterServer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Classes\MasterServer\MasterServer.h">
+    <ClInclude Include="..\..\Classes\Network\DrudgeNet\include\MasterServerMessages.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

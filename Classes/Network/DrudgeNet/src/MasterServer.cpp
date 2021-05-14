@@ -87,7 +87,7 @@ void MasterServer::readSocketData()
     while (true)
     {
         Net::Address sender;
-        const ssize_t receivedBytes = m_socket->Receive(sender, m_readBuffer, Net::BUFFER_SIZE_BYTES);
+        const int64_t receivedBytes = m_socket->Receive(sender, m_readBuffer, Net::BUFFER_SIZE_BYTES);
         if (receivedBytes <= 0)
         {
             break;
@@ -97,7 +97,7 @@ void MasterServer::readSocketData()
 }
 
 void MasterServer::processReceivedData(const Net::Address& sender,
-                                       const ssize_t receivedBytes)
+                                       const int64_t receivedBytes)
 {
     if (!validateDataHeader(receivedBytes))
     {
@@ -178,7 +178,7 @@ void MasterServer::updateConnections(const float deltaTime)
     });
 }
 
-bool MasterServer::validateDataHeader(const ssize_t receivedBytes)
+bool MasterServer::validateDataHeader(const int64_t receivedBytes)
 {
     if (receivedBytes < 5)
     {

@@ -40,7 +40,7 @@ int main(int argc, const char * argv[])
     const float SERVER_UPDATE_FREQUENCY = 1.f / 60.f;
     const uint64_t SERVER_UPDATE_MICROSECONDS = SERVER_UPDATE_FREQUENCY * 1000000;
     uint32_t timeAccumulator = 0;
-    MasterServer server;
+    Net::MasterServer server;
     server.setInfoCallback([](const std::string& info){
         std::cout << info << "\n";
     });
