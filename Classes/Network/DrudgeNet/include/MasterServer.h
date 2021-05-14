@@ -7,6 +7,7 @@
 #include <memory>
 #include <functional>
 #include <vector>
+#include <stdint.h>
 
 namespace Net {
 class Message;

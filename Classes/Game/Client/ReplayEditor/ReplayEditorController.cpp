@@ -199,7 +199,7 @@ void ReplayEditorController::onFastForwardButton(cocos2d::Ref* ref, cocos2d::ui:
     m_view->getTimeLineView()->setCurrentTime(time);
 }
 
-static const std::vector<const float> PLAYBACK_SPEEDS = { 0.1f, 0.25f, 0.5f, 1.f, 2.f, 10.f };
+static const std::vector<float> PLAYBACK_SPEEDS = { 0.1f, 0.25f, 0.5f, 1.f, 2.f, 10.f };
 
 void ReplayEditorController::onSpeedDownButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type)
 {

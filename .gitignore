@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+/.vs
+/cocos2d/cocos/2d/Debug.win32
+/cocos2d/cocos/editor-support/spine/proj.win32/Debug.win32
+/proj.win32/.vs/MayhemRoyale
+/proj.win32/Debug
+/proj.win32/Debug.win32
+/proj.win32/MasterServer/Debug
+/out/build/x64-Debug

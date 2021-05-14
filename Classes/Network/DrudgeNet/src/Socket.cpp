@@ -137,7 +137,7 @@ namespace Net
         return sent_bytes == size;
     }
     
-    ssize_t Socket::Receive(Address& sender, void* data, size_t size)
+    int64_t Socket::Receive(Address& sender, void* data, size_t size)
     {
         assert(data);
         assert(size > 0);
@@ -152,7 +152,7 @@ namespace Net
         sockaddr_in from;
         socklen_t fromLength = sizeof( from );
         
-        ssize_t received_bytes = recvfrom(_socket,
+        int64_t received_bytes = recvfrom(_socket,
                                          (char*)data,
                                          size,
                                          0,

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -24,6 +24,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v120_xp</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v140_xp</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -32,6 +33,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v120_xp</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v140_xp</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -71,8 +73,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(EngineRoot)external;$(EngineRoot)cocos\audio\include;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)extensions;..\Classes;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\cocos2d;..\Classes\Utils;..\Classes\Network\DrudgeNet\include;..\Classes\Network;..\Classes\Lighting;..\Classes\Game\Client\ReplayEditor;..\Classes\Game\Client\MainMenu;..\Classes\Game\Client\HUD;..\Classes\Game\Client;..\Classes\Game\Server;..\Classes\Game\Shared;..\Classes\Core;..\Classes\Audio;$(EngineRoot)external;$(EngineRoot)cocos\audio\include;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)extensions;..\Classes;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=0;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -84,7 +86,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libcurl.lib;%(AdditionalDependencies);$(_COCOS_LIB_WIN32_BEGIN);$(_COCOS_LIB_WIN32_END)</AdditionalDependencies>
+      <AdditionalDependencies>libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories);$(_COCOS_LIB_PATH_WIN32_BEGIN);$(_COCOS_LIB_PATH_WIN32_END)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -96,7 +98,8 @@
       </Command>
     </PostBuildEvent>
     <PreLinkEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
@@ -108,13 +111,12 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
       <Inputs>$(TargetFileName)</Inputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
-
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(EngineRoot)external;$(EngineRoot)cocos\audio\include;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)extensions;..\Classes;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\cocos2d;..\Classes\Utils;..\Classes\Network\DrudgeNet\include;..\Classes\Network;..\Classes\Lighting;..\Classes\Game\Client\ReplayEditor;..\Classes\Game\Client\MainMenu;..\Classes\Game\Client\HUD;..\Classes\Game\Client;..\Classes\Game\Server;..\Classes\Game\Shared;..\Classes\Core;..\Classes\Audio;$(EngineRoot)external;$(EngineRoot)cocos\audio\include;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)extensions;..\Classes;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=0;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
@@ -125,7 +127,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libcurl.lib;%(AdditionalDependencies);$(_COCOS_LIB_WIN32_BEGIN);$(_COCOS_LIB_WIN32_END)</AdditionalDependencies>
+      <AdditionalDependencies>libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories);$(_COCOS_LIB_PATH_WIN32_BEGIN);$(_COCOS_LIB_PATH_WIN32_END)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -139,29 +141,317 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
       </Command>
     </PostBuildEvent>
     <PreLinkEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="..\Classes\Audio\AudioController.cpp" />
+    <ClCompile Include="..\Classes\Audio\AudioModel.cpp" />
+    <ClCompile Include="..\Classes\Audio\PitchAudioEvent.cpp" />
+    <ClCompile Include="..\Classes\Audio\PitchBGMEvent.cpp" />
+    <ClCompile Include="..\Classes\Audio\PlayAudioEvent.cpp" />
+    <ClCompile Include="..\Classes\Audio\PlayBGMEvent.cpp" />
+    <ClCompile Include="..\Classes\Audio\SetAudioListenerPositionEvent.cpp" />
+    <ClCompile Include="..\Classes\Audio\StopAudioEvent.cpp" />
+    <ClCompile Include="..\Classes\Audio\StopBGMEvent.cpp" />
+    <ClCompile Include="..\Classes\Audio\ToggleMuteBGMEvent.cpp" />
+    <ClCompile Include="..\Classes\Core\Dispatcher.cpp" />
+    <ClCompile Include="..\Classes\Core\Event.cpp" />
+    <ClCompile Include="..\Classes\Core\Injector.cpp" />
+    <ClCompile Include="..\Classes\Core\Timer.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\BackButtonPressedEvent.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\CameraController.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\CameraModel.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ClientController.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ClientModel.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\CrosshairView.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\EntityView.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\GameScene.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\GameView.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\GameViewController.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\HUD\HUDHelper.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\HUD\HUDView.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\HUD\HUDWeapon.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\HUD\SettingCell.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\HUD\SettingsView.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\InitClientCommand.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\InitGameCommand.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\InitLocalServerCommand.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\InitServerCommand.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\InputController.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\InputModel.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\InventoryLayer.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\KillFeed.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\LevelView.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\MainMenu\BackToMainMenuEvent.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\MainMenu\InitMainMenuCommand.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\MainMenu\MainMenuController.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\MainMenu\MainMenuView.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ParticlesController.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\Pseudo3DItem.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\Pseudo3DParticle.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\Pseudo3DSprite.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ReplayEditor\EntityInfoView.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ReplayEditor\InitReplayEditorCommand.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ReplayEditor\ReplayEditorController.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ReplayEditor\ReplayEditorScene.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ReplayEditor\ReplayEditorView.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ReplayEditor\TimeLineView.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ReplayModel.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ShootToContinueLayer.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ShowInventoryEvent.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\SnapshotModel.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\SpawnParticlesEvent.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\SpawnTextBlimpEvent.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ToggleClientPredictionEvent.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ToggleInventoryEvent.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\TogglePhysicsDebugEvent.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ToggleSlowMotionEvent.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\BaseAI.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\EntitiesController.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\EntitiesModel.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\Entity.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\Explosion.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\FrameCache.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\GameController.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\GameMode.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\GameModeBR.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\GameModeDM.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\InputCache.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\Item.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\LootBox.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\Player.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\Projectile.cpp" />
+    <ClCompile Include="..\Classes\Game\Server\ServerController.cpp" />
+    <ClCompile Include="..\Classes\Game\Shared\EntityDataModel.cpp" />
+    <ClCompile Include="..\Classes\Game\Shared\GameModel.cpp" />
+    <ClCompile Include="..\Classes\Game\Shared\GameSettings.cpp" />
+    <ClCompile Include="..\Classes\Game\Shared\LevelModel.cpp" />
+    <ClCompile Include="..\Classes\Game\Shared\LoadLevelCommand.cpp" />
+    <ClCompile Include="..\Classes\Game\Shared\LoadStaticEntityDataCommand.cpp" />
+    <ClCompile Include="..\Classes\Game\Shared\MovementIntegrator.cpp" />
+    <ClCompile Include="..\Classes\Game\Shared\PlayerLogic.cpp" />
+    <ClCompile Include="..\Classes\Lighting\AddLightEvent.cpp" />
+    <ClCompile Include="..\Classes\Lighting\LightController.cpp" />
+    <ClCompile Include="..\Classes\Lighting\LightModel.cpp" />
+    <ClCompile Include="..\Classes\Lighting\RemoveLightEvent.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\Beacon.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\BitPacker.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\ChannelUnreliable.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\Connection.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\DrudgeNet.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\FlowControl.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\FragmentBuffer.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\Listener.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\MasterServerConnection.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\MeasureStream.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\Mesh.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\MessageQueue.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\Node.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\ReadStream.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\ReliabilitySystem.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\ReliableConnection.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\Socket.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\Stream.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\TransportIP.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\TransportLAN.cpp" />
+    <ClCompile Include="..\Classes\Network\DrudgeNet\src\WriteStream.cpp" />
+    <ClCompile Include="..\Classes\Network\FakeNet.cpp" />
+    <ClCompile Include="..\Classes\Network\FakeNetworkController.cpp" />
+    <ClCompile Include="..\Classes\Network\InitNetworkClientCommand.cpp" />
+    <ClCompile Include="..\Classes\Network\InitNetworkHostCommand.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkChatView.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkClientHostCell.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkClientView.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkClientViewController.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkController.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkHostClientCell.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkHostGameLevelCell.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkHostGameModeCell.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkHostView.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkHostViewController.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkMessageFactory.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkModel.cpp" />
+    <ClCompile Include="..\Classes\Network\NetworkView.cpp" />
+    <ClCompile Include="..\Classes\Utils\ActionUtils.cpp" />
+    <ClCompile Include="..\Classes\Utils\ButtonUtils.cpp" />
+    <ClCompile Include="..\Classes\Utils\CollisionUtils.cpp" />
+    <ClCompile Include="..\Classes\Utils\FollowNode.cpp" />
+    <ClCompile Include="..\Classes\Utils\GameTableView.cpp" />
+    <ClCompile Include="..\Classes\Utils\RaycastUtil.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
-    <ClInclude Include="..\Classes\HelloWorldScene.h" />
+    <ClInclude Include="..\Classes\Audio\AudioController.h" />
+    <ClInclude Include="..\Classes\Audio\AudioModel.h" />
+    <ClInclude Include="..\Classes\Audio\PitchAudioEvent.h" />
+    <ClInclude Include="..\Classes\Audio\PitchBGMEvent.h" />
+    <ClInclude Include="..\Classes\Audio\PlayAudioEvent.h" />
+    <ClInclude Include="..\Classes\Audio\PlayBGMEvent.h" />
+    <ClInclude Include="..\Classes\Audio\SetAudioListenerPositionEvent.h" />
+    <ClInclude Include="..\Classes\Audio\StopAudioEvent.h" />
+    <ClInclude Include="..\Classes\Audio\StopBGMEvent.h" />
+    <ClInclude Include="..\Classes\Audio\ToggleMuteBGMEvent.h" />
+    <ClInclude Include="..\Classes\Core\Command.h" />
+    <ClInclude Include="..\Classes\Core\Dispatcher.h" />
+    <ClInclude Include="..\Classes\Core\Event.h" />
+    <ClInclude Include="..\Classes\Core\Injector.h" />
+    <ClInclude Include="..\Classes\Core\Timer.h" />
+    <ClInclude Include="..\Classes\Game\Client\BackButtonPressedEvent.h" />
+    <ClInclude Include="..\Classes\Game\Client\CameraController.h" />
+    <ClInclude Include="..\Classes\Game\Client\CameraModel.h" />
+    <ClInclude Include="..\Classes\Game\Client\ClientController.h" />
+    <ClInclude Include="..\Classes\Game\Client\ClientModel.h" />
+    <ClInclude Include="..\Classes\Game\Client\CrosshairView.h" />
+    <ClInclude Include="..\Classes\Game\Client\EntityView.h" />
+    <ClInclude Include="..\Classes\Game\Client\GameScene.h" />
+    <ClInclude Include="..\Classes\Game\Client\GameView.h" />
+    <ClInclude Include="..\Classes\Game\Client\GameViewConstants.h" />
+    <ClInclude Include="..\Classes\Game\Client\GameViewController.h" />
+    <ClInclude Include="..\Classes\Game\Client\HideInventoryEvent.h" />
+    <ClInclude Include="..\Classes\Game\Client\HUD\HUDConstants.h" />
+    <ClInclude Include="..\Classes\Game\Client\HUD\HUDHelper.h" />
+    <ClInclude Include="..\Classes\Game\Client\HUD\HUDView.h" />
+    <ClInclude Include="..\Classes\Game\Client\HUD\HUDWeapon.h" />
+    <ClInclude Include="..\Classes\Game\Client\HUD\SettingCell.h" />
+    <ClInclude Include="..\Classes\Game\Client\HUD\SettingsView.h" />
+    <ClInclude Include="..\Classes\Game\Client\InitClientCommand.h" />
+    <ClInclude Include="..\Classes\Game\Client\InitGameCommand.h" />
+    <ClInclude Include="..\Classes\Game\Client\InitLocalServerCommand.h" />
+    <ClInclude Include="..\Classes\Game\Client\InitServerCommand.h" />
+    <ClInclude Include="..\Classes\Game\Client\InputController.h" />
+    <ClInclude Include="..\Classes\Game\Client\InputModel.h" />
+    <ClInclude Include="..\Classes\Game\Client\InventoryLayer.h" />
+    <ClInclude Include="..\Classes\Game\Client\KillFeed.h" />
+    <ClInclude Include="..\Classes\Game\Client\LevelView.h" />
+    <ClInclude Include="..\Classes\Game\Client\MainMenu\BackToMainMenuEvent.h" />
+    <ClInclude Include="..\Classes\Game\Client\MainMenu\InitMainMenuCommand.h" />
+    <ClInclude Include="..\Classes\Game\Client\MainMenu\MainMenuController.h" />
+    <ClInclude Include="..\Classes\Game\Client\MainMenu\MainMenuView.h" />
+    <ClInclude Include="..\Classes\Game\Client\ParticleConstants.h" />
+    <ClInclude Include="..\Classes\Game\Client\ParticlesController.h" />
+    <ClInclude Include="..\Classes\Game\Client\Pseudo3DItem.h" />
+    <ClInclude Include="..\Classes\Game\Client\Pseudo3DParticle.h" />
+    <ClInclude Include="..\Classes\Game\Client\Pseudo3DSprite.h" />
+    <ClInclude Include="..\Classes\Game\Client\ReplayEditor\EntityInfoView.h" />
+    <ClInclude Include="..\Classes\Game\Client\ReplayEditor\InitReplayEditorCommand.h" />
+    <ClInclude Include="..\Classes\Game\Client\ReplayEditor\ReplayEditorController.h" />
+    <ClInclude Include="..\Classes\Game\Client\ReplayEditor\ReplayEditorScene.h" />
+    <ClInclude Include="..\Classes\Game\Client\ReplayEditor\ReplayEditorView.h" />
+    <ClInclude Include="..\Classes\Game\Client\ReplayEditor\TimeLineView.h" />
+    <ClInclude Include="..\Classes\Game\Client\ReplayModel.h" />
+    <ClInclude Include="..\Classes\Game\Client\ShootToContinueLayer.h" />
+    <ClInclude Include="..\Classes\Game\Client\ShowInventoryEvent.h" />
+    <ClInclude Include="..\Classes\Game\Client\SnapshotModel.h" />
+    <ClInclude Include="..\Classes\Game\Client\SpawnParticlesEvent.h" />
+    <ClInclude Include="..\Classes\Game\Client\SpawnTextBlimpEvent.h" />
+    <ClInclude Include="..\Classes\Game\Client\ToggleClientPredictionEvent.h" />
+    <ClInclude Include="..\Classes\Game\Client\ToggleInventoryEvent.h" />
+    <ClInclude Include="..\Classes\Game\Client\TogglePhysicsDebugEvent.h" />
+    <ClInclude Include="..\Classes\Game\Client\ToggleSlowMotionEvent.h" />
+    <ClInclude Include="..\Classes\Game\Client\ViewLayer.h" />
+    <ClInclude Include="..\Classes\Game\Server\BaseAI.h" />
+    <ClInclude Include="..\Classes\Game\Server\EntitiesController.h" />
+    <ClInclude Include="..\Classes\Game\Server\EntitiesModel.h" />
+    <ClInclude Include="..\Classes\Game\Server\Entity.h" />
+    <ClInclude Include="..\Classes\Game\Server\Explosion.h" />
+    <ClInclude Include="..\Classes\Game\Server\FrameCache.h" />
+    <ClInclude Include="..\Classes\Game\Server\GameController.h" />
+    <ClInclude Include="..\Classes\Game\Server\GameMode.h" />
+    <ClInclude Include="..\Classes\Game\Server\GameModeBR.h" />
+    <ClInclude Include="..\Classes\Game\Server\GameModeDM.h" />
+    <ClInclude Include="..\Classes\Game\Server\InputCache.h" />
+    <ClInclude Include="..\Classes\Game\Server\Item.h" />
+    <ClInclude Include="..\Classes\Game\Server\LootBox.h" />
+    <ClInclude Include="..\Classes\Game\Server\Player.h" />
+    <ClInclude Include="..\Classes\Game\Server\Projectile.h" />
+    <ClInclude Include="..\Classes\Game\Server\ServerController.h" />
+    <ClInclude Include="..\Classes\Game\Shared\EntityConstants.h" />
+    <ClInclude Include="..\Classes\Game\Shared\EntityDataModel.h" />
+    <ClInclude Include="..\Classes\Game\Shared\GameModel.h" />
+    <ClInclude Include="..\Classes\Game\Shared\GameSettings.h" />
+    <ClInclude Include="..\Classes\Game\Shared\LevelModel.h" />
+    <ClInclude Include="..\Classes\Game\Shared\LoadLevelCommand.h" />
+    <ClInclude Include="..\Classes\Game\Shared\LoadStaticEntityDataCommand.h" />
+    <ClInclude Include="..\Classes\Game\Shared\MovementIntegrator.h" />
+    <ClInclude Include="..\Classes\Game\Shared\PlayerLogic.h" />
+    <ClInclude Include="..\Classes\Game\Shared\SharedConstants.h" />
+    <ClInclude Include="..\Classes\Game\Shared\WeaponConstants.h" />
+    <ClInclude Include="..\Classes\Lighting\AddLightEvent.h" />
+    <ClInclude Include="..\Classes\Lighting\LightConstants.h" />
+    <ClInclude Include="..\Classes\Lighting\LightController.h" />
+    <ClInclude Include="..\Classes\Lighting\LightModel.h" />
+    <ClInclude Include="..\Classes\Lighting\RemoveLightEvent.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\Address.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\Beacon.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\BitPacker.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\Channel.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\ChannelReliable.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\ChannelUnreliable.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\Connection.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\CRC32.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\DataConstants.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\DataTypes.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\DrudgeNet.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\FlowControl.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\FragmentBuffer.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\Listener.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\MasterServerConnection.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\MasterServerMessages.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\MeasureStream.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\Mesh.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\Message.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\MessageFactory.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\MessageQueue.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\Node.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\PacketQueue.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\ReadStream.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\ReliabilitySystem.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\ReliableConnection.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\Serialization.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\Socket.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\SocketPlatform.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\Stream.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\Transport.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\TransportIP.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\TransportLAN.h" />
+    <ClInclude Include="..\Classes\Network\DrudgeNet\include\WriteStream.h" />
+    <ClInclude Include="..\Classes\Network\FakeNet.h" />
+    <ClInclude Include="..\Classes\Network\FakeNetworkController.h" />
+    <ClInclude Include="..\Classes\Network\INetworkController.h" />
+    <ClInclude Include="..\Classes\Network\InitNetworkClientCommand.h" />
+    <ClInclude Include="..\Classes\Network\InitNetworkHostCommand.h" />
+    <ClInclude Include="..\Classes\Network\NetworkChatView.h" />
+    <ClInclude Include="..\Classes\Network\NetworkClientHostCell.h" />
+    <ClInclude Include="..\Classes\Network\NetworkClientView.h" />
+    <ClInclude Include="..\Classes\Network\NetworkClientViewController.h" />
+    <ClInclude Include="..\Classes\Network\NetworkConstants.h" />
+    <ClInclude Include="..\Classes\Network\NetworkController.h" />
+    <ClInclude Include="..\Classes\Network\NetworkHostClientCell.h" />
+    <ClInclude Include="..\Classes\Network\NetworkHostGameLevelCell.h" />
+    <ClInclude Include="..\Classes\Network\NetworkHostGameModeCell.h" />
+    <ClInclude Include="..\Classes\Network\NetworkHostView.h" />
+    <ClInclude Include="..\Classes\Network\NetworkHostViewController.h" />
+    <ClInclude Include="..\Classes\Network\NetworkMessageFactory.h" />
+    <ClInclude Include="..\Classes\Network\NetworkMessages.h" />
+    <ClInclude Include="..\Classes\Network\NetworkModel.h" />
+    <ClInclude Include="..\Classes\Network\NetworkView.h" />
+    <ClInclude Include="..\Classes\Utils\ActionUtils.h" />
+    <ClInclude Include="..\Classes\Utils\ButtonUtils.h" />
+    <ClInclude Include="..\Classes\Utils\CollisionUtils.h" />
+    <ClInclude Include="..\Classes\Utils\FollowNode.h" />
+    <ClInclude Include="..\Classes\Utils\GameTableView.h" />
+    <ClInclude Include="..\Classes\Utils\NumberFormatter.h" />
+    <ClInclude Include="..\Classes\Utils\RaycastUtil.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cocos2d\cocos\2d\libcocos2d.vcxproj">
       <Project>{98a51ba8-fc3a-415b-ac8f-8c7bd464e93e}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\cocos2d\cocos\editor-support\spine\proj.win32\libSpine.vcxproj">
-      <Project>{b7c2a162-dec9-4418-972e-240ab3cbfcae}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\cocos2d\external\Box2D\proj.win32\libbox2d.vcxproj">
-      <Project>{929480e7-23c0-4df6-8456-096d71547116}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

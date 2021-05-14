@@ -27,7 +27,7 @@ namespace Net
         
         bool Send(const Address& destination, const void* data, size_t size);
         
-        ssize_t Receive(Address& sender, void* data, size_t size);
+        int64_t Receive(Address& sender, void* data, size_t size);
         
     private:
         int32_t _socket;

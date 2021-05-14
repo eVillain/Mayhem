@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="physics">
-      <UniqueIdentifier>{08593631-5bf5-46aa-9436-62595c4f7bf6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="deprecated">
       <UniqueIdentifier>{0b1152b1-c732-4560-8629-87843b0fbd7c}</UniqueIdentifier>
     </Filter>
@@ -75,9 +72,6 @@
     </Filter>
     <Filter Include="extension\GUI\CCScrollView">
       <UniqueIdentifier>{a1f539bc-d5be-4224-a4d2-01c0b6f17d6e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="extension\physics_nodes">
-      <UniqueIdentifier>{1de7fce7-0dee-4571-8fcd-43eb617aaf8b}</UniqueIdentifier>
     </Filter>
     <Filter Include="cocosdenshion\Header Files">
       <UniqueIdentifier>{f42979de-0079-4eba-b469-81ebff9ec588}</UniqueIdentifier>
@@ -268,9 +262,6 @@
     <Filter Include="external\poly2tri\sweep">
       <UniqueIdentifier>{c37eceeb-5702-4ff7-88de-94680a22266f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="physics3d">
-      <UniqueIdentifier>{e492faef-2169-4117-8d73-e0c66271fe25}</UniqueIdentifier>
-    </Filter>
     <Filter Include="external\clipper">
       <UniqueIdentifier>{ff65e340-b79d-4f87-9b4c-ed46bda5d20f}</UniqueIdentifier>
     </Filter>
@@ -294,21 +285,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\physics\CCPhysicsBody.cpp">
-      <Filter>physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\physics\CCPhysicsContact.cpp">
-      <Filter>physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\physics\CCPhysicsJoint.cpp">
-      <Filter>physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\physics\CCPhysicsShape.cpp">
-      <Filter>physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\physics\CCPhysicsWorld.cpp">
-      <Filter>physics</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\external\xxhash\xxhash.c">
       <Filter>external\xxhash</Filter>
     </ClCompile>
@@ -846,12 +822,6 @@
     </ClCompile>
     <ClCompile Include="..\..\extensions\GUI\CCScrollView\CCTableViewCell.cpp">
       <Filter>extension\GUI\CCScrollView</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\extensions\physics-nodes\CCPhysicsDebugNode.cpp">
-      <Filter>extension\physics_nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\extensions\physics-nodes\CCPhysicsSprite.cpp">
-      <Filter>extension\physics_nodes</Filter>
     </ClCompile>
     <ClCompile Include="..\audio\win32\MciPlayer.cpp">
       <Filter>cocosdenshion\Source Files</Filter>
@@ -1858,30 +1828,6 @@
     <ClCompile Include="..\..\external\poly2tri\sweep\sweep_context.cc">
       <Filter>external\poly2tri\sweep</Filter>
     </ClCompile>
-    <ClCompile Include="..\physics3d\CCPhysics3D.cpp">
-      <Filter>physics3d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\physics3d\CCPhysics3DComponent.cpp">
-      <Filter>physics3d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\physics3d\CCPhysics3DConstraint.cpp">
-      <Filter>physics3d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\physics3d\CCPhysics3DDebugDrawer.cpp">
-      <Filter>physics3d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\physics3d\CCPhysics3DObject.cpp">
-      <Filter>physics3d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\physics3d\CCPhysics3DShape.cpp">
-      <Filter>physics3d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\physics3d\CCPhysics3DWorld.cpp">
-      <Filter>physics3d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\physics3d\CCPhysicsSprite3D.cpp">
-      <Filter>physics3d</Filter>
-    </ClCompile>
     <ClCompile Include="..\renderer\CCPass.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
@@ -2010,21 +1956,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\physics\CCPhysicsBody.h">
-      <Filter>physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\physics\CCPhysicsContact.h">
-      <Filter>physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\physics\CCPhysicsJoint.h">
-      <Filter>physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\physics\CCPhysicsShape.h">
-      <Filter>physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\physics\CCPhysicsWorld.h">
-      <Filter>physics</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\external\xxhash\xxhash.h">
       <Filter>external\xxhash</Filter>
     </ClInclude>
@@ -2638,12 +2569,6 @@
     <ClInclude Include="..\..\extensions\GUI\CCScrollView\CCTableViewCell.h">
       <Filter>extension\GUI\CCScrollView</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\extensions\physics-nodes\CCPhysicsDebugNode.h">
-      <Filter>extension\physics_nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\extensions\physics-nodes\CCPhysicsSprite.h">
-      <Filter>extension\physics_nodes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\extensions\cocos-ext.h">
       <Filter>extension</Filter>
     </ClInclude>
@@ -3256,9 +3181,6 @@
     <ClInclude Include="..\editor-support\cocostudio\WidgetReader\ArmatureNodeReader\CSArmatureNode_generated.h">
       <Filter>cocostudio\reader\WidgetReader\ArmatureNodeReader</Filter>
     </ClInclude>
-    <ClInclude Include="..\physics\CCPhysicsHelper.h">
-      <Filter>physics</Filter>
-    </ClInclude>
     <ClInclude Include="..\3d\CCTerrain.h">
       <Filter>3d</Filter>
     </ClInclude>
@@ -3744,30 +3666,6 @@
     </ClInclude>
     <ClInclude Include="..\..\external\poly2tri\sweep\sweep_context.h">
       <Filter>external\poly2tri\sweep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\physics3d\CCPhysics3D.h">
-      <Filter>physics3d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\physics3d\CCPhysics3DComponent.h">
-      <Filter>physics3d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\physics3d\CCPhysics3DConstraint.h">
-      <Filter>physics3d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\physics3d\CCPhysics3DDebugDrawer.h">
-      <Filter>physics3d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\physics3d\CCPhysics3DObject.h">
-      <Filter>physics3d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\physics3d\CCPhysics3DShape.h">
-      <Filter>physics3d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\physics3d\CCPhysics3DWorld.h">
-      <Filter>physics3d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\physics3d\CCPhysicsSprite3D.h">
-      <Filter>physics3d</Filter>
     </ClInclude>
     <ClInclude Include="..\renderer\CCPass.h">
       <Filter>renderer</Filter>

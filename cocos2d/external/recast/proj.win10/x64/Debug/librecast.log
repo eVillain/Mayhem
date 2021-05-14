@@ -1,0 +1,10 @@
+﻿  fastlz.c
+c:\users\drudgerist\desktop\mayhemroyale\mayhemroyale\cocos2d\external\recast\fastlz\fastlz.c(234): warning C4244: '=': conversion from '__int64' to 'flzuint32', possible loss of data
+c:\users\drudgerist\desktop\mayhemroyale\mayhemroyale\cocos2d\external\recast\fastlz\fastlz.c(304): warning C4244: '=': conversion from '__int64' to 'flzuint32', possible loss of data
+c:\users\drudgerist\desktop\mayhemroyale\mayhemroyale\cocos2d\external\recast\fastlz\fastlz.c(417): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
+c:\users\drudgerist\desktop\mayhemroyale\mayhemroyale\cocos2d\external\recast\fastlz\fastlz.c(548): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
+c:\users\drudgerist\desktop\mayhemroyale\mayhemroyale\cocos2d\external\recast\fastlz\fastlz.c(234): warning C4244: '=': conversion from '__int64' to 'flzuint32', possible loss of data
+c:\users\drudgerist\desktop\mayhemroyale\mayhemroyale\cocos2d\external\recast\fastlz\fastlz.c(304): warning C4244: '=': conversion from '__int64' to 'flzuint32', possible loss of data
+c:\users\drudgerist\desktop\mayhemroyale\mayhemroyale\cocos2d\external\recast\fastlz\fastlz.c(417): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
+c:\users\drudgerist\desktop\mayhemroyale\mayhemroyale\cocos2d\external\recast\fastlz\fastlz.c(548): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
+  librecast.vcxproj -> C:\Users\Drudgerist\Desktop\MayhemRoyale\MayhemRoyale\proj.win10\x64\Debug\librecast\librecast.lib
