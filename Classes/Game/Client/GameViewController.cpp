@@ -474,17 +474,20 @@ void GameViewController::renderHitData(const SnapshotData& snapshot,
     const std::vector<FrameHitData>& hitData = snapshot.hitData;
     for (const auto& hit : hitData)
     {
-        const cocos2d::Vec2 hitPos = cocos2d::Vec2(hit.hitPosX, hit.hitPosY);
-        if (hit.damage != 0)
+        if (hit.damage == 0)
         {
-            m_hudView->showHealthBlimp(-hit.damage, m_gameView->toViewPosition(hitPos + cocos2d::Vec2(0.f, 20.f)));
+            continue;
         }
         
+        const cocos2d::Vec2 hitPos = cocos2d::Vec2(hit.hitPosX, hit.hitPosY);
+        m_hudView->showHealthBlimp(-hit.damage, m_gameView->toViewPosition(hitPos + cocos2d::Vec2(0.f, 20.f)));
+
         auto hitPlayerIt = std::find_if(snapshot.playerData.begin(),
                                         snapshot.playerData.end(),
                                         [&hit](const std::pair<uint8_t, PlayerState>& pair) {
             return pair.second.entityID == hit.hitEntityID;
         });
+        
         if (hitPlayerIt != snapshot.playerData.end())
         {
             Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::BLOOD_SPLASH,
@@ -517,38 +520,40 @@ void GameViewController::renderHitData(const SnapshotData& snapshot,
                                            [&hit](const std::pair<uint8_t, PlayerState>& pair) {
             return pair.second.entityID == hit.hitterEntityID;
         });
-        if (hitterPlayerIt != snapshot.playerData.end())
+        if (hitterPlayerIt == snapshot.playerData.end())
         {
-            // If confirmed a hit on someone show hit marker on cursor
-            const uint8_t localPlayerID = m_cameraModel->getCameraFollowPlayerID();
-            bool shotHitLastFrame = hitterPlayerIt->first == localPlayerID &&
-                                    hit.hitEntityID != 0;
-            setShotHitLastFrame(shotHitLastFrame);
-            
-            if (skipLocalPlayerShots &&
-                hitterPlayerIt->first == localPlayerID)
-            {
-                continue; // Locally predicted shots were already rendered so skip them
-            }
-            
-            const auto& hitterEntityIt = snapshot.entityData.find(hit.hitterEntityID);
-            if (hitterEntityIt != snapshot.entityData.end())
-            {
-                const auto& hitterPlayer = hitterPlayerIt->second;
-                const InventoryItemState& weapon = hitterPlayerIt->second.weaponSlots.at(hitterPlayer.activeWeaponSlot);
-                if (weapon.type != EntityType::PlayerEntity)
-                {
-                    const auto& hitterEntity = hitterEntityIt->second;
-                    renderShot(hitterPlayer.entityID,
-                               hitterPlayerIt->first,
-                               cocos2d::Vec2(hitterEntity.positionX, hitterEntity.positionY),
-                               hitterPlayer.flipX,
-                               cocos2d::Vec2(hit.hitPosX, hit.hitPosY),
-                               (EntityType)weapon.type,
-                               snapshot);
-                }
-            }
+            continue;
         }
+        
+        // If confirmed a hit on someone show hit marker on cursor
+        const uint8_t localPlayerID = m_cameraModel->getCameraFollowPlayerID();
+        if (skipLocalPlayerShots &&
+            hitterPlayerIt->first == localPlayerID)
+        {
+            continue; // Locally predicted shots were already rendered so skip them
+        }
+        
+        const auto& hitterEntityIt = snapshot.entityData.find(hit.hitterEntityID);
+        if (hitterEntityIt == snapshot.entityData.end())
+        {
+            continue;
+        }
+        
+        const auto& hitterPlayer = hitterPlayerIt->second;
+        const InventoryItemState& weapon = hitterPlayerIt->second.weaponSlots.at(hitterPlayer.activeWeaponSlot);
+        if (weapon.type == EntityType::PlayerEntity)
+        {
+            continue;
+        }
+        
+        const auto& hitterEntity = hitterEntityIt->second;
+        renderShot(hitterPlayer.entityID,
+                   hitterPlayerIt->first,
+                   cocos2d::Vec2(hitterEntity.positionX, hitterEntity.positionY),
+                   hitterPlayer.flipX,
+                   cocos2d::Vec2(hit.hitPosX, hit.hitPosY),
+                   (EntityType)weapon.type,
+                   snapshot);
     }
 }
 
@@ -1129,10 +1134,20 @@ void GameViewController::updateShotTrails(const float deltaTime)
 
 void GameViewController::updatePostProcess(const float zoomRadius)
 {
-    if (!m_lightController->getLightMapTexture())
+    cocos2d::Texture2D* texture = nullptr;
+    if (m_lightController->getLightMapTexture())
     {
-        return; // Lighting was disabled, nothing to post-process
+        texture = m_lightController->getLightMapTexture()->getSprite()->getTexture();
     }
+    else
+    {
+        texture = m_gameView->getRenderTexture()->getSprite()->getTexture();
+    }
+    if (!texture)
+    {
+        return;
+    }
+
     const cocos2d::Vec2 winSize = cocos2d::Director::getInstance()->getWinSize();
     const cocos2d::Vec2 midView = winSize * 0.5f;
     const cocos2d::Vec2 midScreenToCursor = m_inputModel->getMouseCoord() - midView;
@@ -1140,7 +1155,7 @@ void GameViewController::updatePostProcess(const float zoomRadius)
     const cocos2d::Vec2 cursorScreenPosition = midView + (midScreenToCursor / m_cameraModel->getZoom());
 
     cocos2d::GLProgramState* postProcessState = cocos2d::GLProgramState::getOrCreateWithGLProgram(m_postProcessShader);
-    postProcessState->setUniformTexture("u_lightTexture", m_lightController->getLightMapTexture()->getSprite()->getTexture());
+    postProcessState->setUniformTexture("u_lightTexture", texture);
     postProcessState->setUniformVec2("u_resolution", winSize);
     postProcessState->setUniformVec2("u_cursor", cursorScreenPosition);
     postProcessState->setUniformFloat("u_radius", zoomRadius);

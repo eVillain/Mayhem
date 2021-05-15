@@ -652,4 +652,47 @@ void ClientController::processIncomingSnapshot(const SnapshotData& snapshot)
         m_hudView->removeViewLayer();
         m_clientModel->setLocalPlayerAlive(true);
     }
+    
+    processSnapshotHitData(snapshot);
 }
+
+void ClientController::processSnapshotHitData(const SnapshotData& snapshot)
+{
+    bool shotHitLastFrame = false;
+    const uint8_t localPlayerID = m_clientModel->getLocalPlayerID();
+    const std::vector<FrameHitData>& hitData = snapshot.hitData;
+    for (const auto& hit : hitData)
+    {
+        if (hit.damage == 0.f)
+        {
+            continue;
+        }
+        if (hit.hitEntityID == 0)
+        {
+            continue;
+        }
+        
+        auto hitterPlayerIt = std::find_if(snapshot.playerData.begin(),
+                                           snapshot.playerData.end(),
+                                           [&hit](const std::pair<uint8_t, PlayerState>& pair) {
+            return pair.second.entityID == hit.hitterEntityID;
+        });
+        
+        if (hitterPlayerIt == snapshot.playerData.end())
+        {
+            continue;
+        }
+        
+        if (hitterPlayerIt->first != localPlayerID)
+        {
+            continue;
+        }
+        
+        // If confirmed a hit on someone show hit marker on cursor
+        shotHitLastFrame = true;
+        break;
+    }
+
+    m_gameViewController->setShotHitLastFrame(shotHitLastFrame);
+}
+

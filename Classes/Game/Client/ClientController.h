@@ -77,7 +77,8 @@ private:
     void debugSnapshots(const size_t targetIndex, const float newAlpha);
     void checkShot(const SnapshotData& snapshot);
     void processIncomingSnapshot(const SnapshotData& snapshot);
-    
+    void processSnapshotHitData(const SnapshotData& snapshot);
+
     std::shared_ptr<ClientInputMessage> getInputData() const;
     
     std::shared_ptr<ClientModel> m_clientModel;
