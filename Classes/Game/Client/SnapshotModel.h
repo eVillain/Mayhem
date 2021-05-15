@@ -20,7 +20,7 @@ public:
 
     void reset();
 
-    void storeSnapshot(const SnapshotData& data);
+    bool storeSnapshot(const SnapshotData& data);
     SnapshotData interpolateSnapshots(const SnapshotData& from,
                                       const SnapshotData& to,
                                       const float alpha);

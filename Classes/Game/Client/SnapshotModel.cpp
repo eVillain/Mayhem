@@ -21,7 +21,7 @@ void SnapshotModel::reset()
     m_snapshots.clear();
 }
 
-void SnapshotModel::storeSnapshot(const SnapshotData& data)
+bool SnapshotModel::storeSnapshot(const SnapshotData& data)
 {
     const bool isOlderThanLastSnapshot = m_lastReceivedSnapshot >= data.serverTick;
     const bool isFirstSnapshot = (m_lastReceivedSnapshot == 0 && data.serverTick == 0 && m_snapshots.size() == 0);
@@ -29,12 +29,13 @@ void SnapshotModel::storeSnapshot(const SnapshotData& data)
     {
         CCLOG("SnapshotModel::storeSnapshot fail - snapshot tick %u older than last received: %u\n",
               data.serverTick, m_snapshots.back().serverTick);
-        return;
+        return false;
     }
 //    CCLOG("SnapshotModel::storeSnapshot snapshot tick %u received\n", data.serverTick);
 
     m_lastReceivedSnapshot = data.serverTick;
     m_snapshots.push_back(data);
+    return true;
 }
 
 SnapshotData SnapshotModel::interpolateSnapshots(const SnapshotData& from,

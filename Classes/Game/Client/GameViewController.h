@@ -67,7 +67,6 @@ public:
     const std::shared_ptr<CameraController>& getCameraController() const { return m_cameraController; }
     const std::shared_ptr<CameraModel>& getCameraModel() const { return m_cameraModel; }
     
-    void setRespawnCallback(const std::function<void()>& callback) { m_respawnCallback = callback; }
     void setShotHitLastFrame(const bool hit) { m_shotHitLastFrame = hit; }
 
 private:
@@ -103,8 +102,6 @@ private:
                            const cocos2d::Vec2& direction,
                            const bool headShot);
     
-    void onToggleInventoryEvent(const Event& event);
-
     std::shared_ptr<GameSettings> m_gameSettings;
     std::shared_ptr<LevelModel> m_levelModel;
     std::shared_ptr<CameraController> m_cameraController;
@@ -115,7 +112,6 @@ private:
     std::shared_ptr<ParticlesController> m_particlesController;
     std::shared_ptr<HUDView> m_hudView;
     cocos2d::RefPtr<cocos2d::GLProgram> m_postProcessShader;
-    std::function<void()> m_respawnCallback;
     
     bool m_shotHitLastFrame;
     

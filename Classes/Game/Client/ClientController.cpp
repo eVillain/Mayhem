@@ -26,12 +26,13 @@
 #include "SnapshotModel.h"
 #include "SpawnParticlesEvent.h"
 #include "ToggleClientPredictionEvent.h"
-#include "ToggleInventoryEvent.h"
 #include "WeaponConstants.h"
 #include "PlayerLogic.h"
 #include "ReplayModel.h"
 #include "GameSettings.h"
 #include "GameModel.h"
+#include "InventoryLayer.h"
+#include "ToggleInventoryEvent.h"
 
 ClientController::ClientController(std::shared_ptr<ClientModel> clientModel,
                                    std::shared_ptr<GameSettings> gameSettings,
@@ -62,6 +63,8 @@ ClientController::ClientController(std::shared_ptr<ClientModel> clientModel,
 {
     Dispatcher::globalDispatcher().addListener(ToggleClientPredictionEvent::descriptor,
                                                std::bind(&ClientController::onToggleClientPredictionEvent, this, std::placeholders::_1));
+    Dispatcher::globalDispatcher().addListener(ToggleInventoryEvent::descriptor,
+                                               std::bind(&ClientController::onToggleInventoryEvent, this, std::placeholders::_1));
 }
 
 ClientController::~ClientController()
@@ -104,15 +107,7 @@ void ClientController::setMode(const ClientMode mode)
         m_serverController = Injector::globalInjector().getInstance<ServerController>();
         m_gameViewController->setCameraFollowPlayerID(0);
     }
-    
-    m_gameViewController->setRespawnCallback([this](){
-        // Send respawn message to server
-        std::shared_ptr<ClientStateUpdateMessage> respawnMessage = std::make_shared<ClientStateUpdateMessage>();
-        respawnMessage->state = ClientState::PLAYER_RESPAWN;
-        std::shared_ptr<Net::Message> message = respawnMessage;
-        m_networkController->sendMessage(0, message, true);
-    });
-    
+        
     // Send client level loaded message to server
     std::shared_ptr<ClientStateUpdateMessage> levelLoadedMessage = std::make_shared<ClientStateUpdateMessage>();
     levelLoadedMessage->state = ClientState::LEVEL_LOADED;
@@ -182,6 +177,15 @@ void ClientController::update(const float deltaTime)
     {
         m_gameModel->setDeltaAccumulator(deltaAccumulator);
         updateGame(deltaTime, processInput);
+        
+        if (m_hudView->getViewLayer())
+        {
+            if (m_hudView->getViewLayer()->getDescriptor() == InventoryLayer::DESCRIPTOR)
+            {
+                auto inventoryLayer = std::dynamic_pointer_cast<InventoryLayer>(m_hudView->getViewLayer());
+                inventoryLayer->setData(m_clientModel->getLocalPlayerID());
+            }
+        }
     }
 }
 
@@ -368,7 +372,10 @@ void ClientController::onSnapshotReceived(const std::shared_ptr<Net::Message>& d
 {
     if (auto snapshotMessage = std::dynamic_pointer_cast<ServerSnapshotMessage>(data))
     {
-        m_snapshotModel->storeSnapshot(snapshotMessage->data);
+        if (m_snapshotModel->storeSnapshot(snapshotMessage->data))
+        {
+            processIncomingSnapshot(snapshotMessage->data);
+        }
         
         const cocos2d::Value& saveReplaySetting = m_gameSettings->getValue(ReplayModel::SETTING_SAVE_REPLAY, cocos2d::Value(true));
         if (saveReplaySetting.asBool())
@@ -399,6 +406,37 @@ void ClientController::onToggleClientPredictionEvent(const Event& event)
                                   " Shooting: " + std::to_string(m_clientModel->getPredictBullets()) +
                                   " Animation: " + std::to_string(m_clientModel->getPredictAnimation()));
     }
+}
+
+void ClientController::onToggleInventoryEvent(const Event& event)
+{
+    if (!m_clientModel->getLocalPlayerAlive())
+    {
+        return;
+    }
+    
+    if (m_hudView->getViewLayer())
+    {
+        if (m_hudView->getViewLayer()->getDescriptor() == InventoryLayer::DESCRIPTOR)
+        {
+            m_hudView->removeViewLayer();
+        }
+        return;
+    }
+    auto inventoryLayer = Injector::globalInjector().instantiateUnmapped<InventoryLayer,
+        SnapshotModel>();
+    inventoryLayer->initialize();
+    inventoryLayer->setItemPickupCallback([this](const EntityType type,
+                                                 const uint16_t amount,
+                                                 const uint16_t entityID){
+        m_inputModel->setInteract(true);
+        m_inputModel->setPickupType((uint8_t)type);
+        m_inputModel->setPickupAmount(amount);
+        m_inputModel->setPickupID(entityID);
+    });
+    m_hudView->setViewLayer(inventoryLayer);
+    
+    inventoryLayer->setData(m_clientModel->getLocalPlayerID());
 }
 
 void ClientController::onPlayerDeathReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID)
@@ -555,7 +593,7 @@ std::shared_ptr<ClientInputMessage> ClientController::getInputData() const
     data->aimPointX = aimPoint.x;
     data->aimPointY = aimPoint.y;
     
-    bool blockInput = m_hudView->getViewLayer() != nullptr;
+    bool blockInput = !m_clientModel->getLocalPlayerAlive();
     data->shoot = blockInput ? false : m_inputModel->getShoot();
     data->interact = blockInput ? false : m_inputModel->getInteract();
     data->run = m_inputModel->getRun();
@@ -578,4 +616,40 @@ std::shared_ptr<ClientInputMessage> ClientController::getInputData() const
     m_inputModel->setChangeWeapon(false);
     
     return data;
+}
+
+void ClientController::processIncomingSnapshot(const SnapshotData& snapshot)
+{
+    const uint8_t localPlayerID = m_clientModel->getLocalPlayerID();
+    bool wasLocalPlayerAlive = m_clientModel->getLocalPlayerAlive();
+    bool isLocalPlayerAlive = false;
+    
+    const bool containsLocalPlayer = snapshot.playerData.find(localPlayerID) != snapshot.playerData.end();
+    if (containsLocalPlayer)
+    {
+        const auto& playerData = snapshot.playerData.at(localPlayerID);
+        isLocalPlayerAlive = playerData.health > 0.f;
+    }
+
+    if (wasLocalPlayerAlive && !isLocalPlayerAlive)
+    {
+        m_clientModel->setLocalPlayerAlive(false);
+        auto shootToContinueLayer = Injector::globalInjector().instantiateUnmapped<ShootToContinueLayer,
+        InputModel>();
+        shootToContinueLayer->setup("YOU DIED",
+                                    "Press Fire to respawn",
+                                    [this](){
+            // Send respawn message to server
+            std::shared_ptr<ClientStateUpdateMessage> respawnMessage = std::make_shared<ClientStateUpdateMessage>();
+            respawnMessage->state = ClientState::PLAYER_RESPAWN;
+            std::shared_ptr<Net::Message> message = respawnMessage;
+            m_networkController->sendMessage(0, message, true);
+        });
+        m_hudView->setViewLayer(shootToContinueLayer);
+    }
+    else if (!wasLocalPlayerAlive && isLocalPlayerAlive)
+    {
+        m_hudView->removeViewLayer();
+        m_clientModel->setLocalPlayerAlive(true);
+    }
 }

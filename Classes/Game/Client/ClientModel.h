@@ -23,6 +23,9 @@ public:
     void setLocalPlayerID(const uint8_t playerID) { m_localPlayerID = playerID; }
     uint8_t getLocalPlayerID() const { return m_localPlayerID; }
 
+    void setLocalPlayerAlive(const bool alive) { m_localPlayerAlive = alive; }
+    bool getLocalPlayerAlive() const { return m_localPlayerAlive; }
+
     void setInterpolationLatency(const float latency) { m_interpolationLatency = latency; }
     float getInterpolationLatency() const { return m_interpolationLatency; }
 
@@ -43,7 +46,7 @@ public:
 
     void setLastPlayerActionTime(const float time) { m_lastPlayerActionTime = time; }
     float getLastPlayerActionTime() const { return m_lastPlayerActionTime; }
-
+    
     std::vector<std::shared_ptr<ClientInputMessage>>& getInputData() { return m_inputData; }
     
     void setPlayerName(uint8_t playerID, const std::string name) { m_playerNames[playerID] = name; }
@@ -52,6 +55,7 @@ public:
 private:
     ClientMode m_mode;
     uint8_t m_localPlayerID;
+    bool m_localPlayerAlive;
     float m_interpolationLatency;
     bool m_predictMovement;
     bool m_predictBullets;

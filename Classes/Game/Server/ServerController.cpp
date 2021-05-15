@@ -911,15 +911,15 @@ std::shared_ptr<ServerSnapshotMessage> ServerController::getWorldStateDiff(const
 
 void ServerController::initDebugStuff()
 {
-//    for (int x = 1; x < 2; x++)
-//    {
-//        // Don't use dispatcher directly or local client will also catch this event
-//        // We want to use the network instead so we spawn the players on the server
-//        // as if they just joined
-//        size_t playerID = x;
-//        onPlayerJoined(playerID);
-//        m_botPlayers[playerID] = std::make_shared<BaseAI>();
-//    }
+    for (int x = 1; x < 10; x++)
+    {
+        // Don't use dispatcher directly or local client will also catch this event
+        // We want to use the network instead so we spawn the players on the server
+        // as if they just joined
+        size_t playerID = x;
+        onPlayerJoined(playerID);
+        m_botPlayers[playerID] = std::make_shared<BaseAI>();
+    }
 }
 
 void ServerController::applyAI()

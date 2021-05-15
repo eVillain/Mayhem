@@ -43,5 +43,14 @@ void ShootToContinueLayer::update(const float deltaTime)
     if (m_inputModel->getShoot() && m_callback)
     {
         m_callback();
+        m_callback = nullptr;
+        
+        cocos2d::FadeOut* fadeOut = cocos2d::FadeOut::create(0.5f);
+        cocos2d::CallFunc* changeTextCB = cocos2d::CallFunc::create([this](){
+            m_continueLabel->setString("Waiting to respawn...");
+        });
+        cocos2d::FadeIn* fadeIn = cocos2d::FadeIn::create(0.5f);
+        cocos2d::Sequence* sequence = cocos2d::Sequence::create(fadeOut, changeTextCB, fadeIn, NULL);
+        m_continueLabel->runAction(sequence);
     }
 }

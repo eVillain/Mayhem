@@ -72,11 +72,12 @@ private:
     void onPlayerDeathReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
     void onTileDeathReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
     void onToggleClientPredictionEvent(const Event& event);
+    void onToggleInventoryEvent(const Event& event);
 
     void debugSnapshots(const size_t targetIndex, const float newAlpha);
     void checkShot(const SnapshotData& snapshot);
+    void processIncomingSnapshot(const SnapshotData& snapshot);
     
-    cocos2d::Vec2 getAimPosition() const;
     std::shared_ptr<ClientInputMessage> getInputData() const;
     
     std::shared_ptr<ClientModel> m_clientModel;

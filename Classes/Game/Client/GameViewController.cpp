@@ -12,7 +12,6 @@
 #include "HUDView.h"
 #include "Core/Injector.h"
 #include "Game/Client/InputModel.h"
-#include "InventoryLayer.h"
 #include "LightController.h"
 #include "ParticlesController.h"
 #include "PlayAudioEvent.h"
@@ -22,14 +21,12 @@
 #include "Pseudo3DSprite.h"
 #include "SharedConstants.h"
 #include "SpawnParticlesEvent.h"
-#include "ToggleInventoryEvent.h"
 #include "WeaponConstants.h"
 #include "GameSettings.h"
 #include "LevelModel.h"
 #include "RaycastUtil.h"
 #include "base/ccUtils.h"
 #include "SnapshotModel.h"
-#include "ShootToContinueLayer.h"
 
 GameViewController::GameViewController(std::shared_ptr<GameSettings> gameSettings,
                                        std::shared_ptr<LevelModel> levelModel,
@@ -48,15 +45,12 @@ GameViewController::GameViewController(std::shared_ptr<GameSettings> gameSetting
 , m_particlesController(particlesController)
 , m_hudView(hudView)
 , m_postProcessShader(nullptr)
-, m_respawnCallback(nullptr)
 , m_shotHitLastFrame(false)
 {
     m_cameraModel = std::make_shared<CameraModel>();
     m_cameraController = std::make_shared<CameraController>(m_cameraModel);
     
     m_postProcessShader = cocos2d::GLProgram::createWithFilenames("res/shaders/vertex_p.vsh", "res/shaders/post_process.fsh");
-
-    Dispatcher::globalDispatcher().addListener(ToggleInventoryEvent::descriptor, std::bind(&GameViewController::onToggleInventoryEvent, this, std::placeholders::_1));
 }
 
 GameViewController::~GameViewController()
@@ -89,18 +83,6 @@ void GameViewController::update(const float deltaTime,
             if (m_entityViews.find(entityID) == m_entityViews.end())
             {
                 onEntitySpawned(entityID, toDataPair.second);
-                if (toDataPair.second.type == EntityType::PlayerEntity)
-                {
-                    // find player ID
-                    const auto playerIt = toSnapshot.playerData.find(m_cameraModel->getCameraFollowPlayerID());
-                    if (playerIt != toSnapshot.playerData.end())
-                    {
-                        if (playerIt->first == m_cameraModel->getCameraFollowPlayerID())
-                        {
-                            m_hudView->removeViewLayer(); // Remove any open layers, you just SPAWNED IN!
-                        }
-                    }
-                }
             }
         }
         
@@ -119,16 +101,6 @@ void GameViewController::update(const float deltaTime,
     updateView(deltaTime);
 
     m_particlesController->update();
-    
-    if (m_hudView->getViewLayer())
-    {
-        if (m_hudView->getViewLayer()->getDescriptor() == InventoryLayer::DESCRIPTOR)
-        {
-            auto inventoryLayer = std::dynamic_pointer_cast<InventoryLayer>(m_hudView->getViewLayer());
-            inventoryLayer->setData(m_cameraModel->getCameraFollowPlayerID());
-        }
-        return;
-    }
     
     const cocos2d::Value& postProcessSetting = m_gameSettings->getValue(GameView::SETTING_RENDER_POSTPROCESS, cocos2d::Value(true));
     if (postProcessSetting.asBool())
@@ -159,35 +131,8 @@ void GameViewController::onEntityDestroyed(const uint32_t entityID,
     type = entityView->getEntityType();
     position = entityView->getSprite()->getPosition();
     
-    if (type == EntityType::PlayerEntity)
-    {
-        auto playerIt = std::find_if(snapshot.playerData.begin(),
-                                     snapshot.playerData.end(),
-                                     [entityID](const std::pair<uint8_t, PlayerState>& pair){
-            return pair.second.entityID == entityID;
-        });
-        if (playerIt != snapshot.playerData.end())
-        {
-            if (playerIt->first == m_cameraModel->getCameraFollowPlayerID())
-            {
-                // You died, show according screen
-                auto shootToContinueLayer = Injector::globalInjector().instantiateUnmapped<ShootToContinueLayer,
-                InputModel>();
-                shootToContinueLayer->setup("YOU DIED",
-                                            "Press Fire to respawn",
-                                            [this](){
-                    if (m_respawnCallback)
-                    {
-                        m_respawnCallback();
-                    }
-                    m_hudView->removeViewLayer();
-                });
-                m_hudView->setViewLayer(shootToContinueLayer);
-            }
-        }
-    }
-    else if (type == EntityType::Projectile_Grenade ||
-             type == EntityType::Projectile_Rocket)
+    if (type == EntityType::Projectile_Grenade ||
+        type == EntityType::Projectile_Rocket)
     {
         const float PSEUDO_3D_BLAST_STRENGTH = 64.f;
         m_gameView->drawExplosion(position);
@@ -1359,32 +1304,6 @@ void GameViewController::renderPlayerDeath(const cocos2d::Vec2& position,
                                            10.f,
                                            0.f);
     }
-}
-
-void GameViewController::onToggleInventoryEvent(const Event& event)
-{
-    if (m_hudView->getViewLayer())
-    {
-        if (m_hudView->getViewLayer()->getDescriptor() == InventoryLayer::DESCRIPTOR)
-        {
-            m_hudView->removeViewLayer();
-        }
-        return;
-    }
-    auto inventoryLayer = Injector::globalInjector().instantiateUnmapped<InventoryLayer,
-        SnapshotModel>();
-    inventoryLayer->initialize();
-    inventoryLayer->setItemPickupCallback([this](const EntityType type,
-                                                 const uint16_t amount,
-                                                 const uint16_t entityID){
-        m_inputModel->setInteract(true);
-        m_inputModel->setPickupType((uint8_t)type);
-        m_inputModel->setPickupAmount(amount);
-        m_inputModel->setPickupID(entityID);
-    });
-    m_hudView->setViewLayer(inventoryLayer);
-    
-    inventoryLayer->setData(m_cameraModel->getCameraFollowPlayerID());
 }
 
 cocos2d::Vec2 GameViewController::getAimPosition(const cocos2d::Vec2& mouseCoord) const
