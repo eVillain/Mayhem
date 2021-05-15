@@ -305,9 +305,14 @@ void ClientController::predictLocalMovement(SnapshotData& toSnapshot,
         toEntitySnapshot = toSnapshot.entityData.at(playerState.entityID);
         m_clientModel->setLastPlayerActionTime(lastActionTime);
         
+        const cocos2d::Vec2 direction = cocos2d::Vec2(input->directionX, input->directionY);
+        const cocos2d::Vec2 velocity = PlayerLogic::getMovementVelocityForInput(direction, input->run);
+        const float angularVelocity = 0.f;
         MovementIntegrator::integratePosition(m_gameModel->getFrameTime(),
                                               localPlayerEntityID,
                                               toEntitySnapshot,
+                                              velocity,
+                                              angularVelocity,
                                               toSnapshot.entityData,
                                               m_levelModel->getStaticRects());
         
@@ -431,8 +436,10 @@ void ClientController::onTileDeathReceived(const std::shared_ptr<Net::Message>& 
         const cocos2d::Vec2 tile = cocos2d::Vec2(deathMessage->tileX, deathMessage->tileY);
         cocos2d::TMXLayer* foreground = m_gameView->getFGTilesNode();
         cocos2d::TMXLayer* background = m_gameView->getBGTilesNode();
+        cocos2d::TMXLayer* staticLights = m_gameView->getStaticLightingNode();
         cocos2d::Sprite* foregroundSprite = foreground->getTileAt(tile);
         cocos2d::Sprite* backgroundSprite = background->getTileAt(tile);
+        cocos2d::Sprite* lightSprite = staticLights->getTileAt(tile);
 
         if (foregroundSprite)
         {
@@ -441,6 +448,10 @@ void ClientController::onTileDeathReceived(const std::shared_ptr<Net::Message>& 
         if (backgroundSprite)
         {
             backgroundSprite->runAction(cocos2d::FadeOut::create(1.f));
+        }
+        if (lightSprite)
+        {
+            lightSprite->runAction(cocos2d::FadeOut::create(1.f));
         }
     }
     else

@@ -85,106 +85,7 @@ void ServerController::update(float deltaTime)
     
     if (sendUpdate)
     {
-        const auto postTickState = m_gameController->getEntitiesModel()->getSnapshot();
-        const auto players = m_gameController->getEntitiesModel()->getPlayers();
-        
-        SnapshotData snapshot;
-        snapshot.serverTick = m_gameModel->getCurrentTick();
-        snapshot.entityCount = (uint32_t)postTickState.size();
-        snapshot.entityData = postTickState;
-        snapshot.playerCount = players.size();
-        snapshot.hitData = m_frameHitData;
-
-        for (auto player : players)
-        {
-            snapshot.playerData[player.first].entityID = player.second->getEntityID();
-            snapshot.playerData[player.first].animationState = player.second->getAnimationState();
-            snapshot.playerData[player.first].aimPointX = player.second->getAimPosition().x;
-            snapshot.playerData[player.first].aimPointY = player.second->getAimPosition().y;
-            snapshot.playerData[player.first].health = player.second->getHealth();
-            snapshot.playerData[player.first].flipX = player.second->getFlipX();
-            snapshot.playerData[player.first].activeWeaponSlot = player.second->getActiveSlot();
-            const auto& weaponSlots = player.second->getWeaponSlots();
-            for (size_t i = 0; i < 5; i++)
-            {
-                snapshot.playerData[player.first].weaponSlots.push_back({(uint8_t)weaponSlots.at(i).type, weaponSlots.at(i).amount});
-            }
-        }
-        
-        for (const auto& clientState : m_clientStates)
-        {
-            const uint8_t playerID = clientState.first;
-            if (clientState.second == ClientPlayerState::DISCONNECTED)
-            {
-                continue;
-            }
-            else if (clientState.second == ClientPlayerState::JOINING)
-            {
-                std::shared_ptr<ServerLoadLevelMessage> loadLevelMessage = std::make_shared<ServerLoadLevelMessage>();
-                loadLevelMessage->tickRate = m_gameModel->getTickRate();
-                loadLevelMessage->modeType = m_gameController->getGameMode()->getType();
-                loadLevelMessage->maxPlayers = m_gameController->getGameMode()->getMaxPlayers();
-                loadLevelMessage->playersPerTeam = m_gameController->getGameMode()->getPlayersPerTeam();
-                loadLevelMessage->level = m_levelModel->getLevel();
-                std::shared_ptr<Net::Message> message = loadLevelMessage;
-                m_networkController->sendMessage(playerID, message);
-                continue;
-            }
-            
-            snapshot.lastReceivedInput = m_inputCache->getLastReceivedSequence(playerID);
-            const auto& sendingPlayer = players.find(playerID);
-            if (sendingPlayer != players.end())
-            {
-                auto& inventory = sendingPlayer->second->getInventory();
-                for (const auto& inventoryItem : inventory)
-                {
-                    snapshot.inventory.push_back({(uint8_t)inventoryItem.type, inventoryItem.amount});
-                }
-            }
-            
-            if (m_sendDeltaUpdates)
-            {
-                auto& playerSnapshots = m_clientSnapshots.at(playerID);
-                playerSnapshots.push_back(snapshot);
-
-                const uint32_t lastReceivedSnapshotTick = m_inputCache->getLastReceivedSnapshot(playerID);
-                auto snapshotIt = std::find_if(playerSnapshots.begin(),
-                                               playerSnapshots.end(),
-                                               [lastReceivedSnapshotTick](const SnapshotData& data){
-                    return data.serverTick == lastReceivedSnapshotTick;
-                });
-                if (snapshotIt != playerSnapshots.end())
-                {
-                    const auto& lastReceivedState = *snapshotIt;
-                    std::shared_ptr<ServerSnapshotDiffMessage> deltaMessage = std::make_shared<ServerSnapshotDiffMessage>([lastReceivedState](const uint32_t){ return lastReceivedState; });
-                    deltaMessage->data = snapshot;
-                    deltaMessage->previousServerTick = lastReceivedSnapshotTick;
-                    std::shared_ptr<Net::Message> message = std::dynamic_pointer_cast<Net::Message>(deltaMessage);
-                    m_networkController->sendMessage(playerID, message);
-                }
-                
-                // Erase up to last received
-                playerSnapshots.erase(std::remove_if(playerSnapshots.begin(),
-                                                     playerSnapshots.end(),
-                                                     [lastReceivedSnapshotTick](const SnapshotData& data)
-                                                     {
-                                                        return data.serverTick < lastReceivedSnapshotTick;
-                                                    }),
-                                      playerSnapshots.end());
-            }
-            else
-            {
-                std::shared_ptr<ServerSnapshotMessage> snapshotMessage = std::make_shared<ServerSnapshotMessage>();
-                snapshotMessage->data = snapshot;
-
-                std::shared_ptr<Net::Message> message = std::dynamic_pointer_cast<Net::Message>(snapshotMessage);
-                m_networkController->sendMessage(playerID, message);
-            }
-//            CCLOG("ServerController::update sent snapshot to player %i", sendingPlayer.first);
-        }
-        
-        m_networkController->sendMessages();
-        m_frameHitData.clear();
+        sendUpdateMessages();
     }
 }
 
@@ -259,10 +160,9 @@ void ServerController::performGameUpdate(const float deltaTime)
 
     std::map<uint32_t, EntitySnapshot> worldState = m_gameController->getEntitiesModel()->getSnapshot();
     
-    MovementIntegrator::integratePositions(m_gameModel->getFrameTime(),
-                                           worldState,
-                                           m_levelModel->getStaticRects(),
-                                           std::bind(&ServerController::onEntityCollision, this, std::placeholders::_1));
+    integratePositions(m_gameModel->getFrameTime(),
+                       worldState,
+                       m_levelModel->getStaticRects());
     m_gameController->getEntitiesModel()->setSnapshot(worldState);
     
     m_gameController->tick(m_gameModel->getFrameTime());
@@ -949,7 +849,7 @@ void ServerController::onInputMessageReceived(const std::shared_ptr<Net::Message
         if (m_inputCache->hasReceivedSequence(playerID) &&
             m_inputCache->getLastReceivedSequence(playerID) >= inputMessage->inputSequence)
         {
-            CCLOG("ServerController::onInputMessageReceived player %i, discarding input older than last (%u vs %u)",
+            CCLOG("ServerController::onInputMessageReceived - discarding player %i input older than last (%u vs %u)",
                   playerID, inputMessage->inputSequence, m_inputCache->getLastReceivedSequence(playerID));
             return;
         }
@@ -1011,15 +911,15 @@ std::shared_ptr<ServerSnapshotMessage> ServerController::getWorldStateDiff(const
 
 void ServerController::initDebugStuff()
 {
-    for (int x = 1; x < 2; x++)
-    {
-        // Don't use dispatcher directly or local client will also catch this event
-        // We want to use the network instead so we spawn the players on the server
-        // as if they just joined
-        size_t playerID = x;
-        onPlayerJoined(playerID);
-        m_botPlayers[playerID] = std::make_shared<BaseAI>();
-    }
+//    for (int x = 1; x < 2; x++)
+//    {
+//        // Don't use dispatcher directly or local client will also catch this event
+//        // We want to use the network instead so we spawn the players on the server
+//        // as if they just joined
+//        size_t playerID = x;
+//        onPlayerJoined(playerID);
+//        m_botPlayers[playerID] = std::make_shared<BaseAI>();
+//    }
 }
 
 void ServerController::applyAI()
@@ -1037,4 +937,123 @@ void ServerController::applyAI()
         
         onInputMessageReceived(input, playerID);
     }
+}
+
+void ServerController::integratePositions(const float deltaTime,
+                                          std::map<uint32_t, EntitySnapshot>& snapshot,
+                                          const std::vector<cocos2d::Rect>& staticRects)
+{
+    MovementIntegrator::setCollisionCallback(std::bind(&ServerController::onEntityCollision, this, std::placeholders::_1));
+    for (auto& entityPair : snapshot)
+    {
+        EntitySnapshot& entity = entityPair.second;
+        const uint32_t entityID = entityPair.first;
+        const cocos2d::Vec2& velocity = m_gameController->getEntitiesModel()->getEntities().at(entityID)->getVelocity();
+        const float angularVelocity = m_gameController->getEntitiesModel()->getEntities().at(entityID)->getAngularVelocity();
+        MovementIntegrator::integratePosition(deltaTime, entityID, entity, velocity, angularVelocity, snapshot, staticRects);
+    }
+    MovementIntegrator::setCollisionCallback(nullptr);
+}
+
+void ServerController::sendUpdateMessages()
+{
+    const auto postTickState = m_gameController->getEntitiesModel()->getSnapshot();
+    const auto players = m_gameController->getEntitiesModel()->getPlayers();
+    
+    SnapshotData snapshot;
+    snapshot.serverTick = m_gameModel->getCurrentTick();
+    snapshot.entityCount = (uint32_t)postTickState.size();
+    snapshot.entityData = postTickState;
+    snapshot.playerCount = players.size();
+    snapshot.hitData = m_frameHitData;
+
+    for (auto player : players)
+    {
+        snapshot.playerData[player.first].entityID = player.second->getEntityID();
+        snapshot.playerData[player.first].animationState = player.second->getAnimationState();
+        snapshot.playerData[player.first].aimPointX = player.second->getAimPosition().x;
+        snapshot.playerData[player.first].aimPointY = player.second->getAimPosition().y;
+        snapshot.playerData[player.first].health = player.second->getHealth();
+        snapshot.playerData[player.first].flipX = player.second->getFlipX();
+        snapshot.playerData[player.first].activeWeaponSlot = player.second->getActiveSlot();
+        const auto& weaponSlots = player.second->getWeaponSlots();
+        for (size_t i = 0; i < 5; i++)
+        {
+            snapshot.playerData[player.first].weaponSlots.push_back({(uint8_t)weaponSlots.at(i).type, weaponSlots.at(i).amount});
+        }
+    }
+    
+    for (const auto& clientState : m_clientStates)
+    {
+        const uint8_t playerID = clientState.first;
+        if (clientState.second == ClientPlayerState::DISCONNECTED)
+        {
+            continue;
+        }
+        else if (clientState.second == ClientPlayerState::JOINING)
+        {
+            std::shared_ptr<ServerLoadLevelMessage> loadLevelMessage = std::make_shared<ServerLoadLevelMessage>();
+            loadLevelMessage->tickRate = m_gameModel->getTickRate();
+            loadLevelMessage->modeType = m_gameController->getGameMode()->getType();
+            loadLevelMessage->maxPlayers = m_gameController->getGameMode()->getMaxPlayers();
+            loadLevelMessage->playersPerTeam = m_gameController->getGameMode()->getPlayersPerTeam();
+            loadLevelMessage->level = m_levelModel->getLevel();
+            std::shared_ptr<Net::Message> message = loadLevelMessage;
+            m_networkController->sendMessage(playerID, message);
+            continue;
+        }
+        
+        snapshot.lastReceivedInput = m_inputCache->getLastReceivedSequence(playerID);
+        const auto& sendingPlayer = players.find(playerID);
+        if (sendingPlayer != players.end())
+        {
+            auto& inventory = sendingPlayer->second->getInventory();
+            for (const auto& inventoryItem : inventory)
+            {
+                snapshot.inventory.push_back({(uint8_t)inventoryItem.type, inventoryItem.amount});
+            }
+        }
+        
+        if (m_sendDeltaUpdates)
+        {
+            auto& playerSnapshots = m_clientSnapshots.at(playerID);
+            playerSnapshots.push_back(snapshot);
+
+            const uint32_t lastReceivedSnapshotTick = m_inputCache->getLastReceivedSnapshot(playerID);
+            auto snapshotIt = std::find_if(playerSnapshots.begin(),
+                                           playerSnapshots.end(),
+                                           [lastReceivedSnapshotTick](const SnapshotData& data){
+                return data.serverTick == lastReceivedSnapshotTick;
+            });
+            if (snapshotIt != playerSnapshots.end())
+            {
+                const auto& lastReceivedState = *snapshotIt;
+                std::shared_ptr<ServerSnapshotDiffMessage> deltaMessage = std::make_shared<ServerSnapshotDiffMessage>([lastReceivedState](const uint32_t){ return lastReceivedState; });
+                deltaMessage->data = snapshot;
+                deltaMessage->previousServerTick = lastReceivedSnapshotTick;
+                std::shared_ptr<Net::Message> message = std::dynamic_pointer_cast<Net::Message>(deltaMessage);
+                m_networkController->sendMessage(playerID, message);
+            }
+            
+            // Erase up to last received
+            playerSnapshots.erase(std::remove_if(playerSnapshots.begin(),
+                                                 playerSnapshots.end(),
+                                                 [lastReceivedSnapshotTick](const SnapshotData& data)
+                                                 {
+                                                    return data.serverTick < lastReceivedSnapshotTick;
+                                                }),
+                                  playerSnapshots.end());
+        }
+        else
+        {
+            std::shared_ptr<ServerSnapshotMessage> snapshotMessage = std::make_shared<ServerSnapshotMessage>();
+            snapshotMessage->data = snapshot;
+
+            std::shared_ptr<Net::Message> message = std::dynamic_pointer_cast<Net::Message>(snapshotMessage);
+            m_networkController->sendMessage(playerID, message);
+        }
+    }
+            
+    m_networkController->sendMessages();
+    m_frameHitData.clear();
 }

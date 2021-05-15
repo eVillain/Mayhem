@@ -13,9 +13,9 @@ public:
     const uint16_t getEntityID() const { return m_entityID; }
     const EntityType& getEntityType() const { return m_entityType; }
     
-    virtual const cocos2d::Vec2 getPosition() const { return m_position; }
+    virtual const cocos2d::Vec2& getPosition() const { return m_position; }
     virtual const float getRotation() const { return m_rotation; }
-    virtual const cocos2d::Vec2 getVelocity() const { return m_velocity; }
+    virtual const cocos2d::Vec2& getVelocity() const { return m_velocity; }
     virtual const float getAngularVelocity() const { return m_angularVelocity; }
     virtual const bool getIsRemoved() const { return m_isRemoved; }
 

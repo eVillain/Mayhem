@@ -66,6 +66,7 @@ public:
     void setPlayersPerTeam(uint8_t players) { m_playersPerTeam = players; }
     
     void setTileDeathCallback(std::function<void(int, int)> cb) { m_tileDeathCallback = cb; }
+    void setWinConditionReachedCallback(std::function<void(uint8_t)> cb) { m_winConditionCallback = cb; }
 
 protected:
     std::shared_ptr<EntitiesController> m_entitiesController;
@@ -76,7 +77,8 @@ protected:
     uint8_t m_playersPerTeam;
     std::vector<TeamData> m_teams;
     
-    std::function<void(int, int)> m_tileDeathCallback;
+    std::function<void(int, int)> m_tileDeathCallback; // Tile x, y coords as params
+    std::function<void(uint8_t)> m_winConditionCallback; // Winning team / winning player as param
 };
 
 #endif /* GameMode_h */

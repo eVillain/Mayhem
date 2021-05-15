@@ -12,6 +12,8 @@ GameModeDM::GameModeDM(std::shared_ptr<EntitiesController> entitiesController,
            const int seed)
 : GameMode(entitiesController, entitiesModel, levelModel)
 , m_seed(seed)
+, m_maxKills(10)
+, m_maxTime(5)
 {
 }
 

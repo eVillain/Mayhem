@@ -22,7 +22,6 @@ private:
     void onMouseDown(cocos2d::EventMouse* event);
     void onMouseUp(cocos2d::EventMouse* event);
 
-    
     std::shared_ptr<InputModel> m_model;
     
     cocos2d::EventListenerKeyboard* m_keyListener;

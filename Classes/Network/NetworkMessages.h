@@ -260,9 +260,6 @@ struct EntitySnapshot {
     float positionX;
     float positionY;
     float rotation;
-    float velocityX;
-    float velocityY;
-    float angularVelocity;
     uint8_t type;
     uint16_t amount;
     uint8_t ownerID;
@@ -378,21 +375,15 @@ public:
                 float positionX;
                 float positionY;
                 float rotation;
-                float velocityX;
-                float velocityY;
-                float angularVelocity;
                 uint8_t entityType = 0;
                 stream.SerializeBits(entityID, 16);
                 stream.SerializeFloat(positionX);
                 stream.SerializeFloat(positionY);
                 stream.SerializeFloat(rotation);
-                stream.SerializeFloat(velocityX);
-                stream.SerializeFloat(velocityY);
-                stream.SerializeFloat(angularVelocity);
                 stream.SerializeByte(entityType);
                 if (!stream.IsMeasuring())
                 {
-                    data.entityData[entityID] = { positionX, positionY, rotation, velocityX, velocityY, angularVelocity, entityType, 0, 0 };
+                    data.entityData[entityID] = { positionX, positionY, rotation, entityType, 0, 0 };
                 }
             }
             
@@ -461,9 +452,6 @@ public:
                 stream.SerializeFloat(pair.second.positionX);
                 stream.SerializeFloat(pair.second.positionY);
                 stream.SerializeFloat(pair.second.rotation);
-                stream.SerializeFloat(pair.second.velocityX);
-                stream.SerializeFloat(pair.second.velocityY);
-                stream.SerializeFloat(pair.second.angularVelocity);
                 stream.SerializeByte(pair.second.type);
             }
             

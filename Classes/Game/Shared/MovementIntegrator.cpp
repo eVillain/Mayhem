@@ -7,24 +7,16 @@
 
 std::function<void(const CollisionData collisionData)> MovementIntegrator::s_collisionCallback = nullptr;
 
-void MovementIntegrator::integratePositions(const float deltaTime,
-                                            std::map<uint32_t, EntitySnapshot>& snapshot,
-                                            const std::vector<cocos2d::Rect>& staticRects,
-                                            std::function<void(const CollisionData collisionData)> collisionCallback)
+void MovementIntegrator::setCollisionCallback(std::function<void(const CollisionData collisionData)> collisionCallback)
 {
     s_collisionCallback = collisionCallback;
-    for (auto& entityPair : snapshot)
-    {
-        EntitySnapshot& entity = entityPair.second;
-        const uint32_t entityID = entityPair.first;
-        integratePosition(deltaTime, entityID, entity, snapshot, staticRects);
-    }
-    s_collisionCallback = nullptr;
 }
 
 void MovementIntegrator::integratePosition(const float deltaTime,
                                            const uint32_t entityID,
                                            EntitySnapshot& entity,
+                                           const cocos2d::Vec2& velocity,
+                                           const float angularVelocity,
                                            const std::map<uint32_t, EntitySnapshot>& snapshot,
                                            const std::vector<cocos2d::Rect>& staticRects)
 {
@@ -34,12 +26,11 @@ void MovementIntegrator::integratePosition(const float deltaTime,
     size_t collisionShapeIndex = 0;
     bool isStaticCollision = false;
     
-    if (entity.angularVelocity != 0.f)
+    if (angularVelocity != 0.f)
     {
-        entity.rotation = entity.rotation + (entity.angularVelocity * deltaTime);
+        entity.rotation = entity.rotation + (angularVelocity * deltaTime);
     }
     
-    const cocos2d::Vec2 velocity = cocos2d::Vec2(entity.velocityX, entity.velocityY);
     if (velocity == cocos2d::Vec2::ZERO)
     {
         return;
@@ -77,9 +68,8 @@ void MovementIntegrator::integratePosition(const float deltaTime,
         for (const cocos2d::Rect& baseColliderRect : colliderRects)
         {
             const cocos2d::Vec2 colliderPos = cocos2d::Vec2(colliderEntity.positionX, colliderEntity.positionY);
-            const cocos2d::Vec2 colliderVel = cocos2d::Vec2(colliderEntity.velocityX, colliderEntity.velocityY);
             const cocos2d::Rect colliderRect = cocos2d::Rect(baseColliderRect.origin + colliderPos, baseColliderRect.size);
-            const float newRatio = getMovementRatio(entity, colliderRect, colliderVel, deltaTime);
+            const float newRatio = getMovementRatio(entity, velocity, colliderRect, cocos2d::Vec2::ZERO, deltaTime);
             if (newRatio < movementRatio)
             {
                 movementRatio = newRatio;
@@ -99,7 +89,7 @@ void MovementIntegrator::integratePosition(const float deltaTime,
     size_t staticColliderID = 0;
     for (const auto& staticRect : staticRects)
     {
-        const float newRatio = getMovementRatio(entity, staticRect, cocos2d::Vec2::ZERO, deltaTime);
+        const float newRatio = getMovementRatio(entity, velocity, staticRect, cocos2d::Vec2::ZERO, deltaTime);
         if (newRatio < movementRatio)
         {
             movementRatio = newRatio;
@@ -130,6 +120,7 @@ void MovementIntegrator::integratePosition(const float deltaTime,
 }
 
 float MovementIntegrator::getMovementRatio(EntitySnapshot& entity,
+                                           const cocos2d::Vec2& velocity,
                                            const cocos2d::Rect& colliderRect,
                                            const cocos2d::Vec2& colliderVelocity,
                                            const float deltaTime)
@@ -139,7 +130,6 @@ float MovementIntegrator::getMovementRatio(EntitySnapshot& entity,
     {
         return 1.f;
     }
-    const cocos2d::Vec2 velocity = cocos2d::Vec2(entity.velocityX, entity.velocityY);
     const cocos2d::Vec2 originalPosition = cocos2d::Vec2(entity.positionX, entity.positionY);
     
     // Solve collisions by finding smallest movementRatio possible

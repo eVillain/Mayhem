@@ -308,8 +308,8 @@ namespace Net
     }
   
     bool TransportIP::SendPacket(NodeID m_nodeID,
-                                  const unsigned char data[],
-                                  int32_t size)
+                                 const unsigned char data[],
+                                 int32_t size)
     {
         assert(m_node);
         assert(size < BUFFER_SIZE_BYTES);

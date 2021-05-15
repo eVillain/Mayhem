@@ -46,7 +46,12 @@ void GameModeBR::onPlayerReady(const uint8_t playerID)
 
 void GameModeBR::onPlayerDied(const uint8_t playerID)
 {
-    
+    // Check number of players - if down to 1 / down to 1 team then win condition is reached
+    if (m_playersPerTeam == 1)
+    {
+        //
+    }
+//    else if ()
 }
 
 void GameModeBR::spawnThings()

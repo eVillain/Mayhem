@@ -110,6 +110,10 @@ private:
     cocos2d::Vec2 getAverageAICenter() const;
     cocos2d::Vec2 getAverageAIVelocity() const;
     cocos2d::Vec2 getAverageAwayVector(const cocos2d::Vec2& position, float distance) const;
+    void integratePositions(const float deltaTime,
+                            std::map<uint32_t, EntitySnapshot>& snapshot,
+                            const std::vector<cocos2d::Rect>& staticRects);
+    void sendUpdateMessages();
 };
 
 #endif /* ServerController_h */

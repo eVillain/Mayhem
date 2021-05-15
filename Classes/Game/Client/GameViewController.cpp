@@ -183,7 +183,6 @@ void GameViewController::onEntityDestroyed(const uint32_t entityID,
                     m_hudView->removeViewLayer();
                 });
                 m_hudView->setViewLayer(shootToContinueLayer);
-
             }
         }
     }
@@ -775,7 +774,8 @@ void GameViewController::updatePlayerAnimations(const uint8_t playerID,
             armRanim = AnimationState::HoldArmR;
         }
     }
-    else if (playerState.animationState == AnimationState::Walk)
+    else if (playerState.animationState == AnimationState::Walk ||
+             playerState.animationState == AnimationState::Run)
     {
         armLanim = AnimationState::WalkArmL;
         armRanim = AnimationState::WalkArmR;
@@ -817,12 +817,12 @@ void GameViewController::updatePlayerAnimations(const uint8_t playerID,
     const bool isAimFaced = entityView->getAnimation(currentHeadAction) == AnimationState::AimFace;
     const bool isUnAimFaced = entityView->getAnimation(currentHeadAction) == AnimationState::UnAimFace;
     const bool shouldAimFace = !isReloading &&
-                                m_inputModel->getAim() &&
+                                playerState.animationState == AnimationState::AimFace &&
                                 playerState.weaponSlots.at(playerState.activeWeaponSlot).type;
     if (shouldAimFace && !isAimFaced)
     {
         headSprite->stopAllActions();
-       headSprite->runAction(entityView->getAnimations().at(AnimationState::AimFace));
+        headSprite->runAction(entityView->getAnimations().at(AnimationState::AimFace));
     }
     else if (!shouldAimFace && isAimFaced)
     {
@@ -851,17 +851,25 @@ void GameViewController::updatePlayerAnimations(const uint8_t playerID,
         }
     }
 
-    if (playerState.animationState == AnimationState::Walk)
+    float legAnimationSpeed = 0.f;
+    float armAnimationSpeed = 0.f;
+
+    if (playerState.animationState == AnimationState::Run)
     {
-        const cocos2d::Vec2 velocity = cocos2d::Vec2(entitySnapshot.velocityX, entitySnapshot.velocityY);
-        const float velocityLength = velocity.length();
-        cocos2d::Speed* walkAnim = static_cast<cocos2d::Speed*>(entityView->getAnimations()[Walk].get());
-        walkAnim->setSpeed((velocityLength * 2.f) / PLAYER_MAX_VEL);
-        cocos2d::Speed* walkArmRAnim = static_cast<cocos2d::Speed*>(entityView->getAnimations()[WalkArmR].get());
-        walkArmRAnim->setSpeed((velocityLength * 2.f) / PLAYER_MAX_VEL);
-        cocos2d::Speed* walkArmLAnim = static_cast<cocos2d::Speed*>(entityView->getAnimations()[WalkArmL].get());
-        walkArmLAnim->setSpeed((velocityLength * 2.f) / PLAYER_MAX_VEL);
+        legAnimationSpeed = 2.f;
+        armAnimationSpeed = 2.f;
     }
+    else if (playerState.animationState == AnimationState::Walk)
+    {
+        legAnimationSpeed = 1.f;
+        armAnimationSpeed = 0.5f;
+    }
+    cocos2d::Speed* walkAnim = static_cast<cocos2d::Speed*>(entityView->getAnimations()[Walk].get());
+    walkAnim->setSpeed(legAnimationSpeed);
+    cocos2d::Speed* walkArmRAnim = static_cast<cocos2d::Speed*>(entityView->getAnimations()[WalkArmR].get());
+    walkArmRAnim->setSpeed(armAnimationSpeed);
+    cocos2d::Speed* walkArmLAnim = static_cast<cocos2d::Speed*>(entityView->getAnimations()[WalkArmL].get());
+    walkArmLAnim->setSpeed(armAnimationSpeed);
 }
 
 void GameViewController::updateHeldItem(std::shared_ptr<EntityView>& entityView,

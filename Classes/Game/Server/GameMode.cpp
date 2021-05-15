@@ -9,5 +9,6 @@ GameMode::GameMode(std::shared_ptr<EntitiesController> entitiesController,
 , m_maxPlayers(2)
 , m_playersPerTeam(1)
 , m_tileDeathCallback(nullptr)
+, m_winConditionCallback(nullptr)
 {
 }

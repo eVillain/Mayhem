@@ -38,12 +38,8 @@ void EntitiesModel::setSnapshot(const std::map<uint32_t, EntitySnapshot>& snapsh
         }
         const cocos2d::Vec2 position = cocos2d::Vec2(snapshot.at(entityPair.first).positionX,
                                                      snapshot.at(entityPair.first).positionY);
-        const cocos2d::Vec2 velocity = cocos2d::Vec2(snapshot.at(entityPair.first).velocityX,
-                                                     snapshot.at(entityPair.first).velocityY);
         entityPair.second->setPosition(position);
         entityPair.second->setRotation(snapshot.at(entityPair.first).rotation);
-        entityPair.second->setVelocity(velocity);
-        entityPair.second->setAngularVelocity(snapshot.at(entityPair.first).angularVelocity);
     }
 }
 
@@ -56,9 +52,6 @@ std::map<uint32_t, EntitySnapshot> EntitiesModel::getSnapshot() const
             entityPair.second->getPosition().x,
             entityPair.second->getPosition().y,
             entityPair.second->getRotation(),
-            entityPair.second->getVelocity().x,
-            entityPair.second->getVelocity().y,
-            entityPair.second->getAngularVelocity(),
             (uint8_t)entityPair.second->getEntityType()
         };
     }
@@ -80,9 +73,6 @@ std::map<uint32_t, EntitySnapshot> EntitiesModel::getDiff(const std::map<uint32_
                 entityPair.second->getPosition().x,
                 entityPair.second->getPosition().y,
                 entityPair.second->getRotation(),
-                entityPair.second->getVelocity().x,
-                entityPair.second->getVelocity().y,
-                entityPair.second->getAngularVelocity(),
                 (uint8_t)entityPair.second->getEntityType()
             };
         }
@@ -94,9 +84,6 @@ std::map<uint32_t, EntitySnapshot> EntitiesModel::getDiff(const std::map<uint32_
                 entityPair.second->getPosition().x - snapshotEntity.positionX,
                 entityPair.second->getPosition().y - snapshotEntity.positionY,
                 entityPair.second->getRotation() - snapshotEntity.rotation,
-                entityPair.second->getVelocity().x - snapshotEntity.velocityX,
-                entityPair.second->getVelocity().y - snapshotEntity.velocityY,
-                entityPair.second->getAngularVelocity() - snapshotEntity.angularVelocity,
                 (uint8_t)entityPair.second->getEntityType()
             };
         }

@@ -118,9 +118,7 @@ void ReplayEditorController::onMouseMoved(cocos2d::EventMouse *event)
         
         m_infoView->getNameLabel()->setString(staticData.name + "(" + std::to_string(entity.amount) + ")");
         m_infoView->getPosLabel()->setString("Pos: " + NumberFormatter::toString(entity.positionX) + ", " + NumberFormatter::toString(entity.positionY));
-        m_infoView->getVelLabel()->setString("Vel: " + NumberFormatter::toString(entity.velocityX) + ", " + NumberFormatter::toString(entity.velocityY));
         m_infoView->getRotLabel()->setString("Rot: " + NumberFormatter::toString(entity.rotation));
-        m_infoView->getAngVelLabel()->setString("Rot: " + NumberFormatter::toString(entity.angularVelocity));
         m_infoView->getOwnerLabel()->setString("Owner: " + std::to_string(entity.ownerID));
     }
     else if (m_infoView)

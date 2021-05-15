@@ -10,7 +10,6 @@ static constexpr float BULLET_SHOTGUN_VELOCITY = 1000.0f;
 static constexpr float BULLET_ROCKET_VELOCITY = 400.0f;
 static constexpr int RAILGUN_DAMAGE = 100.0f;
 
-static constexpr float PLAYER_ACC = 10.f;
 static constexpr float PLAYER_WALK_VEL = 120.f;
 static constexpr float PLAYER_RUN_VEL = 180.f;
 static constexpr float PLAYER_MAX_VEL = 200.f;

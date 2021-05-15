@@ -37,18 +37,13 @@ void PlayerLogic::applyInput(const uint8_t playerID,
     }
     
     cocos2d::Vec2 direction = cocos2d::Vec2(input->directionX, input->directionY);
-    cocos2d::Vec2 velocity = cocos2d::Vec2::ZERO;
+    cocos2d::Vec2 velocity = getMovementVelocityForInput(direction, input->run);
     bool flipX = player.flipX;
     const bool hasInputMovement = direction.length() > 0.f;
     if (hasInputMovement)
     {
         flipX = input->directionX < 0.f;
-
-        float moveSpeed = input->run ? PLAYER_RUN_VEL : PLAYER_WALK_VEL;
-        velocity = cocos2d::Vec2(direction.x, -direction.y).getNormalized() * moveSpeed;
     }
-    entity.velocityX = velocity.x;
-    entity.velocityY = velocity.y;
     player.flipX = flipX;
 
     player.aimPointX = input->aimPointX;
@@ -82,6 +77,10 @@ void PlayerLogic::applyInput(const uint8_t playerID,
                  EntityDataModel::isItemType((EntityType)snapshot.entityData.at(entityUnderCursorID).type))
         {
             animationState = AnimationState::Grab;
+        }
+        else if (velocity.length() > PLAYER_WALK_VEL)
+        {
+            animationState = AnimationState::Run;
         }
         else if (velocity.length() > PLAYER_IDLE_VEL_THRESHOLD)
         {
@@ -253,4 +252,16 @@ void PlayerLogic::setInventoryAmount(const EntityType type,
     }
     
     inventory.push_back({(uint8_t)type, amount});
+}
+
+cocos2d::Vec2 PlayerLogic::getMovementVelocityForInput(const cocos2d::Vec2& input,
+                                                       const bool run)
+{
+    const bool hasInputMovement = input.lengthSquared() > 0.f;
+    if (hasInputMovement)
+    {
+        const float moveSpeed = run ? PLAYER_RUN_VEL : PLAYER_WALK_VEL;
+        return cocos2d::Vec2(input.x, -input.y).getNormalized() * moveSpeed;
+    }
+    return cocos2d::Vec2::ZERO;
 }

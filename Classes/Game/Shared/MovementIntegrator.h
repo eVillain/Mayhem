@@ -13,16 +13,16 @@ struct CollisionData {
 class MovementIntegrator
 {
 public:
-    static void integratePositions(const float deltaTime,
-                                   std::map<uint32_t, EntitySnapshot>& snapshot,
-                                   const std::vector<cocos2d::Rect>& staticRects,
-                                   std::function<void(const CollisionData collisionData)> collisionCallback);
+    static void setCollisionCallback(std::function<void(const CollisionData collisionData)> cb);
     static void integratePosition(const float deltaTime,
                                   const uint32_t entityID,
                                   EntitySnapshot& entity,
+                                  const cocos2d::Vec2& velocity,
+                                  const float angularVelocity,
                                   const std::map<uint32_t, EntitySnapshot>& snapshot,
                                   const std::vector<cocos2d::Rect>& staticRects);
     static float getMovementRatio(EntitySnapshot& entity,
+                                  const cocos2d::Vec2& velocity,
                                   const cocos2d::Rect& colliderRect,
                                   const cocos2d::Vec2& colliderVelocity,
                                   const float deltaTime);

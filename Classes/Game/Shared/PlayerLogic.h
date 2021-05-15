@@ -4,7 +4,6 @@
 #include "Network/NetworkMessages.h"
 #include "Game/Shared/EntityConstants.h"
 
-
 class PlayerLogic
 {
 public:
@@ -40,6 +39,10 @@ public:
     static void setInventoryAmount(const EntityType type,
                                    const uint16_t amount,
                                    std::vector<InventoryItemState>& inventory);
+    
+    static cocos2d::Vec2 getMovementVelocityForInput(const cocos2d::Vec2& direction,
+                                                     const bool run);
+
 };
 
 #endif /* PlayerLogic_h */

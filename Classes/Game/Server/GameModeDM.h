@@ -2,6 +2,7 @@
 #define GameModeDM_h
 
 #include "GameMode.h"
+#include <stdint.h>
 
 class GameModeDM : public GameMode
 {
@@ -23,7 +24,8 @@ public:
 
 private:
     const int m_seed;
-    const std::vector<cocos2d::Vec2> m_deadTiles;
+    const uint32_t m_maxKills;
+    const uint32_t m_maxTime;
     
     void spawnThings();
     void spawnRandomGunWithAmmo(const cocos2d::Vec2& position);

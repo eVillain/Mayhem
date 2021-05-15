@@ -88,16 +88,9 @@ EntitySnapshot SnapshotModel::interpolateEntitySnapshot(const EntitySnapshot& fr
     const cocos2d::Vec2 fromPosition = cocos2d::Vec2(from.positionX, from.positionY);
     const cocos2d::Vec2 toPosition = cocos2d::Vec2(to.positionX,  to.positionY);
     const cocos2d::Vec2 position = fromPosition.lerp(toPosition, alpha);
-//    const cocos2d::Vec2 velocity = (toPosition - fromPosition) / DEFAULT_DELTA_TIME;
-//    const cocos2d::Vec2 fromVel = cocos2d::Vec2(from.velocityX, from.velocityY);
-//    const cocos2d::Vec2 toVel = cocos2d::Vec2(to.velocityX, to.velocityY)
-    const cocos2d::Vec2 velocity = cocos2d::Vec2(from.velocityX, from.velocityY); //fromVel.lerp(toVel, alpha);
     interpolated.positionX = position.x;
     interpolated.positionY = position.y;
     interpolated.rotation = (from.rotation * (1.0f - alpha)) + (to.rotation * alpha);
-    interpolated.velocityX = velocity.x;
-    interpolated.velocityY = velocity.y;
-    interpolated.angularVelocity = (from.angularVelocity * (1.0f - alpha)) + (to.angularVelocity * alpha);
     
     return interpolated;
 }

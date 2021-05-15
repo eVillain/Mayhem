@@ -1,4 +1,5 @@
 #include "GameController.h"
+
 #include "Core/Dispatcher.h"
 #include "EntitiesController.h"
 #include "EntitiesModel.h"
@@ -13,6 +14,7 @@
 #include "GameModeDM.h"
 #include "AddLightEvent.h"
 #include "LevelModel.h"
+#include "PlayerLogic.h"
 
 GameController::GameController(std::shared_ptr<EntitiesController> entitiesController,
                                std::shared_ptr<EntitiesModel> entitiesModel,
@@ -45,9 +47,6 @@ void GameController::setSnapshot(const SnapshotData& data)
         entity->setPosition(cocos2d::Vec2(entityData.second.positionX,
                                           entityData.second.positionY));
         entity->setRotation(entityData.second.rotation);
-        entity->setVelocity(cocos2d::Vec2(entityData.second.velocityX,
-                                          entityData.second.velocityY));
-        entity->setAngularVelocity(entityData.second.angularVelocity);
     }
 
     auto players = m_entitiesModel->getPlayers();
@@ -122,16 +121,13 @@ void GameController::applyInput(const uint8_t playerID, std::shared_ptr<ClientIn
         }
     }
     
-    cocos2d::Vec2 direction = cocos2d::Vec2(input->directionX, input->directionY);
-    cocos2d::Vec2 velocity = cocos2d::Vec2::ZERO;
+    const cocos2d::Vec2 direction = cocos2d::Vec2(input->directionX, input->directionY);
+    const cocos2d::Vec2 velocity = PlayerLogic::getMovementVelocityForInput(direction, input->run);
     bool flipX = player->getFlipX();
-    const bool hasInputMovement = direction.length() > 0.f;
+    const bool hasInputMovement = direction.lengthSquared() > 0.f;
     if (hasInputMovement)
     {
         flipX = input->directionX < 0.f;
-
-        float moveSpeed = input->run ? PLAYER_RUN_VEL : PLAYER_WALK_VEL;
-        velocity = cocos2d::Vec2(direction.x, -direction.y).getNormalized() * moveSpeed;
     }
     player->setVelocity(velocity);
     player->setFlipX(flipX);
@@ -162,6 +158,10 @@ void GameController::applyInput(const uint8_t playerID, std::shared_ptr<ClientIn
                  std::dynamic_pointer_cast<Item>(entity))
         {
             animationState = AnimationState::Grab;
+        }
+        else if (velocity.length() > PLAYER_WALK_VEL)
+        {
+            animationState = AnimationState::Run;
         }
         else if (velocity.length() > PLAYER_IDLE_VEL_THRESHOLD)
         {
