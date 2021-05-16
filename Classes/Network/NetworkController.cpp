@@ -66,7 +66,7 @@ void NetworkController::initialize(const NetworkMode mode)
     const cocos2d::Value& timeoutSetting = gameSettings->getValue(SETTING_NETWORK_TIMEOUT, cocos2d::Value(10));
     const cocos2d::Value& maxNodesSetting = gameSettings->getValue(SETTING_NETWORK_MAX_NODES, cocos2d::Value(100));
 
-    const Net::Address masterServerAddress = getAddressFromString(masterServerAddressSetting.asString());
+    const Net::Address masterServerAddress = Net::Address(masterServerAddressSetting.asString()); //getAddressFromString(masterServerAddressSetting.asString());
     const Net::Port masterServerConnectPort = masterServerPortSetting.asInt();
     const Net::Port meshPort = meshPortSetting.asInt();
     const Net::Port serverPort = serverPortSetting.asInt();
@@ -240,33 +240,4 @@ void NetworkController::onMessageAcked(const Net::NodeID nodeID,
 void NetworkController::onMasterSystemConnection(bool connected)
 {
     controllerMessage(connected ? "Master Server connected!" : "Master Server disconnected!");
-}
-
-Net::Address NetworkController::getAddressFromString(const std::string& string) const
-{
-    int addressValues[4] = {0,0,0,0};
-    size_t dotPos = 0;
-    for (int i = 0; i < 4; i++)
-    {
-        size_t nextDot = string.find(".", dotPos);
-        if (nextDot == 0)
-        {
-            return Net::Address();
-        }
-        
-        std::string value = string.substr(dotPos, (nextDot - dotPos));
-        addressValues[i] = std::stoi(value);
-        
-        dotPos = nextDot + 1;
-    }
-    
-    size_t colon = string.find(":") + 1;
-    std::string portValue = string.substr(colon, string.length() - colon);
-    const int port = std::stoi(portValue);
-    
-    return Net::Address((uint8_t)addressValues[0],
-                        (uint8_t)addressValues[1],
-                        (uint8_t)addressValues[2],
-                        (uint8_t)addressValues[3],
-                        (uint16_t)port);
 }
