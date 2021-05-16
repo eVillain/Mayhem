@@ -24,7 +24,7 @@ void ShootToContinueLayer::setup(const std::string& text,
     m_layer = cocos2d::LayerColor::create(cocos2d::Color4B(0,0,0,192));
     m_textLabel = HUDHelper::createLabel5x7(text);
     m_textLabel->enableOutline(cocos2d::Color4B::BLACK, 1.f);
-    m_textLabel->setPosition(cocos2d::Vec2(m_layer->getContentSize().width * 0.25f,
+    m_textLabel->setPosition(cocos2d::Vec2(m_layer->getContentSize().width * 0.5f,
                                            m_layer->getContentSize().height * 0.66f));
     
     m_continueLabel = HUDHelper::createLabel5x7(continueText);

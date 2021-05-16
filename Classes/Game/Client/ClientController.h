@@ -2,6 +2,7 @@
 #define ClientController_h
 
 #include "cocos2d.h"
+#include "cocos-ext.h"
 #include "Core/Event.h"
 #include "Network/NetworkMessages.h"
 #include "Network/DrudgeNet/include/DataTypes.h"
@@ -71,13 +72,18 @@ private:
     void onSnapshotDiffReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
     void onPlayerDeathReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
     void onTileDeathReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
+    
     void onToggleClientPredictionEvent(const Event& event);
     void onToggleInventoryEvent(const Event& event);
+    void onBackButtonPressed(const Event& event);
 
     void debugSnapshots(const size_t targetIndex, const float newAlpha);
     void checkShot(const SnapshotData& snapshot);
     void processIncomingSnapshot(const SnapshotData& snapshot);
     void processSnapshotHitData(const SnapshotData& snapshot);
+    
+    void onConfirmExitButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
+    void onCancelExitButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
 
     std::shared_ptr<ClientInputMessage> getInputData() const;
     

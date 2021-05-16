@@ -33,8 +33,10 @@
 
 #include "InventoryLayer.h"
 #include "ShootToContinueLayer.h"
+#include "ExitGameLayer.h"
 
 #include "ToggleInventoryEvent.h"
+#include "BackButtonPressedEvent.h"
 #include "SpawnParticlesEvent.h"
 #include "ToggleClientPredictionEvent.h"
 
@@ -69,6 +71,7 @@ ClientController::ClientController(std::shared_ptr<ClientModel> clientModel,
                                                std::bind(&ClientController::onToggleClientPredictionEvent, this, std::placeholders::_1));
     Dispatcher::globalDispatcher().addListener(ToggleInventoryEvent::descriptor,
                                                std::bind(&ClientController::onToggleInventoryEvent, this, std::placeholders::_1));
+    Dispatcher::globalDispatcher().addListener(BackButtonPressedEvent::descriptor, std::bind(&ClientController::onBackButtonPressed, this, std::placeholders::_1));
 }
 
 ClientController::~ClientController()
@@ -461,6 +464,26 @@ void ClientController::onToggleInventoryEvent(const Event& event)
     inventoryLayer->setData(m_clientModel->getLocalPlayerID());
 }
 
+void ClientController::onBackButtonPressed(const Event& event)
+{
+    if (m_hudView->getViewLayer())
+    {
+        if (m_hudView->getViewLayer()->getDescriptor() == InventoryLayer::DESCRIPTOR)
+        {
+            m_hudView->removeViewLayer();
+        }
+        return;
+    }
+    
+    auto exitGameLayer = std::make_shared<ExitGameLayer>();
+    exitGameLayer->setup("Are you sure you want to leave?",
+                         "EXIT GAME");
+    exitGameLayer->getCancelButton()->addTouchEventListener(CC_CALLBACK_2(ClientController::onCancelExitButton, this));
+    exitGameLayer->getConfirmButton()->addTouchEventListener(CC_CALLBACK_2(ClientController::onConfirmExitButton, this));
+
+    m_hudView->setViewLayer(exitGameLayer);
+}
+
 void ClientController::onPlayerDeathReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID)
 {
     if (auto deathMessage = std::dynamic_pointer_cast<ServerPlayerDeathMessage>(data))
@@ -718,3 +741,12 @@ void ClientController::processSnapshotHitData(const SnapshotData& snapshot)
     m_gameViewController->setShotHitLastFrame(shotHitLastFrame);
 }
 
+void ClientController::onConfirmExitButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type)
+{
+    stop();
+}
+
+void ClientController::onCancelExitButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type)
+{
+    m_hudView->removeViewLayer();
+}
