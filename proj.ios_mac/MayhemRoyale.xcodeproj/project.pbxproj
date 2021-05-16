@@ -69,6 +69,10 @@
 		D92ACF692544458B006351A7 /* MasterServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92ACF642544457D006351A7 /* MasterServer.cpp */; };
 		D92C7DF9264DDFA700AA7096 /* KillFeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92C7DF7264DDFA700AA7096 /* KillFeed.cpp */; };
 		D92C7DFA264DDFA700AA7096 /* KillFeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92C7DF7264DDFA700AA7096 /* KillFeed.cpp */; };
+		D92C7E002650906000AA7096 /* ExitGameLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92C7DFD2650906000AA7096 /* ExitGameLayer.cpp */; };
+		D92C7E012650906000AA7096 /* ExitGameLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92C7DFD2650906000AA7096 /* ExitGameLayer.cpp */; };
+		D92C7E0426509CF100AA7096 /* ShutdownClientCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92C7E0326509CF100AA7096 /* ShutdownClientCommand.cpp */; };
+		D92C7E0526509CF100AA7096 /* ShutdownClientCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92C7E0326509CF100AA7096 /* ShutdownClientCommand.cpp */; };
 		D94AFA81262B9B6B00278953 /* BackButtonPressedEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D94AFA7F262B9B6B00278953 /* BackButtonPressedEvent.cpp */; };
 		D94AFA82262B9BE900278953 /* BackButtonPressedEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D94AFA7F262B9B6B00278953 /* BackButtonPressedEvent.cpp */; };
 		D94AFA85262C223F00278953 /* FollowNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D94AFA84262C223F00278953 /* FollowNode.cpp */; };
@@ -455,6 +459,10 @@
 		D92ACF642544457D006351A7 /* MasterServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MasterServer.cpp; sourceTree = "<group>"; };
 		D92C7DF7264DDFA700AA7096 /* KillFeed.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KillFeed.cpp; sourceTree = "<group>"; };
 		D92C7DF8264DDFA700AA7096 /* KillFeed.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KillFeed.h; sourceTree = "<group>"; };
+		D92C7DFD2650906000AA7096 /* ExitGameLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExitGameLayer.cpp; sourceTree = "<group>"; };
+		D92C7DFF2650906000AA7096 /* ExitGameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExitGameLayer.h; sourceTree = "<group>"; };
+		D92C7E0226509CF100AA7096 /* ShutdownClientCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShutdownClientCommand.h; sourceTree = "<group>"; };
+		D92C7E0326509CF100AA7096 /* ShutdownClientCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShutdownClientCommand.cpp; sourceTree = "<group>"; };
 		D94AFA7F262B9B6B00278953 /* BackButtonPressedEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackButtonPressedEvent.cpp; sourceTree = "<group>"; };
 		D94AFA83262C223F00278953 /* FollowNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowNode.h; sourceTree = "<group>"; };
 		D94AFA84262C223F00278953 /* FollowNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FollowNode.cpp; sourceTree = "<group>"; };
@@ -1246,6 +1254,8 @@
 				D96CBCFB2531C3AA006DF3A4 /* CrosshairView.h */,
 				D96CBD0C2531C3AE006DF3A4 /* EntityView.cpp */,
 				D96CBD322531C3B9006DF3A4 /* EntityView.h */,
+				D92C7DFD2650906000AA7096 /* ExitGameLayer.cpp */,
+				D92C7DFF2650906000AA7096 /* ExitGameLayer.h */,
 				D96CBD2B2531C3B8006DF3A4 /* GameScene.cpp */,
 				D96CBD2A2531C3B7006DF3A4 /* GameScene.h */,
 				D96CBD0D2531C3AE006DF3A4 /* GameView.cpp */,
@@ -1293,6 +1303,8 @@
 				D96CBD232531C3B6006DF3A4 /* SpawnParticlesEvent.h */,
 				D96CBD242531C3B6006DF3A4 /* SpawnTextBlimpEvent.cpp */,
 				D96CBD012531C3AB006DF3A4 /* SpawnTextBlimpEvent.h */,
+				D92C7E0326509CF100AA7096 /* ShutdownClientCommand.cpp */,
+				D92C7E0226509CF100AA7096 /* ShutdownClientCommand.h */,
 				D96CBD272531C3B7006DF3A4 /* ToggleClientPredictionEvent.cpp */,
 				D96CBD332531C3B9006DF3A4 /* ToggleClientPredictionEvent.h */,
 				D96CBCFD2531C3AA006DF3A4 /* ToggleInventoryEvent.cpp */,
@@ -1569,6 +1581,7 @@
 				D96CBD4B2531C3BB006DF3A4 /* GameView.cpp in Sources */,
 				D9B2510624C48EA500EAFA5B /* PitchAudioEvent.cpp in Sources */,
 				D96CBD3F2531C3BB006DF3A4 /* CrosshairView.cpp in Sources */,
+				D92C7E0426509CF100AA7096 /* ShutdownClientCommand.cpp in Sources */,
 				D9B2516824C48EA500EAFA5B /* ReplayEditorView.cpp in Sources */,
 				D98DFA8924E80E23007A1997 /* RaycastUtil.cpp in Sources */,
 				D9B250B824C48EA500EAFA5B /* InitNetworkClientCommand.cpp in Sources */,
@@ -1595,6 +1608,7 @@
 				D9B250BA24C48EA500EAFA5B /* NetworkMessageFactory.cpp in Sources */,
 				D96CBD532531C3BB006DF3A4 /* CameraModel.cpp in Sources */,
 				D9B250C424C48EA500EAFA5B /* NetworkView.cpp in Sources */,
+				D92C7E002650906000AA7096 /* ExitGameLayer.cpp in Sources */,
 				D9B250D824C48EA500EAFA5B /* ChannelUnreliable.cpp in Sources */,
 				D9B250EA24C48EA500EAFA5B /* DrudgeNet.cpp in Sources */,
 				D96CBD632531C3BB006DF3A4 /* ToggleClientPredictionEvent.cpp in Sources */,
@@ -1764,6 +1778,7 @@
 				D9B250D724C48EA500EAFA5B /* Mesh.cpp in Sources */,
 				D9B2511124C48EA500EAFA5B /* PlayBGMEvent.cpp in Sources */,
 				D96CBD582531C3BB006DF3A4 /* InitClientCommand.cpp in Sources */,
+				D92C7E0526509CF100AA7096 /* ShutdownClientCommand.cpp in Sources */,
 				D9B250C724C48EA500EAFA5B /* NetworkModel.cpp in Sources */,
 				D9B250F724C48EA500EAFA5B /* Beacon.cpp in Sources */,
 				D9B250B724C48EA500EAFA5B /* NetworkController.cpp in Sources */,
@@ -1811,6 +1826,7 @@
 				D96CBD522531C3BB006DF3A4 /* ParticlesController.cpp in Sources */,
 				D9B250E724C48EA500EAFA5B /* MessageQueue.cpp in Sources */,
 				D9B250D124C48EA500EAFA5B /* NetworkChatView.cpp in Sources */,
+				D92C7E012650906000AA7096 /* ExitGameLayer.cpp in Sources */,
 				D96CBD542531C3BB006DF3A4 /* CameraModel.cpp in Sources */,
 				D96CBD462531C3BB006DF3A4 /* ShootToContinueLayer.cpp in Sources */,
 				D9B250E524C48EA500EAFA5B /* Node.cpp in Sources */,
