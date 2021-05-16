@@ -45,12 +45,14 @@ GameViewController::GameViewController(std::shared_ptr<GameSettings> gameSetting
 , m_particlesController(particlesController)
 , m_hudView(hudView)
 , m_postProcessShader(nullptr)
+, m_postProcessNoLightShader(nullptr)
 , m_shotHitLastFrame(false)
 {
     m_cameraModel = std::make_shared<CameraModel>();
     m_cameraController = std::make_shared<CameraController>(m_cameraModel);
     
     m_postProcessShader = cocos2d::GLProgram::createWithFilenames("res/shaders/vertex_p.vsh", "res/shaders/post_process.fsh");
+    m_postProcessNoLightShader = cocos2d::GLProgram::createWithFilenames("res/shaders/vertex_p.vsh", "res/shaders/post_process_nolight.fsh");
 }
 
 GameViewController::~GameViewController()
@@ -1134,18 +1136,13 @@ void GameViewController::updateShotTrails(const float deltaTime)
 
 void GameViewController::updatePostProcess(const float zoomRadius)
 {
-    cocos2d::Texture2D* texture = nullptr;
-    if (m_lightController->getLightMapTexture())
+    const bool hasLightMap = m_lightController->getLightMapTexture() != nullptr;
+    cocos2d::GLProgram* program = hasLightMap ? m_postProcessShader : m_postProcessNoLightShader;
+    cocos2d::GLProgramState* postProcessState = cocos2d::GLProgramState::getOrCreateWithGLProgram(program);
+
+    if (hasLightMap)
     {
-        texture = m_lightController->getLightMapTexture()->getSprite()->getTexture();
-    }
-    else
-    {
-        texture = m_gameView->getRenderTexture()->getSprite()->getTexture();
-    }
-    if (!texture)
-    {
-        return;
+        postProcessState->setUniformTexture("u_lightTexture", m_lightController->getLightMapTexture()->getSprite()->getTexture());
     }
 
     const cocos2d::Vec2 winSize = cocos2d::Director::getInstance()->getWinSize();
@@ -1154,12 +1151,10 @@ void GameViewController::updatePostProcess(const float zoomRadius)
     const cocos2d::Vec2 viewPos = m_gameView->getView()->getPosition();
     const cocos2d::Vec2 cursorScreenPosition = midView + (midScreenToCursor / m_cameraModel->getZoom());
 
-    cocos2d::GLProgramState* postProcessState = cocos2d::GLProgramState::getOrCreateWithGLProgram(m_postProcessShader);
-    postProcessState->setUniformTexture("u_lightTexture", texture);
     postProcessState->setUniformVec2("u_resolution", winSize);
     postProcessState->setUniformVec2("u_cursor", cursorScreenPosition);
     postProcessState->setUniformFloat("u_radius", zoomRadius);
-    m_gameView->getRenderTexture()->getSprite()->setGLProgram(m_postProcessShader);
+    m_gameView->getRenderTexture()->getSprite()->setGLProgram(program);
 }
 
 void GameViewController::renderPostProcess(const SnapshotData& snapshot)

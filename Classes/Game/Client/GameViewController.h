@@ -112,7 +112,8 @@ private:
     std::shared_ptr<ParticlesController> m_particlesController;
     std::shared_ptr<HUDView> m_hudView;
     cocos2d::RefPtr<cocos2d::GLProgram> m_postProcessShader;
-    
+    cocos2d::RefPtr<cocos2d::GLProgram> m_postProcessNoLightShader;
+
     bool m_shotHitLastFrame;
     
     std::map<uint32_t, std::shared_ptr<EntityView>> m_entityViews;
