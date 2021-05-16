@@ -96,6 +96,22 @@ void HUDView::initialize()
     updatePositions();    
 }
 
+void HUDView::shutdown()
+{
+    m_root->removeAllChildren();
+    m_viewLayer = nullptr;
+    m_healthBarBG = nullptr;
+    m_healthBar = nullptr;
+    m_ammoBG = nullptr;
+    m_ammoLabel = nullptr;
+    m_playersAliveBG = nullptr;
+    m_playersAliveLabel = nullptr;
+    m_highlightLabel = nullptr;
+    m_crosshair = nullptr;
+    m_killFeed = nullptr;
+    m_blockInput = nullptr;
+}
+
 void HUDView::setHealth(const float health)
 {
     const cocos2d::Size oldSize = m_healthBar->getPreferredSize();

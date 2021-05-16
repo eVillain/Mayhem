@@ -1,6 +1,9 @@
 #include "InitClientCommand.h"
+
 #include "InitLocalServerCommand.h"
 #include "InitServerCommand.h"
+#include "LoadLevelCommand.h"
+#include "LoadStaticEntityDataCommand.h"
 
 #include "AudioController.h"
 #include "ClientController.h"
@@ -20,8 +23,6 @@
 #include "LevelModel.h"
 #include "LightController.h"
 #include "LightModel.h"
-#include "LoadLevelCommand.h"
-#include "LoadStaticEntityDataCommand.h"
 #include "NetworkController.h"
 #include "ParticlesController.h"
 #include "ReplayModel.h"
@@ -209,10 +210,10 @@ void InitClientCommand::initControllers()
         {
             injector.mapSingleton<FakeNetworkController, FakeNet>();
             injector.mapInterfaceToType<INetworkController, FakeNetworkController>();
-            
-            auto networkController = injector.getInstance<INetworkController>();
-            networkController->initialize(NetworkMode::CLIENT);
         }
+        
+        auto networkController = injector.getInstance<INetworkController>();
+        networkController->initialize(NetworkMode::CLIENT);
         
         InitLocalServerCommand initLocalServer(m_config);
         initLocalServer.run();

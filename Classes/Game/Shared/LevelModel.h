@@ -13,6 +13,8 @@ public:
 
     void loadLevel(const std::string& level,
                    const bool lights = true);
+    void unloadLevel();
+    
     const cocos2d::Size getMapSize() const;
 
     const cocos2d::Vec2 getRandomTile() const;

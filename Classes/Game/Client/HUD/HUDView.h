@@ -17,6 +17,7 @@ public:
     ~HUDView();
     
     void initialize();
+    void shutdown();
 
     void setHealth(const float health);
     void setAmmo(const size_t magAmmo, const size_t inventoryAmmo);

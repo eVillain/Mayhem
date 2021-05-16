@@ -18,7 +18,8 @@ public:
     ~GameView();
     
     void initialize();
-    
+    void shutdown();
+
     cocos2d::RefPtr<cocos2d::RenderTexture> getRenderTexture() const { return m_renderTexture; }
     cocos2d::RefPtr<cocos2d::Node> getView() const { return m_view; }
     cocos2d::RefPtr<cocos2d::Node> getGameRootNode() const { return m_gameRootNode; }

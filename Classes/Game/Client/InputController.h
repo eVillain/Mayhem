@@ -10,7 +10,8 @@ public:
     InputController(std::shared_ptr<InputModel> model);
 
     void initialize(cocos2d::Node* parent);
-    
+    void shutdown();
+
 private:
     void setupKeyboardListener(cocos2d::EventDispatcher* dispatcher);
     void setupMouseListener(cocos2d::EventDispatcher* dispatcher);
@@ -23,7 +24,7 @@ private:
     void onMouseUp(cocos2d::EventMouse* event);
 
     std::shared_ptr<InputModel> m_model;
-    
+    cocos2d::Node* m_parent;
     cocos2d::EventListenerKeyboard* m_keyListener;
     cocos2d::EventListenerMouse* m_mouseListener;
     cocos2d::Vec2 m_prevMouseCoord;

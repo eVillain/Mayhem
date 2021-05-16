@@ -30,7 +30,7 @@ void FakeNetworkController::initialize(const NetworkMode mode)
     m_readStream = std::make_shared<Net::ReadStream>(m_readBuffer, BUFFER_SIZE);
     m_writeStream = std::make_shared<Net::WriteStream>(m_writeBuffer, BUFFER_SIZE);
     
-    if (mode == NetworkMode::CLIENT)
+    if (m_mode == NetworkMode::CLIENT)
     {
         m_fakeNet->setClientDataCallback(std::bind(&FakeNetworkController::onClientDataReceived,
                                                    this,
@@ -52,6 +52,11 @@ void FakeNetworkController::terminate()
 {
     delete [] m_readBuffer;
     delete [] m_writeBuffer;
+    m_readBuffer = nullptr;
+    m_writeBuffer = nullptr;
+    m_readStream = nullptr;
+    m_writeStream = nullptr;
+    m_fakeNet->terminate();
 }
 
 void FakeNetworkController::update(const float deltaTime)
@@ -66,7 +71,6 @@ float FakeNetworkController::GetRoundTripTime(const Net::NodeID nodeID)
 {
     return m_fakeNet->getInputDelay() + m_fakeNet->getServerDelay();
 }
-
 
 Net::MessageID FakeNetworkController::sendMessage(const Net::NodeID nodeID,
                                                   std::shared_ptr<Net::Message>& message,

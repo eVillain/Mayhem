@@ -83,6 +83,26 @@ void GameView::initialize()
     m_view->addChild(m_gameRootNode, 0);
 }
 
+void GameView::shutdown()
+{
+    Dispatcher::globalDispatcher().removeListeners(TogglePhysicsDebugEvent::descriptor);
+    m_renderTexture = nullptr;
+    m_tileMap = nullptr;
+    m_bgTilesNode = nullptr;
+    m_fgTilesNode = nullptr;
+    m_metaTilesNode = nullptr;
+    m_staticLightingNode = nullptr;
+    m_spriteBatch = nullptr;
+    m_tileMap = nullptr;
+    
+    m_occluderNode->removeAllChildren();
+    m_backgroundNode->removeAllChildren();
+    m_gameRootNode->removeAllChildren();
+    m_view->removeChild(m_gameRootNode);
+    
+    m_pseudo3DItems.clear();
+}
+
 void GameView::setTileMap(cocos2d::RefPtr<cocos2d::TMXTiledMap> tileMap)
 {
     if (m_tileMap)
@@ -114,8 +134,13 @@ void GameView::setSpriteBatch(cocos2d::RefPtr<cocos2d::SpriteBatchNode> batch)
     {
         m_occluderNode->removeChild(m_spriteBatch, true);
     }
+    
     m_spriteBatch = batch;
-    m_occluderNode->addChild(m_spriteBatch);
+    
+    if (m_spriteBatch)
+    {
+        m_occluderNode->addChild(m_spriteBatch);
+    }
 }
 
 void GameView::addDebugLabel(const std::string& labelID, const std::string& text)
@@ -183,12 +208,12 @@ cocos2d::RefPtr<cocos2d::Animation> GameView::createAnimation(const std::string 
 {
     cocos2d::SpriteFrameCache* cache = cocos2d::SpriteFrameCache::getInstance();
     
-    cocos2d::Vector<cocos2d::SpriteFrame*> animFrames(numFrames);
+    cocos2d::Vector<cocos2d::SpriteFrame*> animFrames((int)numFrames);
     
     char str[100] = {0};
     for (size_t i = 1; i <= numFrames; i++)
     {
-        sprintf(str, "%s%02i.png", frameName.c_str(), i);
+        sprintf(str, "%s%02zu.png", frameName.c_str(), i);
         cocos2d::SpriteFrame* frame = cache->getSpriteFrameByName( str );
         animFrames.pushBack(frame);
     }

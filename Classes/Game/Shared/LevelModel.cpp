@@ -23,6 +23,12 @@ void LevelModel::loadLevel(const std::string& level,
     m_level = m_tileMap ? level : "";
 }
 
+void LevelModel::unloadLevel()
+{
+    m_level = "";
+    m_tileMap = nullptr;
+}
+
 const cocos2d::Size LevelModel::getMapSize() const
 {
     if (!m_tileMap)

@@ -23,10 +23,6 @@ MainMenuController::MainMenuController()
 
 MainMenuController::~MainMenuController()
 {
-    removeChild(m_view);
-    
-    Dispatcher::globalDispatcher().removeListeners(BackToMainMenuEvent::descriptor);
-    Dispatcher::globalDispatcher().removeListeners(BackButtonPressedEvent::descriptor);
 }
 
 bool MainMenuController::init()
@@ -62,6 +58,14 @@ bool MainMenuController::init()
     return true;
 }
 
+void MainMenuController::shutdown()
+{
+    removeChild(m_view);
+    
+    Dispatcher::globalDispatcher().removeListeners(BackToMainMenuEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListeners(BackButtonPressedEvent::descriptor);
+}
+
 void MainMenuController::update(float deltaTime)
 {
 //    m_audioController->update(deltaTime);
@@ -75,7 +79,7 @@ void MainMenuController::startGameCallback(cocos2d::Ref* ref,
         return;
     }
 
-    removeChild(m_view);
+    shutdown();
 
     const GameMode::Config config = {GameModeType::GAME_MODE_BATTLEROYALE, 20, 20, 1, "BitTileMap.tmx"};
     InitClientCommand initGame(InitClientCommand::Mode::FAKE_CLIENT, config);
@@ -90,7 +94,7 @@ void MainMenuController::hostGameCallback(cocos2d::Ref* ref,
         return;
     }
 
-    removeChild(m_view);
+    shutdown();
 
     m_networkHostView = new NetworkHostView();
     m_networkHostView->init();
@@ -107,7 +111,8 @@ void MainMenuController::joinGameCallback(cocos2d::Ref* ref,
     {
         return;
     }
-    removeChild(m_view);
+
+    shutdown();
 
     m_networkClientView = new NetworkClientView();
     m_networkClientView->init();
@@ -125,7 +130,7 @@ void MainMenuController::settingsCallback(cocos2d::Ref* ref,
         return;
     }
     
-    removeChild(m_view);
+    shutdown();
 
     auto settingsView = new SettingsView(Injector::globalInjector().getInstance<GameSettings>());
     settingsView->initialize();
@@ -142,6 +147,9 @@ void MainMenuController::replayEditorCallback(cocos2d::Ref* ref, cocos2d::ui::Wi
     {
         return;
     }
+
+    shutdown();
+
     InitReplayEditorCommand initReplay;
     initReplay.run();
 }
@@ -153,6 +161,9 @@ void MainMenuController::exitGameCallback(cocos2d::Ref* ref,
     {
         return;
     }
+
+    shutdown();
+
     exitGame();
 }
 

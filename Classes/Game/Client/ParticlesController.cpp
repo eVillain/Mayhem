@@ -19,6 +19,14 @@ void ParticlesController::initialize()
     Dispatcher::globalDispatcher().addListener(SpawnParticlesAttachedEvent::descriptor, std::bind(&ParticlesController::onSpawnAttachedParticles, this, std::placeholders::_1));
 }
 
+void ParticlesController::shutdown()
+{
+    Dispatcher::globalDispatcher().removeListeners(SpawnParticlesEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListeners(SpawnParticlesAttachedEvent::descriptor);
+    
+    m_attachedParticles.clear();
+}
+
 void ParticlesController::update()
 {
     auto parentPair = m_attachedParticles.begin();

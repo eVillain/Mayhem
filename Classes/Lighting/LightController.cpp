@@ -41,6 +41,22 @@ void LightController::initialize()
     }
 }
 
+void LightController::shutdown()
+{
+    Dispatcher::globalDispatcher().removeListeners(AddLightEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListeners(RemoveLightEvent::descriptor);
+    
+    m_occluderTexture = nullptr;
+    m_occluderSliceTexture = nullptr;
+    m_distortedTexture = nullptr;
+    m_shadowMapTexture = nullptr;
+    m_minimumDistanceTexture = nullptr;
+    m_computeDistanceShader = nullptr;
+    m_minimumDistanceShader = nullptr;
+    m_shadowMapNoBlurShader = nullptr;
+    m_lightShader = nullptr;
+}
+
 void LightController::enable()
 {
     // Note: this could be optimized to only use one color channel, however

@@ -14,6 +14,8 @@ public:
     ~ParticlesController();
     
     void initialize();
+    void shutdown();
+
     void update();
     
 private:

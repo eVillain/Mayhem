@@ -15,6 +15,24 @@ FakeNet::FakeNet()
 {
 }
 
+void FakeNet::terminate()
+{
+    std::queue<ClientData> emptyClientData;
+    std::swap(m_clientData, emptyClientData);
+    std::queue<ServerData> emptyServerData;
+    std::swap(m_serverData, emptyServerData);
+    m_clientDataCallback = nullptr;
+    m_serverDataCallback = nullptr;
+    m_time = 0.f;
+    m_inputDelay = 0.1f;
+    m_serverDelay = 0.1f;
+    m_packetLoss = 0.f;
+    m_totalClientBytes = 0;
+    m_totalServerBytes = 0;
+    m_lastFrameClientBytes = 0;
+    m_lastFrameServerBytes = 0;
+}
+
 void FakeNet::update(const float deltaTime)
 {
     m_time += deltaTime;

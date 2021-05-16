@@ -10,7 +10,6 @@
 #include "Game/Client/InputModel.h"
 #include "GameController.h"
 #include "GameModel.h"
-#include "InitMainMenuCommand.h"
 #include "InputCache.h"
 #include "InputController.h"
 #include "Item.h"
@@ -96,9 +95,11 @@ void ServerController::stop()
     m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_CLIENT_INPUT);
     m_networkController->setNodeConnectedCallback(nullptr);
     m_networkController->setNodeDisconnectedCallback(nullptr);
-    m_networkController->getTransport()->setDisconnectedCallback(nullptr);
-    InitMainMenuCommand initMainMenu;
-    initMainMenu.run();
+    if (m_networkController->getTransport())
+    {
+        m_networkController->getTransport()->setDisconnectedCallback(nullptr);
+    }
+    m_networkController->terminate();
 }
 
 const std::string ServerController::getDebugInfo() const
@@ -845,7 +846,6 @@ void ServerController::onInputMessageReceived(const std::shared_ptr<Net::Message
 {
     if (auto inputMessage = std::dynamic_pointer_cast<ClientInputMessage>(data))
     {
-        
         if (m_inputCache->hasReceivedSequence(playerID) &&
             m_inputCache->getLastReceivedSequence(playerID) >= inputMessage->inputSequence)
         {

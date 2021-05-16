@@ -10,6 +10,8 @@ class FakeNet
 public:
     FakeNet();
 
+    void terminate();
+    
     void update(const float deltaTime);
     
     void takeClientData(const uint8_t playerID, const unsigned char* data, const size_t dataSize);

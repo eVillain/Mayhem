@@ -19,6 +19,7 @@ public:
     virtual ~MainMenuController();
 
     virtual bool init() override;
+    void shutdown();
     CREATE_FUNC(MainMenuController);
 
     virtual void update(float deltaTime) override;

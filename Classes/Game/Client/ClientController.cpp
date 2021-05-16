@@ -2,37 +2,41 @@
 
 #include "CameraController.h"
 #include "CameraModel.h"
-#include "Utils/CollisionUtils.h"
-#include "CrosshairView.h"
 #include "Core/Dispatcher.h"
+#include "Core/Injector.h"
+#include "CrosshairView.h"
 #include "EntityDataModel.h"
+#include "Game/Client/InputModel.h"
+#include "GameModel.h"
+#include "GameSettings.h"
 #include "GameView.h"
 #include "GameViewController.h"
 #include "HUDView.h"
-#include "InitMainMenuCommand.h"
-#include "Core/Injector.h"
-#include "Game/Client/InputModel.h"
 #include "LevelModel.h"
 #include "LightController.h"
 #include "MovementIntegrator.h"
-#include "NetworkController.h"
 #include "Network/NetworkMessages.h"
+#include "NetworkController.h"
 #include "PlayAudioEvent.h"
+#include "PlayerLogic.h"
 #include "Pseudo3DItem.h"
 #include "Pseudo3DParticle.h"
+#include "ReplayModel.h"
 #include "ServerController.h"
 #include "SharedConstants.h"
-#include "ShootToContinueLayer.h"
 #include "SnapshotModel.h"
+#include "Utils/CollisionUtils.h"
+#include "WeaponConstants.h"
+
+#include "InitMainMenuCommand.h"
+#include "ShutdownClientCommand.h"
+
+#include "InventoryLayer.h"
+#include "ShootToContinueLayer.h"
+
+#include "ToggleInventoryEvent.h"
 #include "SpawnParticlesEvent.h"
 #include "ToggleClientPredictionEvent.h"
-#include "WeaponConstants.h"
-#include "PlayerLogic.h"
-#include "ReplayModel.h"
-#include "GameSettings.h"
-#include "GameModel.h"
-#include "InventoryLayer.h"
-#include "ToggleInventoryEvent.h"
 
 ClientController::ClientController(std::shared_ptr<ClientModel> clientModel,
                                    std::shared_ptr<GameSettings> gameSettings,
@@ -69,11 +73,6 @@ ClientController::ClientController(std::shared_ptr<ClientModel> clientModel,
 
 ClientController::~ClientController()
 {
-    const cocos2d::Value& saveReplaySetting = m_gameSettings->getValue(ReplayModel::SETTING_SAVE_REPLAY, cocos2d::Value(true));
-    if (saveReplaySetting.asBool())
-    {
-        m_replayModel->saveFile(ReplayModel::DEFAULT_REPLAY_FILE, m_gameModel->getTickRate());
-    }
 }
 
 void ClientController::setMode(const ClientMode mode)
@@ -120,10 +119,33 @@ void ClientController::stop()
     m_clientModel->setGameStarted(false);
     m_stopping = true;
 
+    const cocos2d::Value& saveReplaySetting = m_gameSettings->getValue(ReplayModel::SETTING_SAVE_REPLAY, cocos2d::Value(true));
+    if (saveReplaySetting.asBool())
+    {
+        m_replayModel->saveFile(ReplayModel::DEFAULT_REPLAY_FILE, m_gameModel->getTickRate());
+    }
+    
     m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_SNAPSHOT);
     m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_STARTGAME);
     m_networkController->setNodeDisconnectedCallback(nullptr);
-    m_networkController->getTransport()->setDisconnectedCallback(nullptr);
+    if (m_networkController->getTransport())
+    {
+        m_networkController->getTransport()->setDisconnectedCallback(nullptr);
+    }
+    m_networkController->terminate();
+    
+    Dispatcher::globalDispatcher().removeListeners(BackButtonPressedEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListeners(ToggleClientPredictionEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListeners(ToggleInventoryEvent::descriptor);
+    
+    ShutdownClientCommand shutdownClient;
+    shutdownClient.run();
+    
+    if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_LOCAL)
+    {
+        m_serverController->stop();
+    }
+
     InitMainMenuCommand initMainMenu;
     initMainMenu.run();
 }
@@ -134,7 +156,7 @@ void ClientController::update(const float deltaTime)
 
     if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_NETWORK)
     {
-        m_networkController->update(deltaTime); // Fake net has its own update
+        m_networkController->update(deltaTime);
 
         if (m_stopping)
         {

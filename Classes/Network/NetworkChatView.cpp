@@ -1,4 +1,5 @@
 #include "NetworkChatView.h"
+
 #include "GameViewConstants.h"
 #include "HUDHelper.h"
 #include "ButtonUtils.h"

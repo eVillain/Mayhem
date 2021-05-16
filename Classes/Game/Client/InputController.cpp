@@ -9,13 +9,27 @@
 
 InputController::InputController(std::shared_ptr<InputModel> model)
 : m_model(model)
+, m_parent(nullptr)
 {
 }
 
 void InputController::initialize(cocos2d::Node* parent)
 {
+    m_parent = parent;
     setupKeyboardListener(parent->getEventDispatcher());
     setupMouseListener(parent->getEventDispatcher());
+}
+
+void InputController::shutdown()
+{
+    if (m_parent)
+    {
+        m_parent->getEventDispatcher()->removeEventListener(m_keyListener);
+        m_parent->getEventDispatcher()->removeEventListener(m_mouseListener);
+    }
+    m_parent = nullptr;
+    m_keyListener = nullptr;
+    m_mouseListener = nullptr;
 }
 
 void InputController::setupKeyboardListener(cocos2d::EventDispatcher* dispatcher)

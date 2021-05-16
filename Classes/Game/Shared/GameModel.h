@@ -8,6 +8,8 @@ class GameModel
 public:
     GameModel();
     
+    void reset();
+
     void setTickRate(const uint32_t rate) { m_tickRate = rate; }
     uint32_t getTickRate() const { return m_tickRate; }
 

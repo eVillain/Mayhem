@@ -16,6 +16,7 @@ public:
                     std::shared_ptr<GameSettings> gameSettings);
     
     void initialize();
+    void shutdown();
     void enable();
     
     void update(const float deltaTime);
