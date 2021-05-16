@@ -17,28 +17,34 @@ using std::size_t;
 using std::recursive_mutex;
 using std::lock_guard;
 
-//
-// IoC Injector
-// Uses variadic templates to provide dependencies at compile-time.
-//
-
+/**
+ * Injector
+ * Inversion-of-Control Dependency Injector
+ * Uses variadic templates to provide dependencies at compile-time.
+*/
 class Injector
 {
 public:
-    static Injector& globalInjector() {
-        return g_injector;
-    }
+    static Injector& globalInjector() { return g_injector; }
     
-    /// Does this injector have a mapping for the given type?
+    /**
+     * Does this injector have a mapping for the given type?
+     *
+     * @return True if a mapping exists for the given type, otherwise false.
+     */
     template <typename T>
     bool hasMapping()
     {
         return hasTypeToInstanceMapping<T>() | hasTypeToFactoryMapping<T>() | hasTypeToInstanceMapping<T>();
     }
     
-    /// Maps a class in the injector. A unique instance of the mapped class
-    /// will be provided for each injection request.
-    /// Mapping a previously mapped class will replace the old mapping.
+    /**
+     * Maps a class in the injector. A unique instance of the mapped class
+     * will be provided for each injection request.
+     * Mapping a previously mapped class will replace the old mapping.
+     *
+     * @return A reference to this injector so it can be used in a fluent interface.
+     */
     template <typename T, typename... Dependencies>
     Injector& map()
     {
@@ -54,11 +60,15 @@ public:
         return *this;
     }
     
-    /// Maps a specific instance of an object in the injector. When an
-    /// object of this class is requested the provided instance will fulfill
-    /// the injection request.
-    /// Note: Since you have manually created the instance it will not
-    /// get any dependencies injected into it.
+    /**
+     * Maps a specific instance of an object in the injector. When an
+     * object of this class is requested the provided instance will fulfill
+     * the injection request.
+     * Note: Since you have manually created the instance it will NOT
+     * get any dependencies automatically injected into it.
+     *
+     * @return A reference to this injector so it can be used in a fluent interface.
+     */
     template <typename T>
     Injector& mapInstance(shared_ptr<T> instance)
     {
@@ -71,8 +81,12 @@ public:
         return *this;
     }
     
-    /// Maps a class as a singleton in the injector. A single instance
-    /// will be used to fulfill every injection request for this class.
+    /**
+     * Maps a class as a singleton in the injector. A single instance
+     * will be used to fulfill every injection request for this class.
+     *
+     * @return A reference to this injector so it can be used in a fluent interface.
+     */
     template <typename T, typename... Dependencies>
     Injector& mapSingleton()
     {
@@ -83,9 +97,13 @@ public:
         return mapInstance<T>(instance);
     }
     
-    /// Maps a class as a singleton of an interface class. When an object
-    /// of the interface class is requested a single instance of the
-    /// concrete class will fulfill the injection request.
+    /**
+     * Maps a class as a singleton of an interface class. When an object
+     * of the interface class is requested a single instance of the
+     * concrete class will fulfill the injection request.
+     *
+     * @return A reference to this injector so it can be used in a fluent interface.
+     */
     template <typename Interface, typename ConcreteClass, typename... Dependencies>
     Injector& mapSingletonOf()
     {
@@ -110,9 +128,13 @@ public:
         return *this;
     }
     
-    /// Maps a class as an interface of a previously mapped singleton. When
-    /// an object of the interface class is requested a single instance of the
-    /// concrete class will fulfill the injection request.
+    /**
+     * Maps a class as an interface of a previously mapped singleton. When
+     * an object of the interface class is requested a single instance of the
+     * concrete class will fulfill the injection request.
+     *
+     * @return A reference to this injector so it can be used in a fluent interface.
+     */
     template <typename Interface, typename RegisteredConcreteClass>
     Injector& mapInterfaceToType()
     {
@@ -138,7 +160,11 @@ public:
         return *this;
     }
     
-    /// Returns an instance of the given type if a mapping exists.
+    /**
+     * Returns an instance of the given type if a mapping exists.
+     *
+     * @return A mapped instance of the given type if a mapping exists, otherwise nullptr.
+     */
     template <typename T>
     shared_ptr<T> getInstance()
     {
@@ -176,13 +202,50 @@ public:
         return nullptr;
     }
     
-    /// TODO: Test this to make sure its working as intended
+    /**
+     * Creates an instance of the given type and resolves its
+     * dependencies without mapping it.
+     *
+     * @return An unmapped instance of the given type.
+     */
     template <typename T, typename... Dependencies>
     shared_ptr<T> instantiateUnmapped()
     {
+        lock_guard<recursive_mutex> lockGuard{ _mutex };
+
         return std::make_shared<T>(getInstance<Dependencies>()...);
     }
     
+    /**
+     * Removes the mapping of the given type it one exists.
+     *
+     * @return True if a mapping was removed, otherwise false.
+     */
+    template <typename T>
+    bool removeMapping()
+    {
+        lock_guard<recursive_mutex> lockGuard{ _mutex };
+
+        bool removed = false;
+        if (hasTypeToInstanceMapping<T>())
+        {
+            _typesToInstances.erase(typeid(T).hash_code());
+            removed = true;
+        }
+        else if (hasTypeToFactoryMapping<T>())
+        {
+            _typesToFactories.erase(typeid(T).hash_code());
+            removed = true;
+        }
+        else if (hasInterfaceToInstanceMapping<T>())
+        {
+            _interfacesToInstanceGetters.erase(typeid(T).hash_code());
+            removed = true;
+        }
+
+        return removed;
+    }
+
 private:
     static Injector g_injector;
 
@@ -209,17 +272,17 @@ private:
     
     recursive_mutex _mutex;
     
-    /// Check if we have a mapped singleton or instance.
+    // Check if we have a mapped singleton or instance.
     template <typename T>
     inline bool hasTypeToInstanceMapping() {
         return _typesToInstances.find(typeid(T).hash_code()) != _typesToInstances.end();
     }
-    /// Check if we have a mapped factory.
+    // Check if we have a mapped factory.
     template <typename T>
     inline bool hasTypeToFactoryMapping() {
         return _typesToFactories.find(typeid(T).hash_code()) != _typesToFactories.end();
     }
-    /// Check if we have an interface type mapped to an instance.
+    // Check if we have an interface type mapped to an instance.
     template <typename T>
     inline bool hasInterfaceToInstanceMapping() {
         return _interfacesToInstanceGetters.find(typeid(T).hash_code()) != _interfacesToInstanceGetters.end();
