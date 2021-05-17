@@ -339,6 +339,8 @@
 		D9BF092F253B215A0053998C /* ReadStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FEF24C48EA400EAFA5B /* ReadStream.cpp */; };
 		D9BF0930253B215F0053998C /* WriteStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FE924C48EA400EAFA5B /* WriteStream.cpp */; };
 		D9BF0931253B23310053998C /* BitPacker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FF524C48EA400EAFA5B /* BitPacker.cpp */; };
+		D9D593F62651EE81005B7DFD /* ShutdownLocalServerCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9D593F32651EE80005B7DFD /* ShutdownLocalServerCommand.cpp */; };
+		D9D593F72651EE81005B7DFD /* ShutdownLocalServerCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9D593F32651EE80005B7DFD /* ShutdownLocalServerCommand.cpp */; };
 		D9E046F7254AF0780055E1E6 /* ClientModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9E046F5254AF0770055E1E6 /* ClientModel.cpp */; };
 		D9E046F8254AF0780055E1E6 /* ClientModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9E046F5254AF0770055E1E6 /* ClientModel.cpp */; };
 		ED545A7C1B68A1F400C3958E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED545A7B1B68A1F400C3958E /* libiconv.dylib */; };
@@ -751,6 +753,8 @@
 		D9B251A724C789A400EAFA5B /* ReplayEditorController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplayEditorController.cpp; sourceTree = "<group>"; };
 		D9BF0925253B1C5F0053998C /* MasterServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MasterServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9BF0927253B1C600053998C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		D9D593F32651EE80005B7DFD /* ShutdownLocalServerCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShutdownLocalServerCommand.cpp; sourceTree = "<group>"; };
+		D9D593F52651EE81005B7DFD /* ShutdownLocalServerCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShutdownLocalServerCommand.h; sourceTree = "<group>"; };
 		D9E046F5254AF0770055E1E6 /* ClientModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientModel.cpp; sourceTree = "<group>"; };
 		D9E046F6254AF0780055E1E6 /* ClientModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientModel.h; sourceTree = "<group>"; };
 		ED545A7B1B68A1F400C3958E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.4.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
@@ -1305,6 +1309,8 @@
 				D96CBD012531C3AB006DF3A4 /* SpawnTextBlimpEvent.h */,
 				D92C7E0326509CF100AA7096 /* ShutdownClientCommand.cpp */,
 				D92C7E0226509CF100AA7096 /* ShutdownClientCommand.h */,
+				D9D593F32651EE80005B7DFD /* ShutdownLocalServerCommand.cpp */,
+				D9D593F52651EE81005B7DFD /* ShutdownLocalServerCommand.h */,
 				D96CBD272531C3B7006DF3A4 /* ToggleClientPredictionEvent.cpp */,
 				D96CBD332531C3B9006DF3A4 /* ToggleClientPredictionEvent.h */,
 				D96CBCFD2531C3AA006DF3A4 /* ToggleInventoryEvent.cpp */,
@@ -1612,6 +1618,7 @@
 				D9B250D824C48EA500EAFA5B /* ChannelUnreliable.cpp in Sources */,
 				D9B250EA24C48EA500EAFA5B /* DrudgeNet.cpp in Sources */,
 				D96CBD632531C3BB006DF3A4 /* ToggleClientPredictionEvent.cpp in Sources */,
+				D9D593F62651EE81005B7DFD /* ShutdownLocalServerCommand.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				D9B2517424C48EA500EAFA5B /* InitMainMenuCommand.cpp in Sources */,
 				D96CBD492531C3BB006DF3A4 /* EntityView.cpp in Sources */,
@@ -1832,6 +1839,7 @@
 				D9B250E524C48EA500EAFA5B /* Node.cpp in Sources */,
 				D96CBD502531C3BB006DF3A4 /* SpawnParticlesEvent.cpp in Sources */,
 				D98BEDD62648892200125847 /* EntityInfoView.cpp in Sources */,
+				D9D593F72651EE81005B7DFD /* ShutdownLocalServerCommand.cpp in Sources */,
 				D9B2510324C48EA500EAFA5B /* StopBGMEvent.cpp in Sources */,
 				D96CBC992531C342006DF3A4 /* MovementIntegrator.cpp in Sources */,
 				D9B251A924C789A400EAFA5B /* ReplayEditorController.cpp in Sources */,

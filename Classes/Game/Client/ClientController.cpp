@@ -225,38 +225,42 @@ const SnapshotData& ClientController::getDeltaData(const uint32_t serverTick)
 
 void ClientController::updateGame(const float deltaTime, const bool processInput)
 {
-    m_gameView->getDebugDrawNode()->clear();
-
+    auto& snapshots = m_snapshotModel->getSnapshots();
+    if (snapshots.empty())
+    {
+        return;
+    }
+    const uint32_t ticksToBuffer = m_clientModel->getTicksToBuffer() + 2;
+    const auto& latestSnapshot = snapshots.back();
+    const uint32_t latestSnapshotTick = latestSnapshot.serverTick;
+    if (latestSnapshotTick > m_gameModel->getCurrentTick() + ticksToBuffer)
+    {
+        printf("server is ahead - fast-forwarding from tick %u to %u\n", m_gameModel->getCurrentTick(), latestSnapshotTick);
+        // Game server is ahead too much, we should fast-forward the client
+        m_gameModel->setCurrentTick(latestSnapshotTick - ticksToBuffer);
+    }
+    
     const float currentTickStartTime = m_gameModel->getCurrentTick() * m_gameModel->getFrameTime();
-    float targetTime = currentTickStartTime + m_gameModel->getDeltaAccumulator() - m_clientModel->getInterpolationLatency();
+    float targetTime = currentTickStartTime + m_gameModel->getDeltaAccumulator();
     if (targetTime < 0.f)
     {
         targetTime = 0.f;
     }
-    
+
     // Find snapshots in queue for target time
     const uint32_t targetFrame = std::floor(targetTime * m_gameModel->getTickRate());
     const size_t targetTimeSnapshotIndex = m_snapshotModel->getSnapshotIndexForFrame(targetFrame);
-    if (targetTimeSnapshotIndex == 0)
-    {
-        return;
-    }
-    
+//    printf("target time: %f, target frame: %u, index: %lu\n", targetTime, targetFrame, targetTimeSnapshotIndex);
+
     if (targetTimeSnapshotIndex > 1)
     {
         // Erase old snapshots
         m_snapshotModel->eraseUpToIndex(targetTimeSnapshotIndex - 1);
     }
-    
-    auto& snapshots = m_snapshotModel->getSnapshots();
-    if (snapshots.size() < 2)
-    {
-        return;
-    }
-    
+
     const SnapshotData& fromSnapshot = snapshots[0];
-    SnapshotData& toSnapshot = snapshots[1];
-    
+    SnapshotData& toSnapshot = snapshots.size() > 1 ? snapshots[1] : snapshots[0];
+
     // New snapshot reached
     const bool reachedNextSnapshot = toSnapshot.serverTick > m_snapshotModel->getLastApplied();
     if (reachedNextSnapshot)
@@ -265,15 +269,17 @@ void ClientController::updateGame(const float deltaTime, const bool processInput
         {
             predictLocalMovement(toSnapshot, fromSnapshot);
         }
-        
-        if (processInput && m_clientModel->getPredictBullets())
-        {
-            checkShot(toSnapshot);
-        }
-        
+
         m_snapshotModel->setLastApplied(toSnapshot.serverTick);
     }
-        
+
+    if (reachedNextSnapshot &&
+        processInput &&
+        m_clientModel->getPredictBullets())
+    {
+        checkShot(toSnapshot);
+    }
+
     const float alphaTime = std::min(std::max(m_gameModel->getDeltaAccumulator() / m_gameModel->getFrameTime(), 0.f), 1.f);
     m_gameViewController->update(deltaTime,
                                  alphaTime,
@@ -354,7 +360,7 @@ void ClientController::predictLocalMovement(SnapshotData& toSnapshot,
                               " Inputs ahead: " + std::to_string(index) +
                               " Last received: " + std::to_string(toSnapshot.lastReceivedInput) +
                               " Unprocessed: " + std::to_string(m_clientModel->getInputData().size()) +
-                              " Cleared: " + std::to_string(removedInputs));        
+                              " Cleared: " + std::to_string(removedInputs));
     }
 }
 

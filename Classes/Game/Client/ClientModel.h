@@ -28,8 +28,8 @@ public:
     void setLocalPlayerAlive(const bool alive) { m_localPlayerAlive = alive; }
     bool getLocalPlayerAlive() const { return m_localPlayerAlive; }
 
-    void setInterpolationLatency(const float latency) { m_interpolationLatency = latency; }
-    float getInterpolationLatency() const { return m_interpolationLatency; }
+    void setTicksToBuffer(const uint32_t count) { m_ticksToBuffer = count; }
+    uint32_t getTicksToBuffer() const { return m_ticksToBuffer; }
 
     void setPredictMovement(const bool predict) { m_predictMovement = predict; }
     bool getPredictMovement() const { return m_predictMovement; }
@@ -58,7 +58,7 @@ private:
     ClientMode m_mode;
     uint8_t m_localPlayerID;
     bool m_localPlayerAlive;
-    float m_interpolationLatency;
+    uint32_t m_ticksToBuffer;
     bool m_predictMovement;
     bool m_predictBullets;
     bool m_predictAnimation;

@@ -69,6 +69,7 @@ void GameViewController::update(const float deltaTime,
                                 const bool skipLocalPlayerShots)
 {
     m_gameView->getPixelDrawNode()->clear();
+    m_gameView->getDebugDrawNode()->clear();
 
     if (newSnapshot)
     {

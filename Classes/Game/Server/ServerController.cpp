@@ -37,7 +37,7 @@ ServerController::ServerController(std::shared_ptr<GameController> gameControlle
 , m_networkController(networkController)
 , m_inputCache(inputCache)
 , m_frameCache(frameCache)
-, m_maxPingThreshold(0.6f) // TODO: Set a reasonable threshold value
+, m_maxPingThreshold(0.5f) // TODO: Set a reasonable threshold value
 , m_sendDeltaUpdates(false)
 {    
     m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_CLIENT_STATE_UPDATE,
@@ -48,7 +48,7 @@ ServerController::ServerController(std::shared_ptr<GameController> gameControlle
                                                       std::placeholders::_1, std::placeholders::_2));
     m_networkController->setNodeConnectedCallback(std::bind(&ServerController::onNodeConnected, this, std::placeholders::_1));
     m_networkController->setNodeDisconnectedCallback(std::bind(&ServerController::onNodeDisconnected, this, std::placeholders::_1));
-    m_frameCache->setMaxRollbackFrames(((m_maxPingThreshold + DEFAULT_INTERPOLATION_LATENCY) / m_gameModel->getFrameTime()) + 10);
+    m_frameCache->setMaxRollbackFrames(((m_maxPingThreshold + DEFAULT_CLIENT_TICKS_BUFFERED) / m_gameModel->getFrameTime()) + 10);
     
     m_gameController->getGameMode()->setTileDeathCallback(std::bind(&ServerController::onTileDeath, this,
                                                                     std::placeholders::_1, std::placeholders::_2));
@@ -729,18 +729,19 @@ void ServerController::rollbackForPlayer(const uint8_t playerID, const uint32_t 
     // Save current state to be applied after shot/interaction has been processed
     m_preRollbackState = m_gameController->getEntitiesModel()->getSnapshot();
     
-    // Roll back network latency + interpolation rate for everyone else before ticking
+    // Roll back network latency + client-side buffer for everyone else before processing frame interactions
     const float networkLatency = m_networkController->GetRoundTripTime(playerID) * 0.5f; // 0.5 because only one-way latency counts here
-    const uint32_t rollbackLatency = (networkLatency + DEFAULT_INTERPOLATION_LATENCY) / m_gameModel->getFrameTime();
-    if (m_frameCache->getFrameCount() < rollbackLatency)
+    const uint32_t rollbackLatencyTicks = (networkLatency / m_gameModel->getFrameTime()) + DEFAULT_CLIENT_TICKS_BUFFERED;
+    if (m_frameCache->getFrameCount() < rollbackLatencyTicks)
     {
         printf("ServerController::rollbackForPlayer %i failed because not enough frames in cache\n", playerID);
         return;
     }
-//    printf("ServerController::rollbackForPlayer %i is %i frames (%fms)\n", playerID, rollbackLatency, networkLatency + DEFAULT_INTERPOLATION_LATENCY);
+//    printf("ServerController::rollbackForPlayer %i is %i frames (%fms+%iticks)\n",
+//           playerID, rollbackLatencyTicks, networkLatency, DEFAULT_CLIENT_TICKS_BUFFERED);
 
     const auto& player = m_gameController->getEntitiesModel()->getPlayer(playerID);
-    std::map<uint32_t, EntitySnapshot> preShotSnapshot = m_frameCache->getFrame(rollbackLatency);
+    std::map<uint32_t, EntitySnapshot> preShotSnapshot = m_frameCache->getFrame(rollbackLatencyTicks);
     preShotSnapshot[player->getEntityID()] = m_preRollbackState.at(player->getEntityID()); // Move shooting player forward in past snapshot
     m_gameController->getEntitiesModel()->setSnapshot(preShotSnapshot);
 }
