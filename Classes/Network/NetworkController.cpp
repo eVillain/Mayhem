@@ -12,7 +12,7 @@
 #include "cocos2d.h"
 #include "GameSettings.h"
 
-const int NetworkController::BUFFER_SIZE = 16 * 1024 * 1024;
+const int NetworkController::BUFFER_SIZE = 2 * 1024 * 1024;
 const std::string NetworkController::SETTING_NETWORK_TYPE = "NetworkType";
 const std::string NetworkController::SETTING_NETWORK_PROTOCOL_ID = "NetworkProtocolID";
 const std::string NetworkController::SETTING_NETWORK_MASTER_SERVER_ADDRESS = "MasterServerAddress";
