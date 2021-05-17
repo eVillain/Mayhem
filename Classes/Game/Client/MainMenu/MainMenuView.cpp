@@ -20,13 +20,16 @@ bool MainMenuView::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     m_title = HUDHelper::createLabel5x7("Mayhem Royale v0.0 - Main Menu", 24);
-    
+    m_playerName = HUDHelper::createLabel5x7("PlayerNameGoesHere", 20);
+
     // position the label on the center of the screen
     m_title->setPosition(Vec2(origin.x + visibleSize.width/2,
                               origin.y + visibleSize.height - m_title->getContentSize().height));
+    m_playerName->setPosition(m_title->getPosition() - Vec2(0.f, m_playerName->getContentSize().height));
 
     // add the label as a child to this layer
-    addChild(m_title, 1);
+    addChild(m_title);
+    addChild(m_playerName);
 
     cocos2d::SpriteFrameCache* cache = cocos2d::SpriteFrameCache::getInstance();
     cache->addSpriteFramesWithFile(GameViewConstants::HUD_SPRITE_BATCH_FILE);

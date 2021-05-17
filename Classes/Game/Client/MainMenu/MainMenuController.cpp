@@ -1,4 +1,5 @@
 #include "MainMenuController.h"
+
 //#include "AudioController.h"
 #include "Core/Dispatcher.h"
 #include "InitClientCommand.h"
@@ -12,6 +13,7 @@
 #include "BackButtonPressedEvent.h"
 #include "SettingsView.h"
 #include "GameSettings.h"
+#include "Utils/PlayerNameUtil.h"
 
 MainMenuController::MainMenuController()
 : m_view(nullptr)
@@ -34,6 +36,7 @@ bool MainMenuController::init()
 
     m_view = new MainMenuView();
     m_view->init();
+    m_view->getPlayerName()->setString(getPlayerName());
     m_view->getStartGameButton()->addTouchEventListener(CC_CALLBACK_2(MainMenuController::startGameCallback, this));
     m_view->getHostGameButton()->addTouchEventListener(CC_CALLBACK_2(MainMenuController::hostGameCallback, this));
     m_view->getJoinGameButton()->addTouchEventListener(CC_CALLBACK_2(MainMenuController::joinGameCallback, this));
@@ -69,6 +72,21 @@ void MainMenuController::shutdown()
 void MainMenuController::update(float deltaTime)
 {
 //    m_audioController->update(deltaTime);
+}
+
+const std::string MainMenuController::getPlayerName() const
+{
+    auto settings = Injector::globalInjector().getInstance<GameSettings>();
+    const cocos2d::Value& playerNameSetting = settings->getValue(GameSettings::SETTING_PLAYER_NAME, cocos2d::Value(""));
+    if (!playerNameSetting.asString().empty())
+    {
+        return playerNameSetting.asString();
+    }
+
+    // Save default name so it can be edited in the settings menu
+    const std::string playerName = PlayerNameUtil::getLoginUserName();
+    settings->setValue(GameSettings::SETTING_PLAYER_NAME, cocos2d::Value(playerName));
+    return playerName;
 }
 
 void MainMenuController::startGameCallback(cocos2d::Ref* ref,

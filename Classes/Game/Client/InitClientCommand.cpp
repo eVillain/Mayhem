@@ -29,7 +29,8 @@
 #include "SnapshotModel.h"
 #include "GameModel.h"
 
-InitClientCommand::InitClientCommand(const Mode mode, const GameMode::Config& config)
+InitClientCommand::InitClientCommand(const Mode mode,
+                                     const GameMode::Config& config)
 : m_mode(mode)
 , m_config(config)
 {

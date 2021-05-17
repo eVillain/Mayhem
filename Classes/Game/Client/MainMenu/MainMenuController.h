@@ -33,6 +33,8 @@ private:
 
 //    std::shared_ptr<AudioController> m_audioController;
     
+    const std::string getPlayerName() const;
+    
     void startGameCallback(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
     void hostGameCallback(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
     void joinGameCallback(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);

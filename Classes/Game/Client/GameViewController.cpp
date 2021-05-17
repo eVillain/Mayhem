@@ -154,7 +154,6 @@ void GameViewController::onEntityDestroyed(const uint32_t entityID,
             const float distRatio = 1.f - (dist / EXPLOSION_RADIUS);
             const cocos2d::Vec2 newVelocity = (distVec.getNormalized() * (distRatio * PSEUDO_3D_BLAST_STRENGTH));
             const float newZVelocity = (distRatio * PSEUDO_3D_BLAST_STRENGTH);
-
             m_gameView->createPseudo3DParticle(cocos2d::Color4F::WHITE,
                                                rockParticlePos,
                                                2.f * (randomZ + 2.f),
@@ -987,8 +986,7 @@ void GameViewController::updateCursor(const SnapshotData& snapshot)
         auto& entityView = m_entityViews[playerState.entityID];
         const cocos2d::Vec2 playerPosition = entityView ? entityView->getSprite()->getPosition() : cocos2d::Vec2(entitySnapshot.positionX, entitySnapshot.positionY);
         const cocos2d::Vec2 aimPosition = getAimPosition(m_inputModel->getMouseCoord());
-//
-//        const cocos2d::Vec2 aimPosition = cocos2d::Vec2(playerState.aimPointX, playerState.aimPointY);
+
         uint32_t entityUnderCursorID = 0;
         bool itemsInRange = false;
         for (const auto& entityPair : snapshot.entityData)
@@ -1026,15 +1024,26 @@ void GameViewController::updateCursor(const SnapshotData& snapshot)
         if (entityUnderCursorID != 0)
         {
             const EntitySnapshot& entitySnapshot = snapshot.entityData.at(entityUnderCursorID);
-            cocos2d::Vec2 offset = cocos2d::Vec2(0, 4);
+            const cocos2d::Vec2 entityPosition = cocos2d::Vec2(entitySnapshot.positionX, entitySnapshot.positionY);
+
+            cocos2d::Rect rect = cocos2d::Rect(entityPosition, cocos2d::Size::ZERO);
             const auto& collisionRects = EntityDataModel::getCollisionRects((EntityType)entitySnapshot.type);
             for (const auto& baseRect : collisionRects)
             {
-                offset.y += baseRect.size.height;
+                if (rect.size.width < baseRect.size.width)
+                {
+                    rect.size.width = baseRect.size.width;
+                }
+                rect.size.height += baseRect.size.height;
             }
-            const cocos2d::Vec2 entityPosition = cocos2d::Vec2(entitySnapshot.positionX, entitySnapshot.positionY);
+            rect.origin -= rect.size * 0.5f;
+            const cocos2d::Vec2 offset = cocos2d::Vec2(0.f, rect.size.height + 8.f);
             const cocos2d::Vec2 labelPosition = m_gameView->toViewPosition(entityPosition + offset);
             const StaticEntityData& entityData = EntityDataModel::getStaticEntityData((EntityType)entitySnapshot.type);
+
+            const double time = cocos2d::utils::gettime();
+            const float glow = 0.5f + (std::abs(std::sin(time)) * 0.5f);
+            m_gameView->getPixelDrawNode()->drawRect(rect.origin, rect.origin + rect.size, cocos2d::Color4F(1.f,1.f,1.f, glow));
 
             m_hudView->showHighlightLabel(entityData.name, labelPosition);
             m_hudView->getHighlightLabel()->setScale(2.f);

@@ -80,11 +80,16 @@ cocos2d::extension::TableViewCell* SettingsView::tableCellAtIndex(cocos2d::exten
         const auto& value = it->second;
         
         cell->setup(it->first, value);
+        
         if (cell->getToggleButton())
         {
             cell->getToggleButton()->addClickEventListener(std::bind(&SettingsView::onSettingToggle, this, idx));
         }
-        
+        else if (cell->getEditBox())
+        {
+            cell->getEditBox()->setDelegate(this);
+            cell->getEditBox()->setTag((int)idx);
+        }
     }
     
     return cell;
