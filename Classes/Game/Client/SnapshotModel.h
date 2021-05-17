@@ -17,13 +17,13 @@ public:
     static PlayerState interpolatePlayerState(const PlayerState& from,
                                               const PlayerState& to,
                                               const float alpha);
+    static SnapshotData interpolateSnapshots(const SnapshotData& from,
+                                             const SnapshotData& to,
+                                             const float alpha);
 
     void reset();
 
     bool storeSnapshot(const SnapshotData& data);
-    SnapshotData interpolateSnapshots(const SnapshotData& from,
-                                      const SnapshotData& to,
-                                      const float alpha);
 
     void setLastApplied(const uint32_t lastApplied) { m_lastAppliedSnapshot = lastApplied; }
     uint32_t getLastReceived() const { return m_lastReceivedSnapshot; }

@@ -3,6 +3,7 @@
 
 #include "HUDWeapon.h"
 #include "KillFeed.h"
+#include "NetworkMessages.h"
 #include "cocos2d.h"
 #include "cocos-ext.h"
 
@@ -18,6 +19,8 @@ public:
     
     void initialize();
     void shutdown();
+    
+    void update(const SnapshotData& snapshot, const uint8_t localPlayerID);
 
     void setHealth(const float health);
     void setAmmo(const size_t magAmmo, const size_t inventoryAmmo);

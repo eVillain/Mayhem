@@ -21,6 +21,7 @@
 #include "EntityDataModel.h"
 #include "ParticlesController.h"
 #include "GameModel.h"
+#include "AudioController.h"
 
 bool InitReplayEditorCommand::run()
 {
@@ -53,6 +54,11 @@ bool InitReplayEditorCommand::run()
     if (!injector.hasMapping<ParticlesController>())
     {
         injector.mapSingleton<ParticlesController>();
+    }
+    if (!injector.hasMapping<AudioController>())
+    {
+        injector.mapSingleton<AudioController,
+            GameSettings>();
     }
     if (!injector.hasMapping<HUDView>())
     {
@@ -99,6 +105,11 @@ bool InitReplayEditorCommand::run()
     auto gameView = injector.getInstance<GameView>();
     gameView->initialize();
     gameView->setTileMap(levelModel->getTileMap());
+    
+    auto particlesController = injector.getInstance<ParticlesController>();
+    particlesController->initialize();
+    auto audioController = injector.getInstance<AudioController>();
+    audioController->initialize();
     
     auto controller = injector.instantiateUnmapped<ReplayEditorController,
         LevelModel, ReplayModel, GameModel, GameView, GameViewController>();

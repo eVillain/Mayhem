@@ -11,6 +11,7 @@
 #include "EntityDataModel.h"
 #include "Utils/NumberFormatter.h"
 #include "GameModel.h"
+#include "SnapshotModel.h"
 
 ReplayEditorController::ReplayEditorController(std::shared_ptr<LevelModel> levelModel,
                                                std::shared_ptr<ReplayModel> replayModel,
@@ -262,7 +263,7 @@ void ReplayEditorController::updatePlayButton()
 void ReplayEditorController::updateView(const float time)
 {
     const auto& snapshots = m_replayModel->getSnapshots();
-    if (snapshots.size() < 2)
+    if (snapshots.empty())
     {
         return;
     }
@@ -270,23 +271,27 @@ void ReplayEditorController::updateView(const float time)
     // Find snapshots in queue for target time
     const uint32_t targetFrame = std::floor(time * m_gameModel->getTickRate());
     size_t newFrameIndex = m_replayModel->getSnapshotIndexForFrame(targetFrame);
-    newFrameIndex = std::min(snapshots.size() - 2, newFrameIndex);
+    newFrameIndex = std::min(snapshots.size() - 1, newFrameIndex);
     
     const bool isNewFrame = newFrameIndex != m_currentFrameIndex;
+    const bool isLastFrame = (newFrameIndex == snapshots.size() -1);
     m_currentFrameIndex = newFrameIndex;
     
     const SnapshotData& fromSnapshot = snapshots.at(m_currentFrameIndex);
-    const SnapshotData& toSnapshot = snapshots.at(m_currentFrameIndex + 1);
+    const SnapshotData& toSnapshot = isLastFrame ? fromSnapshot : snapshots.at(m_currentFrameIndex + 1);
 
     const float frameStartTime = fromSnapshot.serverTick * m_gameModel->getFrameTime();
     const float alphaTime = std::min(std::max((time - frameStartTime) / m_gameModel->getFrameTime(), 0.f), 1.f);
+    auto interpolatedSnapshot = SnapshotModel::interpolateSnapshots(fromSnapshot, toSnapshot, alphaTime);
     m_gameViewController->update(m_gameModel->getFrameTime(),
-                                 alphaTime,
-                                 fromSnapshot,
-                                 toSnapshot,
+                                 interpolatedSnapshot,
                                  isNewFrame,
                                  false);
     
     // Update timeline view
-    m_view->getTimeLineView()->update(targetFrame, snapshots.size(), m_gameModel->getTickRate(), m_playbackSpeed, snapshots);
+    m_view->getTimeLineView()->update(targetFrame,
+                                      snapshots.size(),
+                                      m_gameModel->getTickRate(),
+                                      m_playbackSpeed,
+                                      snapshots);
 }

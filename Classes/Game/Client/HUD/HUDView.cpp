@@ -8,6 +8,7 @@
 #include "InventoryLayer.h"
 #include "ViewLayer.h"
 #include "KillFeed.h"
+#include "EntityDataModel.h"
 
 static const cocos2d::Size HEALTH_BAR_SIZE = cocos2d::Size(200.f, 26.f);
 
@@ -112,6 +113,62 @@ void HUDView::shutdown()
     m_crosshair = nullptr;
     m_killFeed = nullptr;
     m_blockInput = nullptr;
+}
+
+void HUDView::update(const SnapshotData &snapshot, const uint8_t localPlayerID)
+{
+    size_t playersAlive = 0;
+    uint16_t inventoryAmmo = 0;
+    uint16_t weaponAmmo = 0;
+    float health = 0.f;
+    
+    const auto& localPlayerIt = snapshot.playerData.find(localPlayerID);
+    if (localPlayerIt != snapshot.playerData.end())
+    {
+        const PlayerState& playerState = localPlayerIt->second;
+        health = playerState.health;
+        
+        const WeaponSlot activeSlot = (WeaponSlot)playerState.activeWeaponSlot;
+        for (size_t i = 0; i < 5; i++)
+        {
+            bool isActiveSlot = i == activeSlot;
+            const auto& slotWeapon = playerState.weaponSlots.at(i);
+            std::string weaponSpriteFrame;
+            const StaticEntityData& slotWeaponData = EntityDataModel::getStaticEntityData((EntityType)slotWeapon.type);
+            if (slotWeapon.type != EntityType::PlayerEntity)
+            {
+                if (isActiveSlot)
+                {
+                    weaponAmmo = slotWeapon.amount;
+                    auto it = std::find_if(snapshot.inventory.begin(),
+                                           snapshot.inventory.end(),
+                                           [&slotWeaponData](const InventoryItemState& itemState) {
+                        return itemState.type == slotWeaponData.ammo.type;
+                    });
+                    if (it != snapshot.inventory.end())
+                    {
+                        inventoryAmmo = (*it).amount;
+                    }
+                }
+                weaponSpriteFrame = slotWeaponData.sprite;
+            }
+
+            setWeaponSlot(i, weaponSpriteFrame, isActiveSlot);
+        }
+    }
+    
+    for (const auto& player : snapshot.playerData)
+    {
+        if (player.second.health > 0.f)
+        {
+            playersAlive++;
+        }
+    }
+
+    setPlayersAlive(playersAlive);
+    setAmmo(weaponAmmo, inventoryAmmo);
+    setHealth(health);
+    updatePositions();
 }
 
 void HUDView::setHealth(const float health)

@@ -62,44 +62,23 @@ GameViewController::~GameViewController()
 }
 
 void GameViewController::update(const float deltaTime,
-                                const float alphaTime,
-                                const SnapshotData& fromSnapshot,
-                                const SnapshotData& toSnapshot,
-                                const bool newSnapshot,
+                                const SnapshotData& snapshot,
+                                const bool isNewSnapshot,
                                 const bool skipLocalPlayerShots)
 {
     m_gameView->getPixelDrawNode()->clear();
     m_gameView->getDebugDrawNode()->clear();
+    
+    updateEntities(snapshot);
+    
+    updateCamera(deltaTime, snapshot);
 
-    if (newSnapshot)
+    updateCursor(snapshot);
+    
+    if (isNewSnapshot)
     {
-        // Remove entity views for removed entities
-        for (const auto& pair : fromSnapshot.entityData)
-        {
-            if (toSnapshot.entityData.find(pair.first) == toSnapshot.entityData.end())
-            {
-                onEntityDestroyed(pair.first, fromSnapshot);
-            }
-        }
-        // Spawn new entity views
-        for (const auto& toDataPair : toSnapshot.entityData)
-        {
-            const uint32_t entityID = toDataPair.first;
-            if (m_entityViews.find(entityID) == m_entityViews.end())
-            {
-                onEntitySpawned(entityID, toDataPair.second);
-            }
-        }
-        
-        renderHitData(toSnapshot, skipLocalPlayerShots);
-        updateHUD(toSnapshot);
+        renderHitData(snapshot, skipLocalPlayerShots);
     }
-    
-    updateEntities(alphaTime, fromSnapshot, toSnapshot);
-    
-    updateCamera(deltaTime, toSnapshot);
-
-    updateCursor(toSnapshot);
 
     updateShotTrails(deltaTime);
 
@@ -110,7 +89,7 @@ void GameViewController::update(const float deltaTime,
     const cocos2d::Value& postProcessSetting = m_gameSettings->getValue(GameView::SETTING_RENDER_POSTPROCESS, cocos2d::Value(true));
     if (postProcessSetting.asBool())
     {
-        renderPostProcess(toSnapshot);
+        renderPostProcess(snapshot);
     }
     
     // DEBUG DRAW SHIZZLE
@@ -123,18 +102,16 @@ void GameViewController::update(const float deltaTime,
 void GameViewController::onEntityDestroyed(const uint32_t entityID,
                                            const SnapshotData& snapshot)
 {
-    EntityType type = EntityType::PlayerEntity;
-    cocos2d::Vec2 position;
-    
     auto entityViewIt = m_entityViews.find(entityID);
     if (entityViewIt == m_entityViews.end())
     {
+        printf("GameViewController::onEntityDestroyed fail: no entity view %u to remove!", entityID);
         return;
     }
     
     auto entityView = entityViewIt->second;
-    type = entityView->getEntityType();
-    position = entityView->getSprite()->getPosition();
+    const EntityType type = entityView->getEntityType();
+    const cocos2d::Vec2 position = entityView->getSprite()->getPosition();
     
     if (type == EntityType::Projectile_Grenade ||
         type == EntityType::Projectile_Rocket)
@@ -302,8 +279,10 @@ void GameViewController::renderShot(const uint32_t shooterEntityID,
 {
     if (!m_entityViews.count(shooterEntityID))
     {
+        printf("GameViewController::renderShot fail: entity view for shooter entity: %i!\n", shooterEntityID);
         return;
     }
+
     const auto& itemData = EntityDataModel::getStaticEntityData(weaponType);
     const WeaponConstants::WeaponStateData data = WeaponConstants::getWeaponData(shooterPosition,
                                                                                  aimPoint,
@@ -369,8 +348,8 @@ void GameViewController::renderShot(const uint32_t shooterEntityID,
         const cocos2d::Vec2 cursorPos = glview->getCursorPosition();
         m_inputModel->setMouseCoord(m_inputModel->getMouseCoord() + recoil);
 
-        // Show screen shake
-        m_cameraModel->setScreenShake(cocos2d::Vec2(5.f, 5.f));
+//        // Show screen shake
+//        m_cameraModel->setScreenShake(cocos2d::Vec2(5.f, 5.f));
     }
 }
 
@@ -479,45 +458,42 @@ void GameViewController::renderHitData(const SnapshotData& snapshot,
     const std::vector<FrameHitData>& hitData = snapshot.hitData;
     for (const auto& hit : hitData)
     {
-        if (hit.damage == 0)
+        const cocos2d::Vec2 hitPos = cocos2d::Vec2(hit.hitPosX, hit.hitPosY);
+        cocos2d::Vec2 hitterPos = hitPos;
+        cocos2d::Vec2 hitRay;
+        const auto& hitterEntityIt = snapshot.entityData.find(hit.hitterEntityID);
+        if (hitterEntityIt != snapshot.entityData.end())
         {
-            continue;
+            hitterPos = cocos2d::Vec2(hitterEntityIt->second.positionX, hitterEntityIt->second.positionY);
+            hitRay = (hitPos - hitterPos).getNormalized();
         }
         
-        const cocos2d::Vec2 hitPos = cocos2d::Vec2(hit.hitPosX, hit.hitPosY);
-        m_hudView->showHealthBlimp(-hit.damage, m_gameView->toViewPosition(hitPos + cocos2d::Vec2(0.f, 20.f)));
-
+        if (hit.damage > 0)
+        {
+            m_hudView->showHealthBlimp(-hit.damage, m_gameView->toViewPosition(hitPos + cocos2d::Vec2(0.f, 20.f)));
+            const float hitAngle = hitRay.getAngle();
+            // Damage taken by some entity - Show blood particles
+            Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::BLOOD_WOUND,
+                                                                        hitPos,
+                                                                        hitAngle));
+        }
+        
         auto hitPlayerIt = std::find_if(snapshot.playerData.begin(),
                                         snapshot.playerData.end(),
                                         [&hit](const std::pair<uint8_t, PlayerState>& pair) {
             return pair.second.entityID == hit.hitEntityID;
         });
-        
         if (hitPlayerIt != snapshot.playerData.end())
         {
+            // Player took a hit but didn't die, just show some extra blood at hit position
             Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::BLOOD_SPLASH,
                                                                         cocos2d::Vec2(hit.hitPosX, hit.hitPosY),
                                                                         0.f));
-            
-            const auto& hitterEntityIt = snapshot.entityData.find(hit.hitterEntityID);
-            if (hitterEntityIt != snapshot.entityData.end())
-            {
-                // Damage taken by entity - Show blood particles
-                const cocos2d::Vec2 hitterPos = cocos2d::Vec2(hitterEntityIt->second.positionX, hitterEntityIt->second.positionY);
-                const cocos2d::Vec2 hitRay = (hitPos - hitterPos).getNormalized();
-                const float hitAngle = hitRay.getAngle();
-                Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::BLOOD_WOUND,
-                                                                            hitPos,
-                                                                            hitAngle));
-                
-                if (hitPlayerIt->second.health <= hit.damage)
-                {
-                    const EntitySnapshot& hitPlayerSnapshot = snapshot.entityData.at(hit.hitEntityID);
-                    const cocos2d::Vec2 hitPos = cocos2d::Vec2(hitPlayerSnapshot.positionX, hitPlayerSnapshot.positionY);
-                    // Player died from this hit, show appropriate gore effects
-                    renderPlayerDeath(hitPos, hitRay, hit.headShot);
-                }
-            }
+        }
+        else
+        {
+            // Player died from this hit, show appropriate gore effects
+            renderPlayerDeath(hitPos, hitRay, hit.headShot);
         }
 
         auto hitterPlayerIt = std::find_if(snapshot.playerData.begin(),
@@ -527,10 +503,10 @@ void GameViewController::renderHitData(const SnapshotData& snapshot,
         });
         if (hitterPlayerIt == snapshot.playerData.end())
         {
+            printf("GameViewController::renderHitData fail: no hitter player data in snapshot!");
             continue;
         }
         
-        // If confirmed a hit on someone show hit marker on cursor
         const uint8_t localPlayerID = m_cameraModel->getCameraFollowPlayerID();
         if (skipLocalPlayerShots &&
             hitterPlayerIt->first == localPlayerID)
@@ -538,23 +514,23 @@ void GameViewController::renderHitData(const SnapshotData& snapshot,
             continue; // Locally predicted shots were already rendered so skip them
         }
         
-        const auto& hitterEntityIt = snapshot.entityData.find(hit.hitterEntityID);
         if (hitterEntityIt == snapshot.entityData.end())
         {
+            printf("GameViewController::renderHitData fail: no hitter entity data in snapshot!");
             continue;
         }
         
         const auto& hitterPlayer = hitterPlayerIt->second;
-        const InventoryItemState& weapon = hitterPlayerIt->second.weaponSlots.at(hitterPlayer.activeWeaponSlot);
+        const InventoryItemState& weapon = hitterPlayer.weaponSlots.at(hitterPlayer.activeWeaponSlot);
         if (weapon.type == EntityType::PlayerEntity)
         {
+            printf("GameViewController::renderHitData fail: hitter has no weapon in active weapon slot!");
             continue;
         }
         
-        const auto& hitterEntity = hitterEntityIt->second;
         renderShot(hitterPlayer.entityID,
                    hitterPlayerIt->first,
-                   cocos2d::Vec2(hitterEntity.positionX, hitterEntity.positionY),
+                   hitterPos,
                    hitterPlayer.flipX,
                    cocos2d::Vec2(hit.hitPosX, hit.hitPosY),
                    (EntityType)weapon.type,
@@ -895,39 +871,40 @@ void GameViewController::updateHeldItem(std::shared_ptr<EntityView>& entityView,
     }
 }
 
-void GameViewController::updateEntities(const float alphaTime,
-                                        const SnapshotData& fromSnapshot,
-                                        const SnapshotData& toSnapshot)
+void GameViewController::updateEntities(const SnapshotData& snapshot)
 {
-    // Update entity views (positions, velocities etc.)
-    const cocos2d::Size mapSize = m_levelModel->getMapSize();
-    for (const auto& toDataPair : toSnapshot.entityData)
+    // Remove entity views for removed entities
+    std::vector<uint32_t> removedEntityIDs;
+    for (const auto& pair : m_entityViews)
     {
-        const uint32_t entityID = toDataPair.first;
+        if (snapshot.entityData.find(pair.first) == snapshot.entityData.end())
+        {
+            removedEntityIDs.push_back(pair.first);
+        }
+    }
+    for (const uint32_t removedEntityID : removedEntityIDs)
+    {
+        onEntityDestroyed(removedEntityID, snapshot);
+    }
+
+    // Spawn new entity views/update entity views (positions, rotations etc.)
+    const cocos2d::Size mapSize = m_levelModel->getMapSize();
+    for (const auto& pair : snapshot.entityData)
+    {
+        const uint32_t entityID = pair.first;
         if (m_entityViews.find(entityID) == m_entityViews.end())
         {
-            CCLOG("GameViewController::updateEntities fail missing entity %i", entityID);
+            onEntitySpawned(entityID, pair.second);
             continue;
         }
         auto& entityView = m_entityViews[entityID];
-        if (!fromSnapshot.entityData.count(entityID))
-        {
-            entityView->getSprite()->setPosition(toDataPair.second.positionX, toDataPair.second.positionY);
-            entityView->getSprite()->setLocalZOrder(mapSize.height - toDataPair.second.positionY);
-            entityView->getSprite()->setRotation(toDataPair.second.rotation * (180.0 / M_PI));
-        }
-        else
-        {
-            const auto& fromData = fromSnapshot.entityData.at(entityID);
-            const auto interpolatedData = SnapshotModel::interpolateEntitySnapshot(fromData, toDataPair.second, alphaTime);
-            entityView->getSprite()->setPosition(interpolatedData.positionX, interpolatedData.positionY);
-            entityView->getSprite()->setLocalZOrder(mapSize.height - interpolatedData.positionY);
-            entityView->getSprite()->setRotation(interpolatedData.rotation * (180.0 / M_PI));
-        }
+        entityView->getSprite()->setPosition(pair.second.positionX, pair.second.positionY);
+        entityView->getSprite()->setLocalZOrder(mapSize.height - pair.second.positionY);
+        entityView->getSprite()->setRotation(pair.second.rotation * (180.0 / M_PI));
     }
     
     // Update player state data (animtions, held items)
-    for (const auto& data : toSnapshot.playerData)
+    for (const auto& data : snapshot.playerData)
     {
         const uint32_t entityID = data.second.entityID;
         if (m_entityViews.find(entityID) == m_entityViews.end())
@@ -937,7 +914,7 @@ void GameViewController::updateEntities(const float alphaTime,
         }
         
         auto& entityView = m_entityViews[entityID];
-        const EntitySnapshot& entitySnapshot = toSnapshot.entityData.at(data.second.entityID);
+        const EntitySnapshot& entitySnapshot = snapshot.entityData.at(data.second.entityID);
         updatePlayerAnimations(data.first, entityView, entitySnapshot, data.second);
         updateHeldItem(entityView, data.second);
     }
@@ -1060,62 +1037,6 @@ void GameViewController::updateCursor(const SnapshotData& snapshot)
             m_hudView->hideHighlightLabel();
         }
     }
-}
-
-void GameViewController::updateHUD(const SnapshotData& snapshot)
-{
-    size_t playersAlive = 0;
-    uint16_t inventoryAmmo = 0;
-    uint16_t weaponAmmo = 0;
-    float health = 0.f;
-    
-    const auto& localPlayerIt = snapshot.playerData.find(m_cameraModel->getCameraFollowPlayerID());
-    if (localPlayerIt != snapshot.playerData.end())
-    {
-        const PlayerState& playerState = localPlayerIt->second;
-        health = playerState.health;
-        
-        const WeaponSlot activeSlot = (WeaponSlot)playerState.activeWeaponSlot;
-        for (size_t i = 0; i < 5; i++)
-        {
-            bool isActiveSlot = i == activeSlot;
-            const auto& slotWeapon = playerState.weaponSlots.at(i);
-            std::string weaponSpriteFrame;
-            const StaticEntityData& slotWeaponData = EntityDataModel::getStaticEntityData((EntityType)slotWeapon.type);
-            if (slotWeapon.type != EntityType::PlayerEntity)
-            {
-                if (isActiveSlot)
-                {
-                    weaponAmmo = slotWeapon.amount;
-                    auto it = std::find_if(snapshot.inventory.begin(),
-                                           snapshot.inventory.end(),
-                                           [&slotWeaponData](const InventoryItemState& itemState) {
-                        return itemState.type == slotWeaponData.ammo.type;
-                    });
-                    if (it != snapshot.inventory.end())
-                    {
-                        inventoryAmmo = (*it).amount;
-                    }
-                }
-                weaponSpriteFrame = slotWeaponData.sprite;
-            }
-
-            m_hudView->setWeaponSlot(i, weaponSpriteFrame, isActiveSlot);
-        }
-    }
-    
-    for (const auto& player : snapshot.playerData)
-    {
-        if (player.second.health > 0.f)
-        {
-            playersAlive++;
-        }
-    }
-
-    m_hudView->setPlayersAlive(playersAlive);
-    m_hudView->setAmmo(weaponAmmo, inventoryAmmo);
-    m_hudView->setHealth(health);
-    m_hudView->updatePositions();
 }
 
 void GameViewController::updateShotTrails(const float deltaTime)

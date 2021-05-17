@@ -241,11 +241,7 @@ void ClientController::updateGame(const float deltaTime, const bool processInput
     }
     
     const float currentTickStartTime = m_gameModel->getCurrentTick() * m_gameModel->getFrameTime();
-    float targetTime = currentTickStartTime + m_gameModel->getDeltaAccumulator();
-    if (targetTime < 0.f)
-    {
-        targetTime = 0.f;
-    }
+    const float targetTime = std::max(currentTickStartTime + m_gameModel->getDeltaAccumulator(), 0.f);
 
     // Find snapshots in queue for target time
     const uint32_t targetFrame = std::floor(targetTime * m_gameModel->getTickRate());
@@ -269,24 +265,24 @@ void ClientController::updateGame(const float deltaTime, const bool processInput
         {
             predictLocalMovement(toSnapshot, fromSnapshot);
         }
+        m_hudView->update(toSnapshot, m_clientModel->getLocalPlayerID());
 
         m_snapshotModel->setLastApplied(toSnapshot.serverTick);
     }
 
+    const float alphaTime = std::min(std::max(m_gameModel->getDeltaAccumulator() / m_gameModel->getFrameTime(), 0.f), 1.f);
+    auto interpolatedSnapshot = SnapshotModel::interpolateSnapshots(fromSnapshot, toSnapshot, alphaTime);
+    m_gameViewController->update(deltaTime,
+                                 interpolatedSnapshot,
+                                 reachedNextSnapshot,
+                                 m_clientModel->getPredictBullets());
+    
     if (reachedNextSnapshot &&
         processInput &&
         m_clientModel->getPredictBullets())
     {
         checkShot(toSnapshot);
     }
-
-    const float alphaTime = std::min(std::max(m_gameModel->getDeltaAccumulator() / m_gameModel->getFrameTime(), 0.f), 1.f);
-    m_gameViewController->update(deltaTime,
-                                 alphaTime,
-                                 fromSnapshot,
-                                 toSnapshot,
-                                 reachedNextSnapshot,
-                                 m_clientModel->getPredictBullets());
 }
 
 void ClientController::predictLocalMovement(SnapshotData& toSnapshot,

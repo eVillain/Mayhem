@@ -32,10 +32,8 @@ public:
     ~GameViewController();
     
     void update(const float deltaTime,
-                const float alphaTime,
-                const SnapshotData& fromSnapshot,
-                const SnapshotData& toSnapshot,
-                const bool newSnapshot,
+                const SnapshotData& snapshot,
+                const bool isNewSnapshot,
                 const bool skipLocalPlayerShots);
     
     void setCameraFollowPlayerID(const uint8_t playerID);
@@ -83,9 +81,7 @@ private:
     void updateHeldItem(std::shared_ptr<EntityView>& entityView,
                         const PlayerState& state);
     
-    void updateEntities(const float alphaTime,
-                        const SnapshotData& fromSnapshot,
-                        const SnapshotData& toSnapshot);
+    void updateEntities(const SnapshotData& snapshot);
     
     void updateCursor(const SnapshotData& snapshot);
     
