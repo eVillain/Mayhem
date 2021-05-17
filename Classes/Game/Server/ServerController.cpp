@@ -123,7 +123,7 @@ const std::string ServerController::getDebugInfo() const
 void ServerController::performGameUpdate(const float deltaTime)
 {
     // Check for unprocessed inputs
-    const auto inputData = m_inputCache->getCombinedInputs(); // map of inputs
+    const auto inputData = m_inputCache->popCombinedInputs(); // map of inputs
     const auto& players = m_gameController->getEntitiesModel()->getPlayers();
     std::map<uint8_t, std::shared_ptr<ClientInputMessage>> inputs;
     for (auto pair : inputData) // first == playerID, second == inputs
@@ -161,10 +161,7 @@ void ServerController::performGameUpdate(const float deltaTime)
             m_gameController->getEntitiesModel()->setSnapshot(m_preRollbackState);
         }
     }
-    
-    // Current inputs have been processed, clear them for the next frame
-    m_inputCache->getInputData().clear();
-                
+                    
     m_gameController->applyInputs(inputs);
 
     std::map<uint32_t, EntitySnapshot> worldState = m_gameController->getEntitiesModel()->getSnapshot();
@@ -862,6 +859,8 @@ void ServerController::onInputMessageReceived(const std::shared_ptr<Net::Message
                   playerID, inputMessage->inputSequence, m_inputCache->getLastReceivedSequence(playerID));
             return;
         }
+//        CCLOG("ServerController::onInputMessageReceived - player %i input %u received, last %u",
+//              playerID, inputMessage->inputSequence, m_inputCache->getLastReceivedSequence(playerID));
 
         const float networkLatency = m_networkController->GetRoundTripTime(playerID) * 0.5f; // half because only one-way latency counts here
         const float inputGameTime = m_gameModel->getCurrentTime() - networkLatency;
@@ -922,9 +921,6 @@ void ServerController::initDebugStuff()
 {
     for (int x = 1; x < 10; x++)
     {
-        // Don't use dispatcher directly or local client will also catch this event
-        // We want to use the network instead so we spawn the players on the server
-        // as if they just joined
         size_t playerID = x;
         onPlayerJoined(playerID);
         m_botPlayers[playerID] = std::make_shared<BaseAI>();
@@ -1012,7 +1008,10 @@ void ServerController::sendUpdateMessages()
             continue;
         }
         
-        snapshot.lastReceivedInput = m_inputCache->getLastReceivedSequence(playerID);
+        snapshot.lastReceivedInput = m_inputCache->getLastAppliedSequence(playerID);
+//        CCLOG("ServerController::sendUpdateMessages - player %i last applied input %u on server tick: %i",
+//              playerID, snapshot.lastReceivedInput, snapshot.serverTick);
+
         const auto& sendingPlayer = players.find(playerID);
         if (sendingPlayer != players.end())
         {
