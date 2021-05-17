@@ -405,16 +405,15 @@ bool ServerController::onItemPickedUp(Player* player, Item* item)
         
         if (isPrimary)
         {
-            if (weaponSlots.at(WeaponSlot::MAIN_1).type != EntityType::PlayerEntity)
+            const bool isActiveSlotPrimary = (activeSlot == WeaponSlot::MAIN_1 || activeSlot == WeaponSlot::MAIN_2);
+            if (isActiveSlotPrimary)
             {
-                if (weaponSlots.at(WeaponSlot::MAIN_2).type != EntityType::PlayerEntity)
-                {
-                    targetSlot = activeSlot;
-                }
-                else
-                {
-                    targetSlot = WeaponSlot::MAIN_2;
-                }
+                targetSlot = activeSlot;
+            }
+            if (weaponSlots.at(WeaponSlot::MAIN_1).type != EntityType::PlayerEntity &&
+                weaponSlots.at(WeaponSlot::MAIN_2).type == EntityType::PlayerEntity)
+            {
+                targetSlot = WeaponSlot::MAIN_2;
             }
             else
             {
