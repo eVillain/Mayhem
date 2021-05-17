@@ -57,8 +57,7 @@ public:
 
 private:
     void updateGame(const float deltaTime, const bool processInput);
-    void predictLocalMovement(SnapshotData& toSnapshot,
-                              const SnapshotData& fromSnapshot);
+    void predictLocalMovement(SnapshotData& snapshot);
     void updateEntities(const float alphaTime,
                         const SnapshotData& fromSnapshot,
                         const SnapshotData& toSnapshot,

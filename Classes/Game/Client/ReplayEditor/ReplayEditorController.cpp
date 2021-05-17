@@ -283,7 +283,7 @@ void ReplayEditorController::updateView(const float time)
     const float frameStartTime = fromSnapshot.serverTick * m_gameModel->getFrameTime();
     const float alphaTime = std::min(std::max((time - frameStartTime) / m_gameModel->getFrameTime(), 0.f), 1.f);
     auto interpolatedSnapshot = SnapshotModel::interpolateSnapshots(fromSnapshot, toSnapshot, alphaTime);
-    m_gameViewController->update(m_gameModel->getFrameTime(),
+    m_gameViewController->update(m_isPlaying ? m_gameModel->getFrameTime() * m_playbackSpeed : 0.f,
                                  interpolatedSnapshot,
                                  isNewFrame,
                                  false);

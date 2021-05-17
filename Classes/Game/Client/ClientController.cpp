@@ -263,7 +263,7 @@ void ClientController::updateGame(const float deltaTime, const bool processInput
     {
         if (m_clientModel->getPredictMovement())
         {
-            predictLocalMovement(toSnapshot, fromSnapshot);
+            predictLocalMovement(toSnapshot);
         }
         m_hudView->update(toSnapshot, m_clientModel->getLocalPlayerID());
 
@@ -283,50 +283,63 @@ void ClientController::updateGame(const float deltaTime, const bool processInput
     {
         checkShot(toSnapshot);
     }
+    
+    if (m_gameView->getDebugDrawNode()->isVisible())
+    {
+        debugSnapshots(targetTimeSnapshotIndex, alphaTime);
+    }
 }
 
-void ClientController::predictLocalMovement(SnapshotData& toSnapshot,
-                                            const SnapshotData& fromSnapshot)
+void ClientController::predictLocalMovement(SnapshotData& snapshot)
 {
     // Simulate forward inputs which were applied locally since server tick
-    const auto playerIt = toSnapshot.playerData.find(m_clientModel->getLocalPlayerID());
-    if (playerIt == toSnapshot.playerData.end())
+    const auto playerIt = snapshot.playerData.find(m_clientModel->getLocalPlayerID());
+    if (playerIt == snapshot.playerData.end())
     {
-        return;
+        return; // Player is dead, nothing to predict here :D
     }
     
     const PlayerState& playerState = playerIt->second;
 
     const uint16_t localPlayerEntityID = playerState.entityID;
-    auto toEntityIt = toSnapshot.entityData.find(localPlayerEntityID);
-    if (toEntityIt == toSnapshot.entityData.end())
+    auto toEntityIt = snapshot.entityData.find(localPlayerEntityID);
+    if (toEntityIt == snapshot.entityData.end())
     {
-        return;
+        return; // No entity data for player, cant predict anything here
     }
+    
+    // Copy of current player entity state on server before local inputs are applied
+    EntitySnapshot toEntitySnapshot = snapshot.entityData.at(playerState.entityID);
     
     int removedInputs = 0;
     // Remove all inputs already processed on server at that snapshot
     while (!m_clientModel->getInputData().empty() &&
-           m_clientModel->getInputData().begin()->get()->inputSequence <= toSnapshot.lastReceivedInput)
+           m_clientModel->getInputData().begin()->get()->inputSequence <= snapshot.lastReceivedInput)
     {
         removedInputs++;
         m_clientModel->getInputData().erase(m_clientModel->getInputData().begin());
     }
+    
+    if (m_gameView->getDebugDrawNode()->isVisible())
+    {
+        m_gameView->addDebugLabel("SNAPSHOTS",
+                                  "Server pos: " + std::to_string(toEntitySnapshot.positionX) +
+                                  ", "  + std::to_string(toEntitySnapshot.positionY) +
+                                  " at tick: " + std::to_string(snapshot.serverTick) +
+                                  " Last received: " + std::to_string(snapshot.lastReceivedInput));
+    }
 
-    // Copy of current player entity state on server after inputs are applied
-    EntitySnapshot toEntitySnapshot = toSnapshot.entityData.at(playerState.entityID);
-
-    // Replay all remaining inputs on local player
+    // Replay all remaining inputs on local client
     size_t index = 0;
     for (auto input : m_clientModel->getInputData())
     {
         float lastActionTime = m_clientModel->getLastPlayerActionTime();
         PlayerLogic::applyInput(m_clientModel->getLocalPlayerID(),
-                                toSnapshot,
+                                snapshot,
                                 input,
                                 lastActionTime,
                                 m_gameModel->getCurrentTime());
-        toEntitySnapshot = toSnapshot.entityData.at(playerState.entityID);
+        toEntitySnapshot = snapshot.entityData.at(playerState.entityID);
         m_clientModel->setLastPlayerActionTime(lastActionTime);
         
         const cocos2d::Vec2 direction = cocos2d::Vec2(input->directionX, input->directionY);
@@ -337,26 +350,20 @@ void ClientController::predictLocalMovement(SnapshotData& toSnapshot,
                                               toEntitySnapshot,
                                               velocity,
                                               angularVelocity,
-                                              toSnapshot.entityData,
+                                              snapshot.entityData,
                                               m_levelModel->getStaticRects());
         
-        toSnapshot.entityData.at(playerState.entityID) = toEntitySnapshot;
+        snapshot.entityData.at(playerState.entityID) = toEntitySnapshot;
         index++;
     }
 
     if (m_gameView->getDebugDrawNode()->isVisible())
     {
-        const auto& fromEntityData = fromSnapshot.entityData.at(localPlayerEntityID);
-        m_gameView->addDebugLabel("SNAPSHOTS", "Current pos: " + std::to_string(fromEntityData.positionX) + ", "  + std::to_string(toEntitySnapshot.positionY) +
-                                  "From: " + std::to_string(fromEntityData.positionX) + ", "  + std::to_string(fromEntityData.positionY) +
-                                  "To: " + std::to_string(toEntityIt->second.positionX) + ", "  + std::to_string(toEntityIt->second.positionY));
-
-
-        m_gameView->addDebugLabel("INPUTS", "Predicted pos: " + std::to_string(toEntitySnapshot.positionX) + ", "  + std::to_string(toEntitySnapshot.positionY) +
-                              " Inputs ahead: " + std::to_string(index) +
-                              " Last received: " + std::to_string(toSnapshot.lastReceivedInput) +
-                              " Unprocessed: " + std::to_string(m_clientModel->getInputData().size()) +
-                              " Cleared: " + std::to_string(removedInputs));
+        m_gameView->addDebugLabel("INPUTS",
+                                  "Predicted pos: " + std::to_string(toEntitySnapshot.positionX) +
+                                  ", "  + std::to_string(toEntitySnapshot.positionY) +
+                                  " Inputs ahead: " + std::to_string(index) +
+                                  " Removed: " + std::to_string(removedInputs));
     }
 }
 

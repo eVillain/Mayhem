@@ -69,17 +69,17 @@ void GameViewController::update(const float deltaTime,
     m_gameView->getPixelDrawNode()->clear();
     m_gameView->getDebugDrawNode()->clear();
     
+    if (isNewSnapshot)
+    {
+        renderHitData(snapshot, skipLocalPlayerShots);
+    }
+    
     updateEntities(snapshot);
     
     updateCamera(deltaTime, snapshot);
 
     updateCursor(snapshot);
     
-    if (isNewSnapshot)
-    {
-        renderHitData(snapshot, skipLocalPlayerShots);
-    }
-
     updateShotTrails(deltaTime);
 
     updateView(deltaTime);
@@ -485,15 +485,22 @@ void GameViewController::renderHitData(const SnapshotData& snapshot,
         });
         if (hitPlayerIt != snapshot.playerData.end())
         {
-            // Player took a hit but didn't die, just show some extra blood at hit position
-            Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::BLOOD_SPLASH,
-                                                                        cocos2d::Vec2(hit.hitPosX, hit.hitPosY),
-                                                                        0.f));
+            if (hitPlayerIt->second.health > 0.f)
+            {
+                // Player took a hit but didn't die, just show some extra blood at hit position
+                Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::BLOOD_SPLASH,
+                                                                            cocos2d::Vec2(hit.hitPosX, hit.hitPosY),
+                                                                            0.f));
+            }
         }
         else
         {
-            // Player died from this hit, show appropriate gore effects
-            renderPlayerDeath(hitPos, hitRay, hit.headShot);
+            auto entityViewIt = m_entityViews.find(hit.hitEntityID);
+            if (entityViewIt != m_entityViews.end())
+            {
+                // Player died from this hit, show appropriate gore effects
+                renderPlayerDeath(entityViewIt->second->getSprite()->getPosition(), hitRay, hit.headShot);
+            }
         }
 
         auto hitterPlayerIt = std::find_if(snapshot.playerData.begin(),

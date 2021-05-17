@@ -51,22 +51,24 @@ SnapshotData SnapshotModel::interpolateSnapshots(const SnapshotData& from,
     SnapshotData interpolatedSnapshot;
     interpolatedSnapshot.serverTick = from.serverTick;
     interpolatedSnapshot.lastReceivedInput = from.lastReceivedInput;
-    interpolatedSnapshot.playerCount = to.playerCount;
-    interpolatedSnapshot.entityCount = to.entityCount;
+    interpolatedSnapshot.playerCount = from.playerCount;
+    interpolatedSnapshot.entityCount = from.entityCount;
     interpolatedSnapshot.inventory = from.inventory;
     interpolatedSnapshot.hitData = from.hitData;
 
     for (const auto& pair : from.entityData)
     {
         const uint32_t entityID = pair.first;
-        if (!to.entityData.count(entityID))
+        if (to.entityData.find(entityID) != to.entityData.end())
         {
-            continue;
+            const auto& toData = to.entityData.at(entityID);
+            const auto& fromData = pair.second;
+            interpolatedSnapshot.entityData[entityID] = interpolateEntitySnapshot(fromData, toData, alpha);
         }
-        
-        const auto& toData = to.entityData.at(entityID);
-        const auto& fromData = pair.second;
-        interpolatedSnapshot.entityData[entityID] = interpolateEntitySnapshot(fromData, toData, alpha);
+        else
+        {
+            interpolatedSnapshot.entityData[entityID] = pair.second;
+        }
     }
     
     const auto& fromPlayerData = from.playerData;
@@ -75,14 +77,16 @@ SnapshotData SnapshotModel::interpolateSnapshots(const SnapshotData& from,
     {
         const uint8_t playerID = pair.first;
         const auto toPlayerIt = toPlayerData.find(playerID);
-        if (toPlayerIt == toPlayerData.end())
+        if (toPlayerIt != toPlayerData.end())
         {
-            continue;
+            const auto& toData = toPlayerIt->second;
+            const auto& fromData = pair.second;
+            interpolatedSnapshot.playerData[playerID] = interpolatePlayerState(fromData, toData, alpha);
         }
-        
-        const auto& toData = toPlayerIt->second;
-        const auto& fromData = pair.second;
-        interpolatedSnapshot.playerData[playerID] = interpolatePlayerState(fromData, toData, alpha);
+        else
+        {
+            interpolatedSnapshot.playerData[playerID] = pair.second;
+        }
     }
     
     return interpolatedSnapshot;
