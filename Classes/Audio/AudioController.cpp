@@ -1,10 +1,12 @@
 #include "AudioController.h"
+
 #include "AudioModel.h"
 #include "Game/Client/InputModel.h"
 #include "Core/Injector.h"
 #include "Core/Dispatcher.h"
 #include "audio/include/AudioEngine.h"
 #include "cocos2d.h"
+#include "GameSettings.h"
 
 #include "PlayAudioEvent.h"
 #include "StopAudioEvent.h"
@@ -15,12 +17,19 @@
 
 const std::string AudioController::SETTING_USE_POSITIONAL_AUDIO = "UsePositionalAudio";
 
-const float PIXELS_PER_METER = 32.f;
+static const float PIXELS_PER_METER = 64.f;
 
-AudioController::AudioController()
+AudioController::AudioController(std::shared_ptr<GameSettings> settings)
 : m_model(nullptr)
+, m_gameSettings(settings)
 , m_pitchTransition(1.0,0.0)
 {
+    printf("AudioController:: constructor: %p\n", this);
+}
+
+AudioController::~AudioController()
+{
+    printf("AudioController:: destructor: %p\n", this);
 }
 
 void AudioController::initialize()
@@ -45,8 +54,24 @@ void AudioController::initialize()
     Dispatcher::globalDispatcher().addListener(PitchAudioEvent::descriptor, std::bind(&AudioController::onPitchAudio, this, std::placeholders::_1));
 }
 
+void AudioController::terminate()
+{
+    Dispatcher::globalDispatcher().removeListeners(SetAudioListenerPositionEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListeners(PlayAudioEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListeners(PlayPositionalAudioEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListeners(StopAudioEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListeners(PlayBGMEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListeners(StopBGMEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListeners(PitchAudioEvent::descriptor);
+}
+
 void AudioController::setListenerPosition(const cocos2d::Vec2& position)
 {
+    const cocos2d::Value& usePositionalAudioSetting = m_gameSettings->getValue(SETTING_USE_POSITIONAL_AUDIO, cocos2d::Value(false));
+    if (!usePositionalAudioSetting.asBool())
+    {
+        return;
+    }
     cocos2d::experimental::AudioEngine::setListenerPosition(position / PIXELS_PER_METER);
 }
 
@@ -79,6 +104,12 @@ int AudioController::playPositionalAudio(const std::string& audioFile,
                                          const cocos2d::Vec2& position,
                                          const float volume) const
 {
+    const cocos2d::Value& usePositionalAudioSetting = m_gameSettings->getValue(SETTING_USE_POSITIONAL_AUDIO, cocos2d::Value(false));
+    if (!usePositionalAudioSetting.asBool())
+    {
+        return playAudio(audioFile, volume);
+    }
+
     int audioInstance = cocos2d::experimental::AudioEngine::play2d("res/audio/" + audioFile, false, volume * m_model->getMasterVolume());
     if (audioInstance > 0)
     {

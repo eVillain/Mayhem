@@ -6,15 +6,19 @@
 
 class AudioModel;
 class Event;
+class GameSettings;
 
 class AudioController
 {
 public:
     static const std::string SETTING_USE_POSITIONAL_AUDIO;
 
-    AudioController();
+    AudioController(std::shared_ptr<GameSettings> settings);
+    ~AudioController();
     
     void initialize();
+    void terminate();
+
     void setListenerPosition(const cocos2d::Vec2& position);
     
     void update(const float deltaTime);
@@ -38,6 +42,7 @@ private:
     };
     
     std::shared_ptr<AudioModel> m_model;
+    std::shared_ptr<GameSettings> m_gameSettings;
     AudioPitchTransition m_pitchTransition;
     
     void onSetListenerPosition(const Event& event);

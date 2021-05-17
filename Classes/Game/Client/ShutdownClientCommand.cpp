@@ -30,7 +30,6 @@
 #include "ParticlesController.h"
 #include "ReplayModel.h"
 #include "SnapshotModel.h"
-#include "ServerController.h"
 
 ShutdownClientCommand::ShutdownClientCommand()
 {
@@ -46,6 +45,8 @@ bool ShutdownClientCommand::run()
     lightController->shutdown();
     auto particlesController = injector.getInstance<ParticlesController>();
     particlesController->shutdown();
+    auto audioController = injector.getInstance<AudioController>();
+    audioController->terminate();
 
     injector.removeMapping<GameModel>();
     injector.removeMapping<LevelModel>();
@@ -55,17 +56,15 @@ bool ShutdownClientCommand::run()
     injector.removeMapping<SnapshotModel>();
     injector.removeMapping<ReplayModel>();
     injector.removeMapping<ClientModel>();
-    injector.removeMapping<ParticlesController>(); //
+    injector.removeMapping<ParticlesController>();
+    injector.removeMapping<AudioController>();
     injector.removeMapping<LightModel>();
-    injector.removeMapping<LightController>(); //
+    injector.removeMapping<LightController>();
     injector.removeMapping<ClientController>();
     injector.removeMapping<InputModel>();
     injector.removeMapping<InputController>();
     injector.removeMapping<INetworkController>();
     injector.removeMapping<FakeNet>();
-//    injector.removeMapping<ServerController>();
-//    auto audioController = injector.getInstance<AudioController>();
-//    audioController->shutdown(); // Doesnt need a shutdown method yet
 
     InitMainMenuCommand initMainMenu;
     initMainMenu.run();

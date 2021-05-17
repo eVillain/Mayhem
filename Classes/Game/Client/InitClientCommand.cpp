@@ -152,7 +152,8 @@ void InitClientCommand::mapDependencies()
     }
     if (!injector.hasMapping<AudioController>())
     {
-        injector.mapSingleton<AudioController>();
+        injector.mapSingleton<AudioController,
+            GameSettings>();
     }
 
     if (!injector.hasMapping<LightController>())
