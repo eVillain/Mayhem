@@ -7,7 +7,8 @@ class InputModel
 {
 public:
     InputModel();
-    
+    ~InputModel();
+
     void setDirection(const cocos2d::Vec2& direction) { m_direction = direction; }
     void setMouseCoord(const cocos2d::Vec2 coord) { m_mouseCoord = coord; }
     void setRun(bool run) { m_run = run; }

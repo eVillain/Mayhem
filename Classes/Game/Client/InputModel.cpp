@@ -15,4 +15,10 @@ InputModel::InputModel()
 , m_pickupAmount(0)
 , m_pickupID(0)
 {
+    printf("InputModel:: constructor: %p\n", this);
+}
+
+InputModel::~InputModel()
+{
+    printf("InputModel:: destructor: %p\n", this);
 }

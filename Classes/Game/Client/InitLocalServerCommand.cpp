@@ -1,20 +1,20 @@
 #include "InitLocalServerCommand.h"
 
 #include "cocos2d.h"
+#include "Core/Dispatcher.h"
+#include "Core/Injector.h"
 #include "EntitiesController.h"
 #include "EntitiesModel.h"
-#include "GameController.h"
-#include "FrameCache.h"
-#include "InputCache.h"
-#include "Core/Injector.h"
-#include "ServerController.h"
-#include "FakeNetworkController.h"
+#include "EntityDataModel.h"
 #include "FakeNet.h"
-#include "Core/Dispatcher.h"
+#include "FakeNetworkController.h"
+#include "FrameCache.h"
+#include "GameController.h"
+#include "GameModel.h"
+#include "InputCache.h"
 #include "LevelModel.h"
 #include "LoadStaticEntityDataCommand.h"
-#include "EntityDataModel.h"
-#include "GameModel.h"
+#include "ServerController.h"
 
 InitLocalServerCommand::InitLocalServerCommand(const GameMode::Config& config)
 : m_config(config)
@@ -23,13 +23,6 @@ InitLocalServerCommand::InitLocalServerCommand(const GameMode::Config& config)
 
 bool InitLocalServerCommand::run()
 {
-    initControllers();
-    
-    return true;
-}
-
-void InitLocalServerCommand::initControllers()
-{
     if (!EntityDataModel::hasStaticEntityData())
     {
         LoadStaticEntityDataCommand loadStaticEntityData;
@@ -37,23 +30,75 @@ void InitLocalServerCommand::initControllers()
         EntityDataModel::setStaticEntityData(loadStaticEntityData.itemDataMap);
     }
     
-    entitiesModel = std::make_shared<EntitiesModel>();
-    entitiesController = std::make_shared<EntitiesController>(entitiesModel);
-    entitiesController->initialize();
-    auto levelModel = std::make_shared<LevelModel>();
-    levelModel->loadLevel(m_config.level);
-    auto gameModel = std::make_shared<GameModel>();
-    gameModel->setTickRate(m_config.tickRate);
-    gameController = std::make_shared<GameController>(entitiesController, entitiesModel, levelModel);
-    gameController->setGameMode(m_config, true);
-    frameCache = std::make_shared<FrameCache>();
-    inputCache = std::make_shared<InputCache>();
+    mapDependencies();
+    
+    Injector& injector = Injector::globalInjector();
 
-    auto fakeNet = Injector::globalInjector().getInstance<FakeNet>();
-    networkController = std::make_shared<FakeNetworkController>(fakeNet);
-    networkController->initialize(NetworkMode::HOST);
-    serverController = std::make_shared<ServerController>(gameController, levelModel, gameModel, networkController, frameCache, inputCache);
+    auto entitiesModel = injector.getInstance<EntitiesModel>();
+    auto entitiesController = injector.getInstance<EntitiesController>();
+    entitiesController->initialize();
+    auto levelModel = injector.getInstance<LevelModel>();
+    levelModel->loadLevel(m_config.level);
+    auto gameController = injector.getInstance<GameController>();
+    gameController->setGameMode(m_config, true);
+
+    if (!injector.hasMapping<ServerController>())
+    {
+        auto networkController = injector.instantiateUnmapped<FakeNetworkController,
+            FakeNet>();
+        networkController->initialize(NetworkMode::HOST);
+        auto frameCache = injector.getInstance<FrameCache>();
+        auto inputCache = injector.getInstance<InputCache>();
+        auto gameModel = injector.instantiateUnmapped<GameModel>();
+        gameModel->setTickRate(m_config.tickRate);
+
+        auto serverController = std::make_shared<ServerController>(gameController,
+                                                                   levelModel,
+                                                                   gameModel,
+                                                                   networkController,
+                                                                   frameCache,
+                                                                   inputCache);
+        Injector::globalInjector().mapInstance<ServerController>(serverController);
+    }
+    
+    auto serverController = injector.getInstance<ServerController>();
     serverController->initDebugStuff();
     
-    Injector::globalInjector().mapInstance<ServerController>(serverController);
+    return true;
+}
+
+void InitLocalServerCommand::mapDependencies()
+{
+    Injector& injector = Injector::globalInjector();
+    
+    if (!injector.hasMapping<EntitiesModel>())
+    {
+        injector.mapSingleton<EntitiesModel>();
+    }
+    if (!injector.hasMapping<EntitiesController>())
+    {
+        injector.mapSingleton<EntitiesController,
+            EntitiesModel>();
+    }
+    if (!injector.hasMapping<LevelModel>())
+    {
+        injector.mapSingleton<LevelModel>();
+    }
+    if (!injector.hasMapping<GameController>())
+    {
+        injector.mapSingleton<GameController,
+            EntitiesController, EntitiesModel, LevelModel>();
+    }
+    if (!injector.hasMapping<FrameCache>())
+    {
+        injector.mapSingleton<FrameCache>();
+    }
+    if (!injector.hasMapping<InputCache>())
+    {
+        injector.mapSingleton<InputCache>();
+    }
+    if (!injector.hasMapping<FakeNet>())
+    {
+        injector.mapSingleton<FakeNet>();
+    }
 }

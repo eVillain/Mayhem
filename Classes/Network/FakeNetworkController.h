@@ -18,6 +18,7 @@ class FakeNetworkController : public INetworkController
 {
 public:
     FakeNetworkController(std::shared_ptr<FakeNet> fakeNet);
+    ~FakeNetworkController();
     
     void initialize(const NetworkMode mode) override;
     void terminate() override;

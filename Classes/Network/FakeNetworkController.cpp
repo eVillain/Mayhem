@@ -18,6 +18,12 @@ FakeNetworkController::FakeNetworkController(std::shared_ptr<FakeNet> fakeNet)
 , m_writeStream(nullptr)
 , m_messageFactory(std::make_shared<NetworkMessageFactory>())
 {
+    printf("FakeNetworkController:: constructor: %p\n", this);
+}
+
+FakeNetworkController::~FakeNetworkController()
+{
+    printf("FakeNetworkController:: destructor: %p\n", this);
 }
 
 void FakeNetworkController::initialize(const NetworkMode mode)
@@ -61,7 +67,7 @@ void FakeNetworkController::terminate()
 
 void FakeNetworkController::update(const float deltaTime)
 {
-    if (m_fakeNet)
+    if (m_fakeNet && m_mode != NetworkMode::CLIENT)
     {
         m_fakeNet->update(deltaTime);
     }

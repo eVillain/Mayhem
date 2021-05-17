@@ -13,6 +13,12 @@ FakeNet::FakeNet()
 , m_lastFrameClientBytes(0)
 , m_lastFrameServerBytes(0)
 {
+    printf("FakeNet:: constructor: %p\n", this);
+}
+
+FakeNet::~FakeNet()
+{
+    printf("FakeNet:: destructor: %p\n", this);
 }
 
 void FakeNet::terminate()

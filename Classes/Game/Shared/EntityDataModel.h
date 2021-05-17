@@ -1,9 +1,8 @@
 #ifndef EntityDataModel_h
 #define EntityDataModel_h
 
-#include <map>
 #include "Game/Shared/EntityConstants.h"
-
+#include <map>
 
 class EntityDataModel
 {

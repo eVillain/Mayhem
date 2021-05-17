@@ -22,7 +22,6 @@ class INetworkController;
 class InputModel;
 class LightController;
 class Player;
-class ServerController; // For locally hosted games
 class SnapshotModel;
 class ReplayModel;
 class GameSettings;
@@ -99,7 +98,6 @@ private:
     std::shared_ptr<INetworkController> m_networkController;
     std::shared_ptr<LightController> m_lightController;
     std::shared_ptr<HUDView> m_hudView;
-    std::shared_ptr<ServerController> m_serverController; // Only for local games
 
     bool m_stopping;
 };

@@ -7,10 +7,12 @@
 
 ParticlesController::ParticlesController()
 {
+    printf("ParticlesController:: constructor: %p\n", this);
 }
 
 ParticlesController::~ParticlesController()
 {
+    printf("ParticlesController:: destructor: %p\n", this);
 }
 
 void ParticlesController::initialize()

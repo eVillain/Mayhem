@@ -16,18 +16,13 @@ bool InitMainMenuCommand::run()
         gameSettings->load(GameSettings::DEFAULT_SETTINGS_FILE);
     }
 
-    // Create the main menu scene - it's an autorelease object
-    auto mainMenu = MainMenuController::create();
+    // Show cursor
+    auto director = cocos2d::Director::getInstance();
+    auto glview = director->getOpenGLView();
+    glview->setCursorVisible(true);
     
-    // run
-    if (!cocos2d::Director::getInstance()->getRunningScene())
-    {
-        cocos2d::Director::getInstance()->runWithScene(mainMenu);
-    }
-    else
-    {
-        cocos2d::Director::getInstance()->replaceScene(mainMenu);
-    }
+    auto mainMenu = MainMenuController::create();    
+    cocos2d::Director::getInstance()->replaceScene(mainMenu);
     
     return true;
 }

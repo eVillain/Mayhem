@@ -52,10 +52,12 @@ ServerController::ServerController(std::shared_ptr<GameController> gameControlle
     
     m_gameController->getGameMode()->setTileDeathCallback(std::bind(&ServerController::onTileDeath, this,
                                                                     std::placeholders::_1, std::placeholders::_2));
+    printf("ServerController:: constructor: %p\n", this);
 }
 
 ServerController::~ServerController()
 {
+    printf("ServerController:: destructor: %p\n", this);
 }
 
 void ServerController::update(float deltaTime)
@@ -100,6 +102,12 @@ void ServerController::stop()
         m_networkController->getTransport()->setDisconnectedCallback(nullptr);
     }
     m_networkController->terminate();
+    
+    m_preRollbackState.clear();
+    m_clientStates.clear();
+    m_clientSnapshots.clear();
+    m_frameHitData.clear();
+    m_botPlayers.clear();
 }
 
 const std::string ServerController::getDebugInfo() const
@@ -770,7 +778,7 @@ void ServerController::onNodeConnected(const Net::NodeID nodeID)
 
 void ServerController::onNodeDisconnected(const Net::NodeID nodeID)
 {
-    CCLOG("ServerController::onNodeDisconnected %i\n", nodeID);
+    CCLOG("ServerController::onNodeDisconnected %i", nodeID);
     m_clientStates[nodeID] = ClientPlayerState::DISCONNECTED;
     if (nodeID == 0)
     {
@@ -788,7 +796,7 @@ void ServerController::onPlayerJoined(const uint8_t playerID)
                                                                           entityID,
                                                                           position,
                                                                           rotation);
-    CCLOG("ServerController::onPlayerJoined %i, entityID: %i\n", playerID, player->getEntityID());
+//    CCLOG("ServerController::onPlayerJoined %i, entityID: %i", playerID, player->getEntityID());
 
     const cocos2d::Size mapSize = m_levelModel->getTileMap()->getMapSize();
     const cocos2d::Size tileSize = m_levelModel->getTileMap()->getTileSize();
@@ -1051,6 +1059,8 @@ void ServerController::sendUpdateMessages()
 
             std::shared_ptr<Net::Message> message = std::dynamic_pointer_cast<Net::Message>(snapshotMessage);
             m_networkController->sendMessage(playerID, message);
+            
+//            CCLOG("ServerController::sendUpdateMessages snapshot tick %u sent to player %i", snapshot.serverTick, playerID);
         }
     }
             

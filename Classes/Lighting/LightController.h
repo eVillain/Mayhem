@@ -14,6 +14,7 @@ public:
 
     LightController(std::shared_ptr<LightModel> model,
                     std::shared_ptr<GameSettings> gameSettings);
+    ~LightController();
     
     void initialize();
     void shutdown();

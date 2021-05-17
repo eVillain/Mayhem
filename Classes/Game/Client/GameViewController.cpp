@@ -53,10 +53,12 @@ GameViewController::GameViewController(std::shared_ptr<GameSettings> gameSetting
     
     m_postProcessShader = cocos2d::GLProgram::createWithFilenames("res/shaders/vertex_p.vsh", "res/shaders/post_process.fsh");
     m_postProcessNoLightShader = cocos2d::GLProgram::createWithFilenames("res/shaders/vertex_p.vsh", "res/shaders/post_process_nolight.fsh");
+    printf("GameViewController:: constructor: %p\n", this);
 }
 
 GameViewController::~GameViewController()
 {
+    printf("GameViewController:: destructor: %p\n", this);
 }
 
 void GameViewController::update(const float deltaTime,

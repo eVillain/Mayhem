@@ -16,6 +16,8 @@ class ClientModel
 public:
     ClientModel();
     ~ClientModel();
+    
+    void reset();
 
     void setMode(const ClientMode mode) { m_mode = mode; }
     ClientMode getMode() const { return m_mode; }

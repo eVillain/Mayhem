@@ -7,7 +7,8 @@ class GameModel
 {
 public:
     GameModel();
-    
+    ~GameModel();
+
     void reset();
 
     void setTickRate(const uint32_t rate) { m_tickRate = rate; }

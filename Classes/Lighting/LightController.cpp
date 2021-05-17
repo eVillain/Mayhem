@@ -27,6 +27,12 @@ LightController::LightController(std::shared_ptr<LightModel> model,
 , m_shadowMapNoBlurShader(nullptr)
 , m_lightShader(nullptr)
 {
+    printf("LightController:: constructor: %p\n", this);
+}
+
+LightController::~LightController()
+{
+    printf("LightController:: destructor: %p\n", this);
 }
 
 void LightController::initialize()

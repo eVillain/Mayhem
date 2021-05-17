@@ -8,6 +8,7 @@ class InputController
 {
 public:
     InputController(std::shared_ptr<InputModel> model);
+    ~InputController();
 
     void initialize(cocos2d::Node* parent);
     void shutdown();

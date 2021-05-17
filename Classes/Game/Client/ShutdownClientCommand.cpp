@@ -5,6 +5,8 @@
 //#include "LoadLevelCommand.h"
 //#include "LoadStaticEntityDataCommand.h"
 
+#include "InitMainMenuCommand.h"
+
 #include "AudioController.h"
 #include "ClientController.h"
 #include "ClientModel.h"
@@ -37,42 +39,36 @@ ShutdownClientCommand::ShutdownClientCommand()
 bool ShutdownClientCommand::run()
 {
     Injector& injector = Injector::globalInjector();
-    auto levelModel = injector.getInstance<LevelModel>();
-    levelModel->unloadLevel();
-    
-    auto gameModel = injector.getInstance<GameModel>();
-    gameModel->reset();
-    
-    auto hudView = injector.getInstance<HUDView>();
-    hudView->shutdown();
-
-    auto gameView = injector.getInstance<GameView>();
-    gameView->shutdown();
-    
-    auto particlesController = injector.getInstance<ParticlesController>();
-    particlesController->shutdown();
-
-//    auto audioController = injector.getInstance<AudioController>();
-//    audioController->shutdown(); // Doesnt need a shutdown method yet
-
-    auto lightController = injector.getInstance<LightController>();
-    lightController->shutdown();
-    
-    auto clientController = injector.getInstance<ClientController>();
     
     auto inputController = injector.getInstance<InputController>();
     inputController->shutdown();
-    
-    if (injector.hasMapping<ServerController>())
-    {
-        auto serverController = injector.getInstance<ServerController>();
-        serverController->stop();
-    }
-    
-    // Show cursor
-    auto director = cocos2d::Director::getInstance();
-    auto glview = director->getOpenGLView();
-    glview->setCursorVisible(true);
+    auto lightController = injector.getInstance<LightController>();
+    lightController->shutdown();
+    auto particlesController = injector.getInstance<ParticlesController>();
+    particlesController->shutdown();
 
+    injector.removeMapping<GameModel>();
+    injector.removeMapping<LevelModel>();
+    injector.removeMapping<HUDView>();
+    injector.removeMapping<GameViewController>();
+    injector.removeMapping<GameView>();
+    injector.removeMapping<SnapshotModel>();
+    injector.removeMapping<ReplayModel>();
+    injector.removeMapping<ClientModel>();
+    injector.removeMapping<ParticlesController>(); //
+    injector.removeMapping<LightModel>();
+    injector.removeMapping<LightController>(); //
+    injector.removeMapping<ClientController>();
+    injector.removeMapping<InputModel>();
+    injector.removeMapping<InputController>();
+    injector.removeMapping<INetworkController>();
+    injector.removeMapping<FakeNet>();
+//    injector.removeMapping<ServerController>();
+//    auto audioController = injector.getInstance<AudioController>();
+//    audioController->shutdown(); // Doesnt need a shutdown method yet
+
+    InitMainMenuCommand initMainMenu;
+    initMainMenu.run();
+    
     return true;
 }

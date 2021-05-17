@@ -22,7 +22,7 @@ private:
     Mode m_mode;
     GameMode::Config m_config;
     
-    void initControllers();
+    void mapDependencies();
 };
 
 #endif /* InitClientCommand_h */

@@ -26,10 +26,12 @@ HUDView::HUDView()
 , m_killFeed(nullptr)
 , m_blockInput(false)
 {
+    printf("HUDView:: constructor: %p\n", this);
 }
 
 HUDView::~HUDView()
 {
+    printf("HUDView:: destructor: %p\n", this);
 }
 
 void HUDView::initialize()

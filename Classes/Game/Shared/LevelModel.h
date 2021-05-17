@@ -7,7 +7,8 @@ class LevelModel
 {
 public:
     LevelModel();
-    
+    ~LevelModel();
+
     cocos2d::TMXTiledMap* getTileMap() const { return m_tileMap; }
     const std::vector<cocos2d::Rect>& getStaticRects() const { return m_staticRects; }
 

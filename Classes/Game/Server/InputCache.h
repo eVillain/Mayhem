@@ -14,7 +14,8 @@ class InputCache
 {
 public:
     InputCache();
-    
+    ~InputCache();
+
     void onInputDataReceived(uint8_t playerID,
                              const std::shared_ptr<ClientInputMessage>& data,
                              const float gameTime);

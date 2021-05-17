@@ -7,6 +7,12 @@
 LevelModel::LevelModel()
 : m_tileMap(nullptr)
 {
+    printf("LevelModel:: constructor: %p\n", this);
+}
+
+LevelModel::~LevelModel()
+{
+    printf("LevelModel:: destructor: %p\n", this);
 }
 
 void LevelModel::loadLevel(const std::string& level,

@@ -44,6 +44,9 @@ void GameScene::onExit()
 {
     cocos2d::Scene::onExit();
     unscheduleUpdate();
+    
+    m_clientController = nullptr;
+    m_serverController = nullptr;
 }
 
 void GameScene::update(float deltaTime)

@@ -8,10 +8,12 @@ SnapshotModel::SnapshotModel()
 : m_lastReceivedSnapshot(0)
 , m_lastAppliedSnapshot(0)
 {
+    printf("SnapshotModel:: constructor: %p\n", this);
 }
 
 SnapshotModel::~SnapshotModel()
 {
+    printf("SnapshotModel:: destructor: %p\n", this);
 }
 
 void SnapshotModel::reset()
@@ -31,7 +33,7 @@ bool SnapshotModel::storeSnapshot(const SnapshotData& data)
               data.serverTick, m_snapshots.back().serverTick);
         return false;
     }
-//    CCLOG("SnapshotModel::storeSnapshot snapshot tick %u received\n", data.serverTick);
+//    CCLOG("SnapshotModel::storeSnapshot snapshot for tick %u received", data.serverTick);
 
     m_lastReceivedSnapshot = data.serverTick;
     m_snapshots.push_back(data);

@@ -26,10 +26,12 @@ GameController::GameController(std::shared_ptr<EntitiesController> entitiesContr
 , m_currentTime(0.f)
 , m_host(false)
 {
+    printf("[Server]GameController:: constructor: %p\n", this);
 }
 
 GameController::~GameController()
 {
+    printf("[Server]GameController:: destructor: %p\n", this);
 }
 
 void GameController::setSnapshot(const SnapshotData& data)

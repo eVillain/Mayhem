@@ -31,10 +31,12 @@ GameView::GameView(std::shared_ptr<GameSettings> gameSettings)
 , m_lineOfSightNode(cocos2d::DrawNode::create())
 , m_debugLabelNode(cocos2d::Node::create())
 {
+    printf("GameView:: constructor: %p\n", this);
 }
 
 GameView::~GameView()
 {
+    printf("GameView:: destructor: %p\n", this);
 }
 
 void GameView::initialize()

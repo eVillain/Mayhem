@@ -9,6 +9,7 @@ class FakeNet
 {
 public:
     FakeNet();
+    ~FakeNet();
 
     void terminate();
     

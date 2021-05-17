@@ -43,7 +43,13 @@ public:
     
     void initDebugStuff();
 
-private:    
+private:
+    enum ClientPlayerState {
+        DISCONNECTED = 0,
+        JOINING,
+        CONNECTED,
+    };
+    
     std::shared_ptr<GameController> m_gameController;
     std::shared_ptr<LevelModel> m_levelModel;
     std::shared_ptr<GameModel> m_gameModel;
@@ -54,11 +60,6 @@ private:
     float m_maxPingThreshold;
     bool m_sendDeltaUpdates;
 
-    enum ClientPlayerState {
-        DISCONNECTED = 0,
-        JOINING,
-        CONNECTED,
-    };
     std::map<uint32_t, EntitySnapshot> m_preRollbackState;
     std::map<uint8_t, ClientPlayerState> m_clientStates;
     std::map<uint8_t, std::vector<SnapshotData>> m_clientSnapshots;

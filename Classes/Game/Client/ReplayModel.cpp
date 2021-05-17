@@ -1,11 +1,28 @@
 #include "ReplayModel.h"
-#include "SharedConstants.h"
 
+#include "SharedConstants.h"
 #include "ReadStream.h"
 #include "WriteStream.h"
 
 const std::string ReplayModel::DEFAULT_REPLAY_FILE = "ReplayData.bin";
 const std::string ReplayModel::SETTING_SAVE_REPLAY = "SaveReplay";
+
+ReplayModel::ReplayModel()
+: m_tickRate(DEFAULT_TICK_RATE)
+{
+    printf("ReplayModel:: constructor: %p\n", this);
+}
+
+ReplayModel::~ReplayModel()
+{
+    printf("ReplayModel:: destructor: %p\n", this);
+}
+
+void ReplayModel::reset()
+{
+    m_tickRate = DEFAULT_TICK_RATE;
+    m_snapshots.clear();
+}
 
 bool ReplayModel::loadFile(const std::string& fileName)
 {

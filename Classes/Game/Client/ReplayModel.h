@@ -11,6 +11,11 @@ public:
     static const std::string DEFAULT_REPLAY_FILE;
     static const std::string SETTING_SAVE_REPLAY;
 
+    ReplayModel();
+    ~ReplayModel();
+
+    void reset();
+    
     bool loadFile(const std::string& fileName);
     bool saveFile(const std::string& fileName, const uint32_t tickRate) const;
 

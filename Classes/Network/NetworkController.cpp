@@ -125,9 +125,11 @@ void NetworkController::initialize(const NetworkMode mode)
 }
 
 void NetworkController::terminate()
-{    
+{
     delete [] m_readBuffer;
+    m_readBuffer = nullptr;
     delete [] m_writeBuffer;
+    m_writeBuffer = nullptr;
 }
 
 void NetworkController::update(float deltaTime)

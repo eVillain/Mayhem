@@ -8,6 +8,12 @@ GameModel::GameModel()
 , m_currentTime(0.f)
 , m_deltaAccumulator(0.f)
 {
+    printf("GameModel:: constructor: %p\n", this);
+}
+
+GameModel::~GameModel()
+{
+    printf("GameModel:: destructor: %p\n", this);
 }
 
 void GameModel::reset()

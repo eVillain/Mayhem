@@ -6,10 +6,12 @@ const size_t DEFAULT_MAX_ROLLBACK_FRAMES = 20;
 FrameCache::FrameCache()
 : m_maxRollbackFrames(DEFAULT_MAX_ROLLBACK_FRAMES)
 {
+    printf("[Server]FrameCache:: constructor: %p\n", this);
 }
 
 FrameCache::~FrameCache()
 {
+    printf("[Server]FrameCache:: destructor: %p\n", this);
 }
 
 void FrameCache::takeFrameSnapshot(std::map<uint32_t, EntitySnapshot> frameData)

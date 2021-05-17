@@ -2,6 +2,12 @@
 
 InputCache::InputCache()
 {
+    printf("[Server]InputCache:: constructor: %p\n", this);
+}
+
+InputCache::~InputCache()
+{
+    printf("[Server]InputCache:: destructor: %p\n", this);
 }
 
 void InputCache::onInputDataReceived(uint8_t playerID,

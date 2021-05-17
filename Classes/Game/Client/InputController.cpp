@@ -11,6 +11,12 @@ InputController::InputController(std::shared_ptr<InputModel> model)
 : m_model(model)
 , m_parent(nullptr)
 {
+    printf("InputController:: constructor: %p\n", this);
+}
+
+InputController::~InputController()
+{
+    printf("InputController:: destructor: %p\n", this);
 }
 
 void InputController::initialize(cocos2d::Node* parent)

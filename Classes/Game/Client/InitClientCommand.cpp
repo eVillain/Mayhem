@@ -37,11 +37,18 @@ InitClientCommand::InitClientCommand(const Mode mode, const GameMode::Config& co
 
 bool InitClientCommand::run()
 {
+    if (!EntityDataModel::hasStaticEntityData())
+    {
+        LoadStaticEntityDataCommand loadStaticEntityData;
+        loadStaticEntityData.run();
+        EntityDataModel::setStaticEntityData(loadStaticEntityData.itemDataMap);
+    }
+    
+    mapDependencies();
+
     LoadLevelCommand loadLevel(m_config.level);
     loadLevel.run();
     
-    initControllers();
-
     Injector& injector = Injector::globalInjector();
     auto levelModel = injector.getInstance<LevelModel>();
 
@@ -62,14 +69,18 @@ bool InitClientCommand::run()
     audioController->initialize();
 
     auto lightController = injector.getInstance<LightController>();
+    lightController->initialize();
     
     auto clientController = injector.getInstance<ClientController>();
+    auto networkController = injector.getInstance<INetworkController>();
+    networkController->initialize(NetworkMode::CLIENT);
+    networkController->setDeltaDataCallback(std::bind(&ClientController::getDeltaData, clientController, std::placeholders::_1));
+
     if (m_mode == HOST)
     {
         clientController->setMode(ClientMode::CLIENT_MODE_LOCAL);
     }
-    else if (m_mode == CLIENT ||
-             m_mode == FAKE_CLIENT)
+    else if (m_mode == CLIENT || m_mode == FAKE_CLIENT)
     {
         clientController->setMode(ClientMode::CLIENT_MODE_NETWORK);
     }
@@ -126,7 +137,7 @@ bool InitClientCommand::run()
     return true;
 }
 
-void InitClientCommand::initControllers()
+void InitClientCommand::mapDependencies()
 {
     Injector& injector = Injector::globalInjector();
 
@@ -152,8 +163,6 @@ void InitClientCommand::initControllers()
         }
         injector.mapSingleton<LightController,
             LightModel, GameSettings>();
-        auto lightController = injector.getInstance<LightController>();
-        lightController->initialize();
     }
 
     if (!injector.hasMapping<InputController>())
@@ -177,6 +186,10 @@ void InitClientCommand::initControllers()
     if (!injector.hasMapping<GameModel>())
     {
         injector.mapSingleton<GameModel>();
+    }
+    if (!injector.hasMapping<LevelModel>())
+    {
+        injector.mapSingleton<LevelModel>();
     }
     if (!injector.hasMapping<ClientModel>())
     {
@@ -212,9 +225,6 @@ void InitClientCommand::initControllers()
             injector.mapInterfaceToType<INetworkController, FakeNetworkController>();
         }
         
-        auto networkController = injector.getInstance<INetworkController>();
-        networkController->initialize(NetworkMode::CLIENT);
-        
         InitLocalServerCommand initLocalServer(m_config);
         initLocalServer.run();
     }
@@ -222,13 +232,6 @@ void InitClientCommand::initControllers()
     {
         InitServerCommand initServer(m_config);
         initServer.run();
-    }
-    
-    if (!EntityDataModel::hasStaticEntityData())
-    {
-        LoadStaticEntityDataCommand loadStaticEntityData;
-        loadStaticEntityData.run();
-        EntityDataModel::setStaticEntityData(loadStaticEntityData.itemDataMap);
     }
 
     if (!injector.hasMapping<ClientController>())
@@ -247,8 +250,4 @@ void InitClientCommand::initControllers()
             LightController,
             HUDView>();
     }
-    
-    auto clientController = injector.getInstance<ClientController>();
-    auto networkController = injector.getInstance<INetworkController>();
-    networkController->setDeltaDataCallback(std::bind(&ClientController::getDeltaData, clientController, std::placeholders::_1));
 }

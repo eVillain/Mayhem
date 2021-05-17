@@ -7,10 +7,12 @@ EntitiesModel::EntitiesModel()
 : m_nextEntityID(0)
 , m_localPlayerID(0)
 {
+    printf("[Server]EntitiesModel:: constructor: %p\n", this);
 }
 
 EntitiesModel::~EntitiesModel()
 {
+    printf("[Server]EntitiesModel:: destructor: %p\n", this);
 }
 
 void EntitiesModel::addEntity(const uint32_t entityID, const std::shared_ptr<Entity>& entity)

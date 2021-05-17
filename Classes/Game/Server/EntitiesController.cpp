@@ -11,10 +11,12 @@
 EntitiesController::EntitiesController(std::shared_ptr<EntitiesModel> entitiesModel)
 : m_model(entitiesModel)
 {
+    printf("[Server]EntitiesController:: constructor: %p\n", this);
 }
 
 EntitiesController::~EntitiesController()
 {
+    printf("[Server]EntitiesController:: destructor: %p\n", this);
 }
 
 void EntitiesController::initialize()

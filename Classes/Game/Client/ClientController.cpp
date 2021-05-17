@@ -22,14 +22,13 @@
 #include "Pseudo3DItem.h"
 #include "Pseudo3DParticle.h"
 #include "ReplayModel.h"
-#include "ServerController.h"
 #include "SharedConstants.h"
 #include "SnapshotModel.h"
 #include "Utils/CollisionUtils.h"
 #include "WeaponConstants.h"
 
-#include "InitMainMenuCommand.h"
 #include "ShutdownClientCommand.h"
+#include "ShutdownLocalServerCommand.h"
 
 #include "InventoryLayer.h"
 #include "ShootToContinueLayer.h"
@@ -64,7 +63,6 @@ ClientController::ClientController(std::shared_ptr<ClientModel> clientModel,
 , m_networkController(networkController)
 , m_lightController(lightController)
 , m_hudView(hudView)
-, m_serverController(nullptr)
 , m_stopping(false)
 {
     Dispatcher::globalDispatcher().addListener(ToggleClientPredictionEvent::descriptor,
@@ -72,10 +70,12 @@ ClientController::ClientController(std::shared_ptr<ClientModel> clientModel,
     Dispatcher::globalDispatcher().addListener(ToggleInventoryEvent::descriptor,
                                                std::bind(&ClientController::onToggleInventoryEvent, this, std::placeholders::_1));
     Dispatcher::globalDispatcher().addListener(BackButtonPressedEvent::descriptor, std::bind(&ClientController::onBackButtonPressed, this, std::placeholders::_1));
+    printf("ClientController:: constructor: %p\n", this);
 }
 
 ClientController::~ClientController()
 {
+    printf("ClientController:: destructor: %p\n", this);
 }
 
 void ClientController::setMode(const ClientMode mode)
@@ -104,11 +104,7 @@ void ClientController::setMode(const ClientMode mode)
         m_networkController->getTransport()->setDisconnectedCallback(std::bind(&ClientController::onDisconnected, this));
     }
 
-    if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_LOCAL)
-    {
-        m_serverController = Injector::globalInjector().getInstance<ServerController>();
-        m_gameViewController->setCameraFollowPlayerID(0);
-    }
+    m_stopping = false;
         
     // Send client level loaded message to server
     std::shared_ptr<ClientStateUpdateMessage> levelLoadedMessage = std::make_shared<ClientStateUpdateMessage>();
@@ -137,29 +133,26 @@ void ClientController::stop()
     }
     m_networkController->terminate();
     
+
+    ShutdownLocalServerCommand shutdownServer;
+    shutdownServer.run();
+    
     Dispatcher::globalDispatcher().removeListeners(BackButtonPressedEvent::descriptor);
     Dispatcher::globalDispatcher().removeListeners(ToggleClientPredictionEvent::descriptor);
     Dispatcher::globalDispatcher().removeListeners(ToggleInventoryEvent::descriptor);
     
     ShutdownClientCommand shutdownClient;
     shutdownClient.run();
-    
-    if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_LOCAL)
-    {
-        m_serverController->stop();
-    }
-
-    InitMainMenuCommand initMainMenu;
-    initMainMenu.run();
 }
 
 void ClientController::update(const float deltaTime)
 {
     m_networkController->receiveMessages();
 
+    m_networkController->update(deltaTime);
+
     if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_NETWORK)
     {
-        m_networkController->update(deltaTime);
 
         if (m_stopping)
         {
@@ -361,7 +354,7 @@ void ClientController::predictLocalMovement(SnapshotData& toSnapshot,
                               " Inputs ahead: " + std::to_string(index) +
                               " Last received: " + std::to_string(toSnapshot.lastReceivedInput) +
                               " Unprocessed: " + std::to_string(m_clientModel->getInputData().size()) +
-                              " Cleared: " + std::to_string(removedInputs));
+                              " Cleared: " + std::to_string(removedInputs));        
     }
 }
 
@@ -743,10 +736,18 @@ void ClientController::processSnapshotHitData(const SnapshotData& snapshot)
 
 void ClientController::onConfirmExitButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type)
 {
+    if (type != cocos2d::ui::Widget::TouchEventType::ENDED)
+    {
+        return;
+    }
     stop();
 }
 
 void ClientController::onCancelExitButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type)
 {
+    if (type != cocos2d::ui::Widget::TouchEventType::ENDED)
+    {
+        return;
+    }
     m_hudView->removeViewLayer();
 }

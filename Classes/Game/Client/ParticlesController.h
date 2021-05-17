@@ -19,7 +19,6 @@ public:
     void update();
     
 private:
-    
     void onSpawnParticles(const Event& event);
     void onSpawnAttachedParticles(const Event& event);
     
