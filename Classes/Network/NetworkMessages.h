@@ -288,7 +288,8 @@ struct FrameHitData {
     float damage;
     float hitPosX;
     float hitPosY;
-    bool headShot;
+    bool isHeadshot;
+    bool isLethal;
 };
 
 struct SnapshotData {
@@ -414,6 +415,8 @@ public:
                 stream.SerializeFloat(hitData.damage);
                 stream.SerializeFloat(hitData.hitPosX);
                 stream.SerializeFloat(hitData.hitPosY);
+                stream.SerializeBoolean(hitData.isHeadshot);
+                stream.SerializeBoolean(hitData.isLethal);
                 if (!stream.IsMeasuring())
                 {
                     data.hitData.push_back(hitData);
@@ -473,11 +476,15 @@ public:
                 float damage = hit.damage;
                 float hitPosX = hit.hitPosX;
                 float hitPosY = hit.hitPosY;
+                bool isHeadshot = hit.isHeadshot;
+                bool isLethal = hit.isLethal;
                 stream.SerializeBits(hitterPlayerID, 16);
                 stream.SerializeBits(hitPlayerID, 16);
                 stream.SerializeFloat(damage);
                 stream.SerializeFloat(hitPosX);
                 stream.SerializeFloat(hitPosY);
+                stream.SerializeBoolean(isHeadshot);
+                stream.SerializeBoolean(isLethal);
             }
         }
         return true;

@@ -595,21 +595,22 @@ void ServerController::applyDamage(const std::shared_ptr<Player>& player,
                                    const EntityType damageType,
                                    const size_t hitShapeIndex)
 {
-    const bool headShot = hitShapeIndex == 1;
-    const float totalDamage = damage * (headShot ? DEFAULT_HEADSHOT_DAMAGE_MULTIPLIER : 1.f);
-    const float newHealth = std::max(player->getHealth() - totalDamage, 0.f);
-    
+    const bool isHeadshot = hitShapeIndex == 1;
+    const float totalDamage = damage * (isHeadshot ? DEFAULT_HEADSHOT_DAMAGE_MULTIPLIER : 1.f);
+    const float newHealth = player->getHealth() - totalDamage;
+    const bool isLethal = newHealth <= 0.f;
     FrameHitData hit;
     hit.hitterEntityID = damagerID;
     hit.hitEntityID = player->getEntityID();
     hit.damage = totalDamage;
     hit.hitPosX = position.x;
     hit.hitPosY = position.y;
-    hit.headShot = headShot;
+    hit.isHeadshot = isHeadshot;
+    hit.isLethal = isLethal;
     m_frameHitData.push_back(hit);
     
     player->setHealth(newHealth);
-    if (newHealth == 0.f)
+    if (isLethal && !player->getIsRemoved())
     {
         auto entitiesModel = m_gameController->getEntitiesModel();
         player->setIsRemoved(true);
@@ -665,10 +666,10 @@ void ServerController::applyDamage(const std::shared_ptr<Player>& player,
         deathMessage->deadPlayerID = playerID;
         deathMessage->killerEntityID = damagerID;
         deathMessage->killerType = damageType;
-        deathMessage->headshot = headShot;
+        deathMessage->headshot = isHeadshot;
         std::shared_ptr<Net::Message> message = std::dynamic_pointer_cast<Net::Message>(deathMessage);
         m_networkController->sendMessage(playerID, message);
-        
+
         const std::shared_ptr<Player> killerPlayer = m_gameController->getEntitiesModel()->getPlayerByEntityID(damagerID);
         if (killerPlayer)
         {

@@ -476,30 +476,30 @@ void GameViewController::renderHitData(const SnapshotData& snapshot,
             Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::BLOOD_WOUND,
                                                                         hitPos,
                                                                         hitAngle));
-        }
-        
-        auto hitPlayerIt = std::find_if(snapshot.playerData.begin(),
-                                        snapshot.playerData.end(),
-                                        [&hit](const std::pair<uint8_t, PlayerState>& pair) {
-            return pair.second.entityID == hit.hitEntityID;
-        });
-        if (hitPlayerIt != snapshot.playerData.end())
-        {
-            if (hitPlayerIt->second.health > 0.f)
+            if (hit.isLethal)
             {
-                // Player took a hit but didn't die, just show some extra blood at hit position
-                Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::BLOOD_SPLASH,
-                                                                            cocos2d::Vec2(hit.hitPosX, hit.hitPosY),
-                                                                            0.f));
+                auto entityViewIt = m_entityViews.find(hit.hitEntityID);
+                if (entityViewIt != m_entityViews.end())
+                {
+                    // Player died from this hit, show appropriate gore effects
+                    renderPlayerDeath(entityViewIt->second->getSprite()->getPosition(), hitRay, hit.isHeadshot);
+                }
             }
-        }
-        else
-        {
-            auto entityViewIt = m_entityViews.find(hit.hitEntityID);
-            if (entityViewIt != m_entityViews.end())
+            else
             {
-                // Player died from this hit, show appropriate gore effects
-                renderPlayerDeath(entityViewIt->second->getSprite()->getPosition(), hitRay, hit.headShot);
+                auto hitPlayerIt = std::find_if(snapshot.playerData.begin(),
+                                                snapshot.playerData.end(),
+                                                [&hit](const std::pair<uint8_t, PlayerState>& pair) {
+                    return pair.second.entityID == hit.hitEntityID;
+                });
+                if (hitPlayerIt != snapshot.playerData.end() &&
+                    hitPlayerIt->second.health > 0.f)
+                {
+                    // Player took a hit but didn't die, just show some extra blood at hit position
+                    Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::BLOOD_SPLASH,
+                                                                                cocos2d::Vec2(hit.hitPosX, hit.hitPosY),
+                                                                                0.f));
+                }
             }
         }
 
@@ -1170,6 +1170,12 @@ void GameViewController::renderPlayerDeath(const cocos2d::Vec2& position,
                                            const cocos2d::Vec2& direction,
                                            const bool headShot)
 {
+    static const std::vector<std::string> REGULAR_SPRITES = {
+        "ArmLIdle-0.png",
+        "ArmRIdle-0.png",
+        "BaseHead.png",
+        "TorsoIdle-0.png",
+    };
     static const std::vector<std::string> GORE_SPRITES = {
         "Gore-Hand1.png",
         "Gore-Hand2.png",
@@ -1179,16 +1185,16 @@ void GameViewController::renderPlayerDeath(const cocos2d::Vec2& position,
         "Gore-Torso2.png",
     };
     
-    const size_t handSpritesCount = cocos2d::random(1, 2);
+    const size_t handSpritesCount = 2;
     for (size_t i = 0; i < handSpritesCount; i++)
     {
-        const size_t handSprite = cocos2d::random(0, 1);
+        const size_t goreSprite = cocos2d::random(0, 1);
         float randomX = cocos2d::random(-4.f, 4.f);
         float randomY = cocos2d::random(0.f, 16.f);
         float randomZ = cocos2d::random(2.f, 22.f);
         const cocos2d::Vec2 randomPos = cocos2d::Vec2(randomX, randomY);
-
-        m_gameView->createPseudo3DSprite(GORE_SPRITES.at(handSprite),
+        const std::string& sprite = goreSprite ? GORE_SPRITES.at(goreSprite) : REGULAR_SPRITES.at(i);
+        m_gameView->createPseudo3DSprite(sprite,
                                          position + randomPos,
                                          randomZ,
                                          randomPos + direction * 16.f,
@@ -1197,16 +1203,29 @@ void GameViewController::renderPlayerDeath(const cocos2d::Vec2& position,
                                          0.5f);
     }
     
-    const size_t torsoSpritesCount = cocos2d::random(0, 1);
-    for (size_t i = 0; i < torsoSpritesCount; i++)
+    const size_t torsoSprite = cocos2d::random(0, 1);
+    float randomX = cocos2d::random(-4.f, 4.f);
+    float randomY = cocos2d::random(0.f, 16.f);
+    float randomZ = cocos2d::random(2.f, 22.f);
+    const cocos2d::Vec2 randomPos = cocos2d::Vec2(randomX, randomY);
+
+    m_gameView->createPseudo3DSprite(GORE_SPRITES.at(4 + torsoSprite),
+                                     position + randomPos,
+                                     randomZ,
+                                     randomPos + direction * 16.f,
+                                     16.f,
+                                     10.f,
+                                     0.5f);
+    
+    if (headShot)
     {
-        const size_t goreSprite = cocos2d::random(0, 1);
+        const size_t headSprite = cocos2d::random(0, 1);
         float randomX = cocos2d::random(-4.f, 4.f);
         float randomY = cocos2d::random(0.f, 16.f);
         float randomZ = cocos2d::random(2.f, 22.f);
         const cocos2d::Vec2 randomPos = cocos2d::Vec2(randomX, randomY);
 
-        m_gameView->createPseudo3DSprite(GORE_SPRITES.at(4 + goreSprite),
+        m_gameView->createPseudo3DSprite(GORE_SPRITES.at(2 + headSprite),
                                          position + randomPos,
                                          randomZ,
                                          randomPos + direction * 16.f,
@@ -1214,20 +1233,17 @@ void GameViewController::renderPlayerDeath(const cocos2d::Vec2& position,
                                          10.f,
                                          0.5f);
     }
+    else
+    {
+        m_gameView->createPseudo3DSprite(REGULAR_SPRITES.at(2),
+                                         position,
+                                         0.f,
+                                         direction * 16.f,
+                                         16.f,
+                                         10.f,
+                                         0.5f);
+    }
 
-    const size_t headSprite = cocos2d::random(0, 1);
-    float randomX = cocos2d::random(-4.f, 4.f);
-    float randomY = cocos2d::random(0.f, 16.f);
-    float randomZ = cocos2d::random(2.f, 22.f);
-    const cocos2d::Vec2 randomPos = cocos2d::Vec2(randomX, randomY);
-
-    m_gameView->createPseudo3DSprite(GORE_SPRITES.at(2 + headSprite),
-                                     position + randomPos,
-                                     randomZ,
-                                     randomPos + direction * 16.f,
-                                     16.f,
-                                     10.f,
-                                     0.5f);
     
     for (int i = 0; i < 16; i++)
     {
