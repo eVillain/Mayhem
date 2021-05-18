@@ -2,7 +2,7 @@
 #define InitServerCommand_h
 
 #include "Core/Command.h"
-#include "GameMode.h"
+#include "Game/Shared/GameMode.h"
 
 class InitServerCommand : public Command
 {

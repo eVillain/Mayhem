@@ -3,7 +3,7 @@
 
 #include "Core/Event.h"
 #include "Network/NetworkMessages.h"
-#include "GameMode.h"
+#include "Game/Shared/GameMode.h"
 
 class EntitiesController;
 class EntitiesModel;
@@ -24,6 +24,7 @@ public:
     const std::shared_ptr<EntitiesModel>& getEntitiesModel() const { return m_entitiesModel; }
     const std::shared_ptr<LevelModel>& getLevelModel() const { return m_levelModel; }
 
+    void setGameMode(const GameMode::Config& config, const bool host);
     const std::shared_ptr<GameMode>& getGameMode() const { return m_gameMode; }
 
     const float getCurrentTime() const { return m_currentTime; }
@@ -35,7 +36,6 @@ public:
 
     void tick(const float deltaTime);
 
-    void setGameMode(const GameMode::Config& config, const bool host);
     void spawnThings();
 
     std::shared_ptr<Entity> getEntityAtPoint(const cocos2d::Vec2& point,

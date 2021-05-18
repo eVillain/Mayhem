@@ -1,37 +1,35 @@
-#ifndef ShootToContinueLayer_h
-#define ShootToContinueLayer_h
+#ifndef ConfirmToContinueLayer_h
+#define ConfirmToContinueLayer_h
 
 #include "ViewLayer.h"
 #include "cocos2d.h"
 
-class InputModel;
-
-class ShootToContinueLayer : public ViewLayer
+class ConfirmToContinueLayer : public ViewLayer
 {
 public:
     static const std::string DESCRIPTOR;
     
-    ShootToContinueLayer(std::shared_ptr<InputModel> inputModel);
-    ~ShootToContinueLayer();
+    ConfirmToContinueLayer();
+    ~ConfirmToContinueLayer();
     
     void setup(const std::string& text,
                const std::string& continueText,
-               std::function<void()> callback);
+               const std::string& confirmButtonLabel);
     
-    void update(const float deltaTime) override;
+    void update(const float deltaTime) override {};
     
     cocos2d::Node* getRoot() override { return m_layer; }
     const std::string& getDescriptor() const override { return DESCRIPTOR; }
     
     const cocos2d::RefPtr<cocos2d::Label>& getTextLabel() const { return m_textLabel; }
     const cocos2d::RefPtr<cocos2d::Label>& getContinueLabel() const { return m_continueLabel; }
+    const cocos2d::RefPtr<cocos2d::ui::Button>& getConfirmButton() const { return m_confirmButton; }
 
 private:
-    std::shared_ptr<InputModel> m_inputModel;
     cocos2d::RefPtr<cocos2d::LayerColor> m_layer;
     cocos2d::RefPtr<cocos2d::Label> m_textLabel;
     cocos2d::RefPtr<cocos2d::Label> m_continueLabel;
-    std::function<void()> m_callback;
+    cocos2d::RefPtr<cocos2d::ui::Button> m_confirmButton;
 };
 
-#endif /* ShootToContinueLayer_h */
+#endif /* ConfirmToContinueLayer_h */

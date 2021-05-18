@@ -31,8 +31,9 @@
 #include "ShutdownLocalServerCommand.h"
 
 #include "InventoryLayer.h"
-#include "ShootToContinueLayer.h"
+#include "ConfirmToContinueLayer.h"
 #include "ExitGameLayer.h"
+#include "GameOverLayer.h"
 
 #include "ToggleInventoryEvent.h"
 #include "BackButtonPressedEvent.h"
@@ -96,6 +97,13 @@ void ClientController::setMode(const ClientMode mode)
     m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_TILE_DEATH,
                                             std::bind(&ClientController::onTileDeathReceived, this,
                                                       std::placeholders::_1, std::placeholders::_2));
+    m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_SPECTATE,
+                                            std::bind(&ClientController::onSpectateReceived, this,
+                                                      std::placeholders::_1, std::placeholders::_2));
+    m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_GAME_OVER,
+                                            std::bind(&ClientController::onGameOverReceived, this,
+                                                      std::placeholders::_1, std::placeholders::_2));
+
     m_networkController->setNodeDisconnectedCallback(std::bind(&ClientController::onNodeDisconnected, this,
                                                                std::placeholders::_1));
 
@@ -196,13 +204,11 @@ void ClientController::update(const float deltaTime)
         m_gameModel->setDeltaAccumulator(deltaAccumulator);
         updateGame(deltaTime, processInput);
         
-        if (m_hudView->getViewLayer())
+        if (m_hudView->getViewLayer() &&
+            m_hudView->getViewLayer()->getDescriptor() == InventoryLayer::DESCRIPTOR)
         {
-            if (m_hudView->getViewLayer()->getDescriptor() == InventoryLayer::DESCRIPTOR)
-            {
-                auto inventoryLayer = std::dynamic_pointer_cast<InventoryLayer>(m_hudView->getViewLayer());
-                inventoryLayer->setData(m_clientModel->getLocalPlayerID());
-            }
+            auto inventoryLayer = std::dynamic_pointer_cast<InventoryLayer>(m_hudView->getViewLayer());
+            inventoryLayer->setData(m_clientModel->getLocalPlayerID());
         }
     }
 }
@@ -444,10 +450,11 @@ void ClientController::onToggleInventoryEvent(const Event& event)
     
     if (m_hudView->getViewLayer())
     {
-        if (m_hudView->getViewLayer()->getDescriptor() == InventoryLayer::DESCRIPTOR)
+        if (m_hudView->getViewLayer()->getDescriptor() != InventoryLayer::DESCRIPTOR)
         {
-            m_hudView->removeViewLayer();
+            return;
         }
+        m_hudView->removeViewLayer();
         return;
     }
     auto inventoryLayer = Injector::globalInjector().instantiateUnmapped<InventoryLayer,
@@ -542,6 +549,47 @@ void ClientController::onTileDeathReceived(const std::shared_ptr<Net::Message>& 
     else
     {
         CCLOG("ClientController::onTileDeathReceived fail");
+    }
+}
+
+void ClientController::onSpectateReceived(const std::shared_ptr<Net::Message>& data,
+                                          const Net::NodeID nodeID)
+{
+    if (auto spectateMessage = std::dynamic_pointer_cast<ServerSpectateMessage>(data))
+    {
+        m_gameViewController->getCameraModel()->setCameraFollowPlayerID(spectateMessage->spectatingPlayerID);
+    }
+    else
+    {
+        CCLOG("ClientController::onSpectateReceived fail");
+    }
+}
+
+void ClientController::onGameOverReceived(const std::shared_ptr<Net::Message>& data,
+                                          const Net::NodeID nodeID)
+{
+    if (auto gameOverMessage = std::dynamic_pointer_cast<ServerGameOverMessage>(data))
+    {
+        static const std::string FIRST_PLACE_SOLO_TITLE = "You have emerged victorious!";
+        static const std::string FIRST_PLACE_SOLO_TEXT = "Bask in thy glory!!!";
+//        static const std::string FIRST_PLACE_TEAM_TITLE = "Your team has emerged victorious!";
+//        static const std::string SECOND_PLACE_TITLE = "First Is The Worst, Second Is The Best...";
+//        static const std::string SECOND_PLACE_TEXT = "Third Is The One With The Hairy Chest";
+        static const std::string LOST_SOLO_TITLE = "You have lost.";
+        static const std::string LOST_SOLO_TEXT = "Better luck next time...";
+
+        // TODO: Handle multiple teams on client + get placement from server
+        const bool isWinner = gameOverMessage->winnerID == m_clientModel->getLocalPlayerID();
+        const std::string title = isWinner ? FIRST_PLACE_SOLO_TITLE : LOST_SOLO_TITLE;
+        const std::string text = isWinner ? FIRST_PLACE_SOLO_TEXT : LOST_SOLO_TEXT;
+        auto gameOverLayer = std::make_shared<GameOverLayer>();
+        gameOverLayer->setup(title, text);
+        gameOverLayer->getExitButton()->addTouchEventListener(CC_CALLBACK_2(ClientController::onConfirmExitButton, this));
+        m_hudView->setViewLayer(gameOverLayer);
+    }
+    else
+    {
+        CCLOG("ClientController::onGameOverReceived fail");
     }
 }
 
@@ -640,7 +688,7 @@ std::shared_ptr<ClientInputMessage> ClientController::getInputData() const
     data->aimPointX = aimPoint.x;
     data->aimPointY = aimPoint.y;
     
-    bool blockInput = !m_clientModel->getLocalPlayerAlive();
+    bool blockInput = !m_clientModel->getLocalPlayerAlive() || m_hudView->getViewLayer();
     data->shoot = blockInput ? false : m_inputModel->getShoot();
     data->interact = blockInput ? false : m_inputModel->getInteract();
     data->run = m_inputModel->getRun();
@@ -652,7 +700,7 @@ std::shared_ptr<ClientInputMessage> ClientController::getInputData() const
     data->pickUpType = m_inputModel->getPickupType();
     data->pickUpID = m_inputModel->getPickupID();
 
-    if (data->pickUpType != 0) // Hack: 
+    if (data->pickUpType != 0) // Hack: makes it so we can grab stuff in inventory
     {
         data->interact = true;
     }
@@ -681,18 +729,30 @@ void ClientController::processIncomingSnapshot(const SnapshotData& snapshot)
     if (wasLocalPlayerAlive && !isLocalPlayerAlive)
     {
         m_clientModel->setLocalPlayerAlive(false);
-        auto shootToContinueLayer = Injector::globalInjector().instantiateUnmapped<ShootToContinueLayer,
-        InputModel>();
-        shootToContinueLayer->setup("YOU DIED",
-                                    "Press Fire to respawn",
-                                    [this](){
-            // Send respawn message to server
-            std::shared_ptr<ClientStateUpdateMessage> respawnMessage = std::make_shared<ClientStateUpdateMessage>();
-            respawnMessage->state = ClientState::PLAYER_RESPAWN;
-            std::shared_ptr<Net::Message> message = respawnMessage;
-            m_networkController->sendMessage(0, message, true);
-        });
-        m_hudView->setViewLayer(shootToContinueLayer);
+
+        if (m_hudView->getViewLayer() &&
+            m_hudView->getViewLayer()->getDescriptor() == GameOverLayer::DESCRIPTOR)
+        {
+            return;
+        }
+        
+        const bool allowRespawn = (m_gameModel->getGameModeType() != GameModeType::GAME_MODE_BATTLEROYALE);
+        const std::string titleText = "YOU DIED";
+        const std::string messageText = allowRespawn ? "Press button to respawn" : "Press button to spectate";
+        const std::string buttonText = allowRespawn ? "Respawn" : "Spectate";
+        auto confirmToContinueLayer = Injector::globalInjector().instantiateUnmapped<ConfirmToContinueLayer>();
+        confirmToContinueLayer->setup(titleText,
+                                      messageText,
+                                      buttonText);
+        if (allowRespawn)
+        {
+            confirmToContinueLayer->getConfirmButton()->addTouchEventListener(CC_CALLBACK_2(ClientController::onRespawnButton, this));
+        }
+        else
+        {
+            confirmToContinueLayer->getConfirmButton()->addTouchEventListener(CC_CALLBACK_2(ClientController::onSpectateButton, this));
+        }
+        m_hudView->setViewLayer(confirmToContinueLayer);
     }
     else if (!wasLocalPlayerAlive && isLocalPlayerAlive)
     {
@@ -759,4 +819,34 @@ void ClientController::onCancelExitButton(cocos2d::Ref* ref, cocos2d::ui::Widget
         return;
     }
     m_hudView->removeViewLayer();
+}
+
+void ClientController::onSpectateButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type)
+{
+    std::shared_ptr<ClientStateUpdateMessage> updateMessage = std::make_shared<ClientStateUpdateMessage>();
+    updateMessage->state = ClientState::PLAYER_SPECTATE;
+    std::shared_ptr<Net::Message> message = updateMessage;
+    m_networkController->sendMessage(0, message, true);
+}
+
+void ClientController::onRespawnButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type)
+{
+    if (m_hudView->getViewLayer() &&
+        m_hudView->getViewLayer()->getDescriptor() == ConfirmToContinueLayer::DESCRIPTOR)
+    {
+        auto layer = std::dynamic_pointer_cast<ConfirmToContinueLayer>(m_hudView->getViewLayer());
+        cocos2d::FadeOut* fadeOut = cocos2d::FadeOut::create(0.5f);
+        cocos2d::CallFunc* changeTextCB = cocos2d::CallFunc::create([layer](){
+            layer->getContinueLabel()->setString("Waiting to respawn...");
+        });
+        cocos2d::FadeIn* fadeIn = cocos2d::FadeIn::create(0.5f);
+        cocos2d::Sequence* sequence = cocos2d::Sequence::create(fadeOut, changeTextCB, fadeIn, NULL);
+        layer->getContinueLabel()->runAction(sequence);
+    }
+    
+    // Send respawn message to server
+    std::shared_ptr<ClientStateUpdateMessage> respawnMessage = std::make_shared<ClientStateUpdateMessage>();
+    respawnMessage->state = ClientState::PLAYER_RESPAWN;
+    std::shared_ptr<Net::Message> message = respawnMessage;
+    m_networkController->sendMessage(0, message, true);
 }

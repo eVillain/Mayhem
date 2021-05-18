@@ -50,7 +50,7 @@ bool InitLocalServerCommand::run()
         auto frameCache = injector.getInstance<FrameCache>();
         auto inputCache = injector.getInstance<InputCache>();
         auto gameModel = injector.instantiateUnmapped<GameModel>();
-        gameModel->setTickRate(m_config.tickRate);
+        gameModel->setConfig(m_config);
 
         auto serverController = std::make_shared<ServerController>(gameController,
                                                                    levelModel,

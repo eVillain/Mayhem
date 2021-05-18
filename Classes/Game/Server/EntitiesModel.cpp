@@ -117,7 +117,7 @@ const std::shared_ptr<Player> EntitiesModel::getPlayerByEntityID(const uint16_t 
     return nullptr;
 }
 
-const uint8_t getPlayerIDByEntityID(const uint16_t entityID)
+const uint8_t EntitiesModel::getPlayerIDByEntityID(const uint16_t entityID)
 {
     auto it = std::find_if(m_players.begin(), m_players.end(), [entityID](const std::pair<uint8_t, const std::shared_ptr<Player>>& player) {
         return player.second->getEntityID() == entityID;

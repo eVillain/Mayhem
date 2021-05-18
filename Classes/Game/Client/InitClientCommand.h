@@ -2,7 +2,7 @@
 #define InitClientCommand_h
 
 #include "Core/Command.h"
-#include "Game/Server/GameMode.h"
+#include "Game/Shared/GameMode.h"
 
 class InitClientCommand : public Command
 {

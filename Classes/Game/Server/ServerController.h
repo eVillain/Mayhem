@@ -59,6 +59,7 @@ private:
     
     float m_maxPingThreshold;
     bool m_sendDeltaUpdates;
+    float m_gameOverTimer;
 
     std::map<uint32_t, EntitySnapshot> m_preRollbackState;
     std::map<uint8_t, ClientPlayerState> m_clientStates;
@@ -83,6 +84,8 @@ private:
                          const size_t hitShapeIndex);
     void onProjectileDestroyed(const std::shared_ptr<Projectile>& projectile);
     void onTileDeath(const int tileX, const int tileY);
+    void onGameModeWinConditionReached(uint8_t winner);
+    
     void applyDamage(const std::shared_ptr<Player>& player,
                      const float damage,
                      const cocos2d::Vec2 position,

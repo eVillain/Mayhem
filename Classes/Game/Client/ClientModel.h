@@ -1,7 +1,7 @@
 #ifndef ClientModel_h
 #define ClientModel_h
 
-#include "NetworkMessages.h"
+#include "Network/NetworkMessages.h"
 #include <stdint.h>
 #include <vector>
 #include <map>
@@ -67,6 +67,7 @@ private:
     float m_lastPlayerActionTime;
     std::vector<std::shared_ptr<ClientInputMessage>> m_inputData;
     std::map<uint8_t, std::string> m_playerNames;
+    
 };
 
 #endif /* ClientModel_h */

@@ -73,6 +73,10 @@
 		D92C7E012650906000AA7096 /* ExitGameLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92C7DFD2650906000AA7096 /* ExitGameLayer.cpp */; };
 		D92C7E0426509CF100AA7096 /* ShutdownClientCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92C7E0326509CF100AA7096 /* ShutdownClientCommand.cpp */; };
 		D92C7E0526509CF100AA7096 /* ShutdownClientCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D92C7E0326509CF100AA7096 /* ShutdownClientCommand.cpp */; };
+		D934AA0B2653DFA20007495E /* GameOverLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D934AA092653DFA10007495E /* GameOverLayer.cpp */; };
+		D934AA0C2653DFA20007495E /* GameOverLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D934AA092653DFA10007495E /* GameOverLayer.cpp */; };
+		D934AA0F2653E77F0007495E /* GameMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D934AA0D2653E77E0007495E /* GameMode.cpp */; };
+		D934AA102653E77F0007495E /* GameMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D934AA0D2653E77E0007495E /* GameMode.cpp */; };
 		D94AFA81262B9B6B00278953 /* BackButtonPressedEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D94AFA7F262B9B6B00278953 /* BackButtonPressedEvent.cpp */; };
 		D94AFA82262B9BE900278953 /* BackButtonPressedEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D94AFA7F262B9B6B00278953 /* BackButtonPressedEvent.cpp */; };
 		D94AFA85262C223F00278953 /* FollowNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D94AFA84262C223F00278953 /* FollowNode.cpp */; };
@@ -117,8 +121,6 @@
 		D96CBCEB2531C356006DF3A4 /* ServerController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCBE2531C352006DF3A4 /* ServerController.cpp */; };
 		D96CBCEE2531C356006DF3A4 /* BaseAI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCC42531C354006DF3A4 /* BaseAI.cpp */; };
 		D96CBCEF2531C356006DF3A4 /* BaseAI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCC42531C354006DF3A4 /* BaseAI.cpp */; };
-		D96CBCF42531C356006DF3A4 /* GameMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCCA2531C355006DF3A4 /* GameMode.cpp */; };
-		D96CBCF52531C356006DF3A4 /* GameMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCCA2531C355006DF3A4 /* GameMode.cpp */; };
 		D96CBCF62531C356006DF3A4 /* EntitiesController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCCC2531C356006DF3A4 /* EntitiesController.cpp */; };
 		D96CBCF72531C356006DF3A4 /* EntitiesController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCCC2531C356006DF3A4 /* EntitiesController.cpp */; };
 		D96CBCF82531C356006DF3A4 /* GameModeDM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBCCD2531C356006DF3A4 /* GameModeDM.cpp */; };
@@ -135,8 +137,8 @@
 		D96CBD422531C3BB006DF3A4 /* InitLocalServerCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBD032531C3AC006DF3A4 /* InitLocalServerCommand.cpp */; };
 		D96CBD432531C3BB006DF3A4 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBD042531C3AC006DF3A4 /* InputController.cpp */; };
 		D96CBD442531C3BB006DF3A4 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBD042531C3AC006DF3A4 /* InputController.cpp */; };
-		D96CBD452531C3BB006DF3A4 /* ShootToContinueLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBD062531C3AC006DF3A4 /* ShootToContinueLayer.cpp */; };
-		D96CBD462531C3BB006DF3A4 /* ShootToContinueLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBD062531C3AC006DF3A4 /* ShootToContinueLayer.cpp */; };
+		D96CBD452531C3BB006DF3A4 /* ConfirmToContinueLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBD062531C3AC006DF3A4 /* ConfirmToContinueLayer.cpp */; };
+		D96CBD462531C3BB006DF3A4 /* ConfirmToContinueLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBD062531C3AC006DF3A4 /* ConfirmToContinueLayer.cpp */; };
 		D96CBD472531C3BB006DF3A4 /* Pseudo3DSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBD072531C3AD006DF3A4 /* Pseudo3DSprite.cpp */; };
 		D96CBD482531C3BB006DF3A4 /* Pseudo3DSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBD072531C3AD006DF3A4 /* Pseudo3DSprite.cpp */; };
 		D96CBD492531C3BB006DF3A4 /* EntityView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBD0C2531C3AE006DF3A4 /* EntityView.cpp */; };
@@ -466,6 +468,10 @@
 		D92C7E0226509CF100AA7096 /* ShutdownClientCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShutdownClientCommand.h; sourceTree = "<group>"; };
 		D92C7E0326509CF100AA7096 /* ShutdownClientCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShutdownClientCommand.cpp; sourceTree = "<group>"; };
 		D934AA07265330330007495E /* PlayerNameUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerNameUtil.h; sourceTree = "<group>"; };
+		D934AA092653DFA10007495E /* GameOverLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameOverLayer.cpp; sourceTree = "<group>"; };
+		D934AA0A2653DFA10007495E /* GameOverLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameOverLayer.h; sourceTree = "<group>"; };
+		D934AA0D2653E77E0007495E /* GameMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameMode.cpp; sourceTree = "<group>"; };
+		D934AA0E2653E77E0007495E /* GameMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameMode.h; sourceTree = "<group>"; };
 		D94AFA7F262B9B6B00278953 /* BackButtonPressedEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackButtonPressedEvent.cpp; sourceTree = "<group>"; };
 		D94AFA83262C223F00278953 /* FollowNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowNode.h; sourceTree = "<group>"; };
 		D94AFA84262C223F00278953 /* FollowNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FollowNode.cpp; sourceTree = "<group>"; };
@@ -508,13 +514,11 @@
 		D96CBCBB2531C351006DF3A4 /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
 		D96CBCBD2531C351006DF3A4 /* GameController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameController.cpp; sourceTree = "<group>"; };
 		D96CBCBE2531C352006DF3A4 /* ServerController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ServerController.cpp; sourceTree = "<group>"; };
-		D96CBCC02531C352006DF3A4 /* GameMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameMode.h; sourceTree = "<group>"; };
 		D96CBCC12531C353006DF3A4 /* EntitiesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntitiesController.h; sourceTree = "<group>"; };
 		D96CBCC32531C353006DF3A4 /* GameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameController.h; sourceTree = "<group>"; };
 		D96CBCC42531C354006DF3A4 /* BaseAI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseAI.cpp; sourceTree = "<group>"; };
 		D96CBCC72531C354006DF3A4 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
 		D96CBCC82531C355006DF3A4 /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
-		D96CBCCA2531C355006DF3A4 /* GameMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameMode.cpp; sourceTree = "<group>"; };
 		D96CBCCB2531C355006DF3A4 /* InputCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputCache.h; sourceTree = "<group>"; };
 		D96CBCCC2531C356006DF3A4 /* EntitiesController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EntitiesController.cpp; sourceTree = "<group>"; };
 		D96CBCCD2531C356006DF3A4 /* GameModeDM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameModeDM.cpp; sourceTree = "<group>"; };
@@ -530,7 +534,7 @@
 		D96CBD032531C3AC006DF3A4 /* InitLocalServerCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InitLocalServerCommand.cpp; sourceTree = "<group>"; };
 		D96CBD042531C3AC006DF3A4 /* InputController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputController.cpp; sourceTree = "<group>"; };
 		D96CBD052531C3AC006DF3A4 /* GameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
-		D96CBD062531C3AC006DF3A4 /* ShootToContinueLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShootToContinueLayer.cpp; sourceTree = "<group>"; };
+		D96CBD062531C3AC006DF3A4 /* ConfirmToContinueLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfirmToContinueLayer.cpp; sourceTree = "<group>"; };
 		D96CBD072531C3AD006DF3A4 /* Pseudo3DSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pseudo3DSprite.cpp; sourceTree = "<group>"; };
 		D96CBD082531C3AD006DF3A4 /* GameViewConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameViewConstants.h; sourceTree = "<group>"; };
 		D96CBD092531C3AD006DF3A4 /* InputModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputModel.h; sourceTree = "<group>"; };
@@ -578,7 +582,7 @@
 		D96CBD332531C3B9006DF3A4 /* ToggleClientPredictionEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToggleClientPredictionEvent.h; sourceTree = "<group>"; };
 		D96CBD342531C3BA006DF3A4 /* ViewLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewLayer.h; sourceTree = "<group>"; };
 		D96CBD352531C3BA006DF3A4 /* InputModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputModel.cpp; sourceTree = "<group>"; };
-		D96CBD362531C3BA006DF3A4 /* ShootToContinueLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShootToContinueLayer.h; sourceTree = "<group>"; };
+		D96CBD362531C3BA006DF3A4 /* ConfirmToContinueLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfirmToContinueLayer.h; sourceTree = "<group>"; };
 		D96CBD372531C3BA006DF3A4 /* ClientController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientController.cpp; sourceTree = "<group>"; };
 		D96CBD382531C3BB006DF3A4 /* Pseudo3DParticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pseudo3DParticle.h; sourceTree = "<group>"; };
 		D98BEDCE2641F77800125847 /* ReplayModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ReplayModel.cpp; sourceTree = "<group>"; };
@@ -1195,8 +1199,6 @@
 				D96CBCA22531C34C006DF3A4 /* FrameCache.h */,
 				D96CBCBD2531C351006DF3A4 /* GameController.cpp */,
 				D96CBCC32531C353006DF3A4 /* GameController.h */,
-				D96CBCCA2531C355006DF3A4 /* GameMode.cpp */,
-				D96CBCC02531C352006DF3A4 /* GameMode.h */,
 				D96CBCA52531C34D006DF3A4 /* GameModeBR.cpp */,
 				D96CBCAF2531C34E006DF3A4 /* GameModeBR.h */,
 				D96CBCCD2531C356006DF3A4 /* GameModeDM.cpp */,
@@ -1223,6 +1225,8 @@
 				D96CBC912531C341006DF3A4 /* EntityConstants.h */,
 				D96CBC902531C341006DF3A4 /* EntityDataModel.cpp */,
 				D96CBC892531C340006DF3A4 /* EntityDataModel.h */,
+				D934AA0D2653E77E0007495E /* GameMode.cpp */,
+				D934AA0E2653E77E0007495E /* GameMode.h */,
 				D98BEDD82649903F00125847 /* GameModel.cpp */,
 				D98BEDD92649904000125847 /* GameModel.h */,
 				D96CBC8F2531C341006DF3A4 /* GameSettings.cpp */,
@@ -1262,6 +1266,8 @@
 				D96CBD322531C3B9006DF3A4 /* EntityView.h */,
 				D92C7DFD2650906000AA7096 /* ExitGameLayer.cpp */,
 				D92C7DFF2650906000AA7096 /* ExitGameLayer.h */,
+				D934AA092653DFA10007495E /* GameOverLayer.cpp */,
+				D934AA0A2653DFA10007495E /* GameOverLayer.h */,
 				D96CBD2B2531C3B8006DF3A4 /* GameScene.cpp */,
 				D96CBD2A2531C3B7006DF3A4 /* GameScene.h */,
 				D96CBD0D2531C3AE006DF3A4 /* GameView.cpp */,
@@ -1299,8 +1305,8 @@
 				D96CBD192531C3B3006DF3A4 /* Pseudo3DSprite.h */,
 				D98BEDCE2641F77800125847 /* ReplayModel.cpp */,
 				D98BEDCF2641F77800125847 /* ReplayModel.h */,
-				D96CBD062531C3AC006DF3A4 /* ShootToContinueLayer.cpp */,
-				D96CBD362531C3BA006DF3A4 /* ShootToContinueLayer.h */,
+				D96CBD062531C3AC006DF3A4 /* ConfirmToContinueLayer.cpp */,
+				D96CBD362531C3BA006DF3A4 /* ConfirmToContinueLayer.h */,
 				D96CBCFC2531C3AA006DF3A4 /* ShowInventoryEvent.cpp */,
 				D96CBD2C2531C3B8006DF3A4 /* ShowInventoryEvent.h */,
 				D96CBD1F2531C3B5006DF3A4 /* SnapshotModel.cpp */,
@@ -1624,6 +1630,7 @@
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				D9B2517424C48EA500EAFA5B /* InitMainMenuCommand.cpp in Sources */,
 				D96CBD492531C3BB006DF3A4 /* EntityView.cpp in Sources */,
+				D934AA0B2653DFA20007495E /* GameOverLayer.cpp in Sources */,
 				D9B250BC24C48EA500EAFA5B /* InitNetworkHostCommand.cpp in Sources */,
 				D98BEDD02641F77800125847 /* ReplayModel.cpp in Sources */,
 				D9B250A424C48EA500EAFA5B /* Timer.cpp in Sources */,
@@ -1631,8 +1638,8 @@
 				D9B250A224C48EA500EAFA5B /* Injector.cpp in Sources */,
 				D96CBCCE2531C356006DF3A4 /* Explosion.cpp in Sources */,
 				D9B250C224C48EA500EAFA5B /* NetworkHostGameModeCell.cpp in Sources */,
+				D934AA0F2653E77F0007495E /* GameMode.cpp in Sources */,
 				D9B2510224C48EA500EAFA5B /* StopBGMEvent.cpp in Sources */,
-				D96CBCF42531C356006DF3A4 /* GameMode.cpp in Sources */,
 				D96CBD712531C3BB006DF3A4 /* ClientController.cpp in Sources */,
 				D92ACF652544457D006351A7 /* MasterServerConnection.cpp in Sources */,
 				D9B2510C24C48EA500EAFA5B /* AudioModel.cpp in Sources */,
@@ -1675,7 +1682,7 @@
 				D96CBD392531C3BB006DF3A4 /* ShowInventoryEvent.cpp in Sources */,
 				D92ACF672544457D006351A7 /* MasterServer.cpp in Sources */,
 				D9B250C024C48EA500EAFA5B /* FakeNet.cpp in Sources */,
-				D96CBD452531C3BB006DF3A4 /* ShootToContinueLayer.cpp in Sources */,
+				D96CBD452531C3BB006DF3A4 /* ConfirmToContinueLayer.cpp in Sources */,
 				D9B2519024C48EA500EAFA5B /* SettingsView.cpp in Sources */,
 				D9B250F024C48EA500EAFA5B /* Stream.cpp in Sources */,
 				D9B250E824C48EA500EAFA5B /* MeasureStream.cpp in Sources */,
@@ -1708,7 +1715,6 @@
 				D96CBCEF2531C356006DF3A4 /* BaseAI.cpp in Sources */,
 				D9B2518B24C48EA500EAFA5B /* HUDHelper.cpp in Sources */,
 				D9B250BB24C48EA500EAFA5B /* NetworkMessageFactory.cpp in Sources */,
-				D96CBCF52531C356006DF3A4 /* GameMode.cpp in Sources */,
 				D9B250A324C48EA500EAFA5B /* Injector.cpp in Sources */,
 				D9B250BF24C48EA500EAFA5B /* FakeNetworkController.cpp in Sources */,
 				D92ACF5F254444F4006351A7 /* TransportIP.cpp in Sources */,
@@ -1789,7 +1795,9 @@
 				D96CBD582531C3BB006DF3A4 /* InitClientCommand.cpp in Sources */,
 				D92C7E0526509CF100AA7096 /* ShutdownClientCommand.cpp in Sources */,
 				D9B250C724C48EA500EAFA5B /* NetworkModel.cpp in Sources */,
+				D934AA0C2653DFA20007495E /* GameOverLayer.cpp in Sources */,
 				D9B250F724C48EA500EAFA5B /* Beacon.cpp in Sources */,
+				D934AA102653E77F0007495E /* GameMode.cpp in Sources */,
 				D9B250B724C48EA500EAFA5B /* NetworkController.cpp in Sources */,
 				D96CBCD72531C356006DF3A4 /* Entity.cpp in Sources */,
 				D96CBD662531C3BB006DF3A4 /* InitGameCommand.cpp in Sources */,
@@ -1837,7 +1845,7 @@
 				D9B250D124C48EA500EAFA5B /* NetworkChatView.cpp in Sources */,
 				D92C7E012650906000AA7096 /* ExitGameLayer.cpp in Sources */,
 				D96CBD542531C3BB006DF3A4 /* CameraModel.cpp in Sources */,
-				D96CBD462531C3BB006DF3A4 /* ShootToContinueLayer.cpp in Sources */,
+				D96CBD462531C3BB006DF3A4 /* ConfirmToContinueLayer.cpp in Sources */,
 				D9B250E524C48EA500EAFA5B /* Node.cpp in Sources */,
 				D96CBD502531C3BB006DF3A4 /* SpawnParticlesEvent.cpp in Sources */,
 				D98BEDD62648892200125847 /* EntityInfoView.cpp in Sources */,

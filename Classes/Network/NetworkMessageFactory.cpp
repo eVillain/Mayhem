@@ -47,6 +47,14 @@ std::shared_ptr<Net::Message> NetworkMessageFactory::create(const Net::MessageTy
     {
         return std::make_shared<ServerTileDeathMessage>();
     }
+    else if (type == MESSAGE_TYPE_SERVER_SPECTATE)
+    {
+        return std::make_shared<ServerSpectateMessage>();
+    }
+    else if (type == MESSAGE_TYPE_SERVER_GAME_OVER)
+    {
+        return std::make_shared<ServerGameOverMessage>();
+    }
     assert(false);
 
     return nullptr;
@@ -113,6 +121,18 @@ const std::string NetworkMessageFactory::getNameForType(const Net::MessageType t
     else if (type == MESSAGE_TYPE_SERVER_PLAYER_DEATH)
     {
         return "Server Player Death";
+    }
+    else if (type == MESSAGE_TYPE_SERVER_TILE_DEATH)
+    {
+        return "Server Tile Death";
+    }
+    else if (type == MESSAGE_TYPE_SERVER_SPECTATE)
+    {
+        return "Server Player Spectate";
+    }
+    else if (type == MESSAGE_TYPE_SERVER_GAME_OVER)
+    {
+        return "Server Game Over";
     }
     return "Unknown Message Type";
 }

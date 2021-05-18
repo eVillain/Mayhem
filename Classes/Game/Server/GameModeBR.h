@@ -1,7 +1,7 @@
 #ifndef GameModeBR_h
 #define GameModeBR_h
 
-#include "GameMode.h"
+#include "Game/Shared/GameMode.h"
 
 class GameModeBR : public GameMode
 {

@@ -18,6 +18,8 @@ enum MessageTypes {
     MESSAGE_TYPE_SERVER_SNAPSHOT_DIFF,
     MESSAGE_TYPE_SERVER_PLAYER_DEATH,
     MESSAGE_TYPE_SERVER_TILE_DEATH,
+    MESSAGE_TYPE_SERVER_SPECTATE,
+    MESSAGE_TYPE_SERVER_GAME_OVER,
     MESSAGE_TYPES_COUNT
 };
 
@@ -27,6 +29,7 @@ enum ClientState {
     LEVEL_LOADED,
     GAME_STARTED,
     PLAYER_RESPAWN,
+    PLAYER_SPECTATE,
 };
 
 class ClientReadyMessage : public Net::Message {
@@ -836,5 +839,50 @@ public:
     bool serialize(Net::MeasureStream& stream) override { return serializeInternal(stream); }
 };
 
+class ServerSpectateMessage : public Net::Message {
+public:
+    uint8_t spectatingPlayerID;
+
+    ServerSpectateMessage()
+    : Message(MESSAGE_TYPE_SERVER_SPECTATE) {}
+
+    template <typename Stream> bool serializeInternal(Stream& stream)
+    {
+        if (stream.IsReading())
+        {
+            spectatingPlayerID = 0;
+        }
+        stream.SerializeByte(spectatingPlayerID);
+        
+        return true;
+    }
+    
+    bool serialize(Net::WriteStream& stream) override { return serializeInternal(stream); }
+    bool serialize(Net::ReadStream& stream) override { return serializeInternal(stream); }
+    bool serialize(Net::MeasureStream& stream) override { return serializeInternal(stream); }
+};
+
+class ServerGameOverMessage : public Net::Message {
+public:
+    uint8_t winnerID;
+
+    ServerGameOverMessage()
+    : Message(MESSAGE_TYPE_SERVER_GAME_OVER) {}
+
+    template <typename Stream> bool serializeInternal(Stream& stream)
+    {
+        if (stream.IsReading())
+        {
+            winnerID = 0;
+        }
+        stream.SerializeByte(winnerID);
+        
+        return true;
+    }
+    
+    bool serialize(Net::WriteStream& stream) override { return serializeInternal(stream); }
+    bool serialize(Net::ReadStream& stream) override { return serializeInternal(stream); }
+    bool serialize(Net::MeasureStream& stream) override { return serializeInternal(stream); }
+};
 
 #endif /* NetworkMessages_h */

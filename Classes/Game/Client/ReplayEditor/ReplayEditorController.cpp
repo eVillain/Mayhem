@@ -12,6 +12,7 @@
 #include "Utils/NumberFormatter.h"
 #include "GameModel.h"
 #include "SnapshotModel.h"
+#include "CameraModel.h"
 
 ReplayEditorController::ReplayEditorController(std::shared_ptr<LevelModel> levelModel,
                                                std::shared_ptr<ReplayModel> replayModel,
@@ -98,7 +99,6 @@ void ReplayEditorController::onMouseMoved(cocos2d::EventMouse *event)
     size_t currentFrame = m_replayModel->getSnapshotIndexForTime(time);
     const auto& snapshots = m_replayModel->getSnapshots();
     const SnapshotData& snapshot = snapshots.at(currentFrame);
-
     uint32_t entityID = 0;
     const bool isEntityUnderCursor = PlayerLogic::getEntityAtPoint(entityID,
                                                                    snapshot,
@@ -137,7 +137,35 @@ void ReplayEditorController::onMouseDown(cocos2d::EventMouse* event)
     }
     else if (event->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_RIGHT)
     {
-        
+        const cocos2d::Vec2 aimPosition = m_gameViewController->getAimPosition(event->getLocationInView());
+        const float time = m_view->getTimeLineView()->getCurrentTime();
+        size_t currentFrame = m_replayModel->getSnapshotIndexForTime(time);
+        const auto& snapshots = m_replayModel->getSnapshots();
+        const SnapshotData& snapshot = snapshots.at(currentFrame);
+        uint32_t entityID = 0;
+        const bool isEntityUnderCursor = PlayerLogic::getEntityAtPoint(entityID,
+                                                                       snapshot,
+                                                                       aimPosition,
+                                                                       0);
+        if (isEntityUnderCursor)
+        {
+            const EntitySnapshot& entity = snapshot.entityData.at(entityID);
+            if (entity.type == EntityType::PlayerEntity)
+            {
+                auto playerIt = std::find_if(snapshot.playerData.begin(),
+                                             snapshot.playerData.end(),
+                                             [entityID](const std::pair<uint8_t, PlayerState>& pair) {
+                    return pair.second.entityID == entityID;
+                });
+                if (playerIt != snapshot.playerData.end())
+                {
+                    m_gameViewController->getCameraModel()->setFollowPlayer(true);
+                    m_gameViewController->getCameraModel()->setCameraFollowPlayerID(playerIt->first);
+                    return;
+                }
+            }
+        }
+        m_gameViewController->getCameraModel()->setFollowPlayer(false);
     }
 }
 

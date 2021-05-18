@@ -595,5 +595,3 @@ namespace Net
         m_masterServerConnection->connect(m_config.masterServerAddress);
     }
 }
-
-

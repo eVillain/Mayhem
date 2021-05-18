@@ -83,6 +83,7 @@ void InitServerCommand::initControllers()
         auto levelModel = std::make_shared<LevelModel>();
         levelModel->loadLevel(m_config.level);
         auto gameModel = std::make_shared<GameModel>();
+        gameModel->setConfig(m_config);
         auto gameController = std::make_shared<GameController>(entitiesController, entitiesModel, levelModel);
         gameController->setGameMode(m_config, true);
         auto frameCache = std::make_shared<FrameCache>();

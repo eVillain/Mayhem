@@ -86,7 +86,7 @@ void BaseAI::refreshState(const uint8_t playerID,
     auto playerIt = players.find(playerID);
     if (playerIt == players.end())
     {
-        return; // dead bot, respawn?
+        return;
     }
 
     const auto& botPlayer = playerIt->second;
@@ -147,7 +147,7 @@ void BaseAI::updateState(const uint8_t playerID,
     auto playerIt = players.find(playerID);
     if (playerIt == players.end())
     {
-        return; // dead bot, respawn?
+        return;
     }
 
     const auto& botPlayer = playerIt->second;

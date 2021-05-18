@@ -54,7 +54,7 @@ bool InitClientCommand::run()
     auto levelModel = injector.getInstance<LevelModel>();
 
     auto gameModel = injector.getInstance<GameModel>();
-    gameModel->setTickRate(m_config.tickRate);
+    gameModel->setConfig(m_config);
     
     auto hudView = injector.getInstance<HUDView>();
     hudView->initialize();

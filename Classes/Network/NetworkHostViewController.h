@@ -4,7 +4,7 @@
 #include "Core/Injector.h"
 #include "cocos-ext.h"
 #include "Network/DrudgeNet/include/DataTypes.h"
-#include "GameMode.h"
+#include "Game/Shared/GameMode.h"
 
 class Event;
 class NetworkModel;

@@ -70,7 +70,9 @@ private:
     void onSnapshotDiffReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
     void onPlayerDeathReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
     void onTileDeathReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
-    
+    void onSpectateReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
+    void onGameOverReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
+
     void onToggleClientPredictionEvent(const Event& event);
     void onToggleInventoryEvent(const Event& event);
     void onBackButtonPressed(const Event& event);
@@ -82,6 +84,8 @@ private:
     
     void onConfirmExitButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
     void onCancelExitButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
+    void onSpectateButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
+    void onRespawnButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
 
     std::shared_ptr<ClientInputMessage> getInputData() const;
     

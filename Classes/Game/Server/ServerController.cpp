@@ -39,6 +39,7 @@ ServerController::ServerController(std::shared_ptr<GameController> gameControlle
 , m_frameCache(frameCache)
 , m_maxPingThreshold(0.5f) // TODO: Set a reasonable threshold value
 , m_sendDeltaUpdates(false)
+, m_gameOverTimer(-1.f)
 {    
     m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_CLIENT_STATE_UPDATE,
                                             std::bind(&ServerController::onClientStateMessageReceived, this,
@@ -46,12 +47,16 @@ ServerController::ServerController(std::shared_ptr<GameController> gameControlle
     m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_CLIENT_INPUT,
                                             std::bind(&ServerController::onInputMessageReceived, this,
                                                       std::placeholders::_1, std::placeholders::_2));
-    m_networkController->setNodeConnectedCallback(std::bind(&ServerController::onNodeConnected, this, std::placeholders::_1));
-    m_networkController->setNodeDisconnectedCallback(std::bind(&ServerController::onNodeDisconnected, this, std::placeholders::_1));
-    m_frameCache->setMaxRollbackFrames(((m_maxPingThreshold + DEFAULT_CLIENT_TICKS_BUFFERED) / m_gameModel->getFrameTime()) + 10);
-    
+    m_networkController->setNodeConnectedCallback(std::bind(&ServerController::onNodeConnected, this,
+                                                            std::placeholders::_1));
+    m_networkController->setNodeDisconnectedCallback(std::bind(&ServerController::onNodeDisconnected, this,
+                                                               std::placeholders::_1));
     m_gameController->getGameMode()->setTileDeathCallback(std::bind(&ServerController::onTileDeath, this,
                                                                     std::placeholders::_1, std::placeholders::_2));
+    m_gameController->getGameMode()->setWinConditionReachedCallback(std::bind(&ServerController::onGameModeWinConditionReached, this,
+                                                                              std::placeholders::_1));
+    m_frameCache->setMaxRollbackFrames((m_maxPingThreshold / m_gameModel->getFrameTime()) + DEFAULT_CLIENT_TICKS_BUFFERED);
+
     printf("ServerController:: constructor: %p\n", this);
 }
 
@@ -62,11 +67,22 @@ ServerController::~ServerController()
 
 void ServerController::update(float deltaTime)
 {
-    const float deltaAccumulator = m_gameModel->getDeltaAccumulator() + deltaTime;
-    m_gameModel->setDeltaAccumulator(deltaAccumulator);
-
     m_networkController->receiveMessages();
     m_networkController->update(deltaTime);
+    
+    const bool isGameOver = m_gameOverTimer >= 0.f;
+    if (isGameOver)
+    {
+        m_gameOverTimer += deltaTime;
+        if (m_gameOverTimer > 10.f)
+        {
+            stop();
+            return;
+        }
+    }
+    
+    const float deltaAccumulator = m_gameModel->getDeltaAccumulator() + deltaTime;
+    m_gameModel->setDeltaAccumulator(deltaAccumulator);
     
     bool sendUpdate = false;
     
@@ -588,6 +604,22 @@ void ServerController::onTileDeath(const int tileX, const int tileY)
     }
 }
 
+void ServerController::onGameModeWinConditionReached(uint8_t winner)
+{
+    std::shared_ptr<ServerGameOverMessage> gameOverMessage = std::make_shared<ServerGameOverMessage>();
+    gameOverMessage->winnerID = winner;
+    std::shared_ptr<Net::Message> message = std::dynamic_pointer_cast<Net::Message>(gameOverMessage);
+    for (const auto& clientState : m_clientStates)
+    {
+        const uint8_t playerID = clientState.first;
+        if (clientState.second == ClientPlayerState::CONNECTED)
+        {
+            m_networkController->sendMessage(playerID, message);
+        }
+    }
+    m_gameOverTimer = 0.f;
+}
+
 void ServerController::applyDamage(const std::shared_ptr<Player>& player,
                                    const float damage,
                                    const cocos2d::Vec2 position,
@@ -704,6 +736,12 @@ void ServerController::applyDamage(const std::shared_ptr<Player>& player,
                 }
             }
         }
+        
+        // If it was a bot player we can respawn him instantly :D
+        if (m_botPlayers.find(playerID) != m_botPlayers.end())
+        {
+            onPlayerJoined(playerID);
+        }
     }
 }
 
@@ -773,7 +811,6 @@ void ServerController::onNodeConnected(const Net::NodeID nodeID)
             m_clientStates[0] = ClientPlayerState::CONNECTED;
         }
     }
-
 }
 
 void ServerController::onNodeDisconnected(const Net::NodeID nodeID)
@@ -815,6 +852,8 @@ void ServerController::onPlayerJoined(const uint8_t playerID)
     }
 
     player->setPosition(cocos2d::Vec2(randX, randY));
+    
+    m_gameController->getGameMode()->onPlayerReady(playerID);
 }
 
 void ServerController::onClientStateMessageReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID playerID)
@@ -836,15 +875,27 @@ void ServerController::onClientStateMessageReceived(const std::shared_ptr<Net::M
                 return;
             }
             onPlayerJoined(playerID);
-            m_gameController->getGameMode()->onPlayerReady(playerID);
         }
         else if (stateMessage->state == ClientState::PLAYER_RESPAWN)
         {
-            if (m_gameController->getGameMode()->allowRespawn() &&
-                !m_gameController->getEntitiesModel()->getPlayer(playerID))
+            if (!m_gameController->getEntitiesModel()->getPlayer(playerID))
             {
-                onPlayerJoined(playerID);
-                m_gameController->getGameMode()->onPlayerReady(playerID);
+                if (m_gameController->getGameMode()->allowRespawn())
+                {
+                    onPlayerJoined(playerID);
+                }
+            }
+        }
+        else if (stateMessage->state == ClientState::PLAYER_SPECTATE)
+        {
+            // TODO: Make this so the player can choose to spectate the next player
+            auto players = m_gameController->getEntitiesModel()->getPlayers();
+            if (!players.empty())
+            {
+                std::shared_ptr<ServerSpectateMessage> spectateMessage = std::make_shared<ServerSpectateMessage>();
+                spectateMessage->spectatingPlayerID = players.begin()->first;
+                std::shared_ptr<Net::Message> message = spectateMessage;
+                m_networkController->sendMessage(playerID, message);
             }
         }
     }
