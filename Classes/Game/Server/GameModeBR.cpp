@@ -41,17 +41,59 @@ void GameModeBR::onLevelLoaded(const bool isHost)
 
 void GameModeBR::onPlayerReady(const uint8_t playerID)
 {
-    
+    m_playerStates[playerID] = true;
 }
 
 void GameModeBR::onPlayerDied(const uint8_t playerID)
 {
-    // Check number of players - if down to 1 / down to 1 team then win condition is reached
+    m_playerStates[playerID] = false;
+
+    // Check number of players - if down to 1 player / down to 1 team then win condition is reached
     if (m_playersPerTeam == 1)
     {
-        //
+        uint8_t lastLivingPlayerID = 0;
+        uint32_t livingPlayerCount = 0;
+        for (const auto& pair : m_playerStates)
+        {
+            if (pair.second)
+            {
+                livingPlayerCount++;
+                lastLivingPlayerID = pair.first;
+            }
+        }
+        if (livingPlayerCount == 1 &&
+            m_winConditionCallback)
+        {
+            m_winConditionCallback(lastLivingPlayerID);
+        }
     }
-//    else if ()
+    else
+    {
+        uint8_t lastLivingTeamID = 0;
+        uint32_t livingTeamCount = 0;
+        for (uint8_t teamID = 0; teamID < m_teams.size(); teamID++)
+        {
+            const auto& teamData = m_teams.at(teamID);
+            bool hasLivingPlayers = false;
+            for (const uint8_t playerID : teamData.players)
+            {
+                if (m_playerStates.at(playerID))
+                {
+                    hasLivingPlayers = true;
+                }
+            }
+            if (hasLivingPlayers)
+            {
+                livingTeamCount++;
+                lastLivingTeamID = teamID;
+            }
+        }
+        if (livingTeamCount == 1 &&
+            m_winConditionCallback)
+        {
+            m_winConditionCallback(lastLivingTeamID);
+        }
+    }
 }
 
 void GameModeBR::spawnThings()

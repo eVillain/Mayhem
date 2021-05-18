@@ -2,6 +2,7 @@
 
 const std::string GameSettings::DEFAULT_SETTINGS_FILE = "res/Settings.plist";
 const std::string GameSettings::SETTING_SAVE_SETTINGS_ON_EXIT = "SaveSettingsOnExit";
+const std::string GameSettings::SETTING_PLAYER_NAME = "PlayerName";
 
 GameSettings::GameSettings()
 {

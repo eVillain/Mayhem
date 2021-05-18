@@ -674,6 +674,8 @@ void ServerController::applyDamage(const std::shared_ptr<Player>& player,
         if (killerPlayer)
         {
             m_networkController->sendMessage(killerPlayer->getPlayerID(), message);
+            const uint8_t killerPlayerID = m_gameController->getEntitiesModel()->getPlayerIDByEntityID(damagerID);
+            m_gameController->getGameMode()->onPlayerGotAKill(killerPlayerID);
         }
         else
         {

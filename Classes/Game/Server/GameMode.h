@@ -2,6 +2,8 @@
 #define GameMode_h
 
 #include "cocos2d.h"
+#include <map>
+#include <vector>
 
 class EntitiesController;
 class EntitiesModel;
@@ -60,11 +62,12 @@ public:
     virtual void onLevelLoaded(const bool isHost) = 0;
     virtual void onPlayerReady(const uint8_t playerID) = 0;
     virtual void onPlayerDied(const uint8_t playerID) = 0;
-    
+    virtual void onPlayerGotAKill(const uint8_t playerID) = 0;
+
     uint8_t getMaxPlayers() const { return m_maxPlayers; }
     uint8_t getPlayersPerTeam() const { return m_playersPerTeam; }
     void setPlayersPerTeam(uint8_t players) { m_playersPerTeam = players; }
-    
+    void setPlayerTeam(const uint8_t playerID, const uint8_t teamID) { m_teams[teamID].players.push_back(playerID); }
     void setTileDeathCallback(std::function<void(int, int)> cb) { m_tileDeathCallback = cb; }
     void setWinConditionReachedCallback(std::function<void(uint8_t)> cb) { m_winConditionCallback = cb; }
 
@@ -76,7 +79,6 @@ protected:
     uint8_t m_maxPlayers;
     uint8_t m_playersPerTeam;
     std::vector<TeamData> m_teams;
-    
     std::function<void(int, int)> m_tileDeathCallback; // Tile x, y coords as params
     std::function<void(uint8_t)> m_winConditionCallback; // Winning team / winning player as param
 };

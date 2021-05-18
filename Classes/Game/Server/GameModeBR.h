@@ -20,13 +20,15 @@ public:
     void onLevelLoaded(const bool isHost) override;
     void onPlayerReady(const uint8_t playerID) override;
     void onPlayerDied(const uint8_t playerID) override;
+    void onPlayerGotAKill(const uint8_t playerID) override {};
 
 private:
     const int m_seed;
     float m_tileUpdateAccumulator;
     int m_tileUpdateLayer;
     std::vector<cocos2d::Vec2> m_deadTiles;
-    
+    std::map<uint8_t, bool> m_playerStates;
+
     void spawnThings();
     void fillDeadTiles();
     

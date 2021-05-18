@@ -465,6 +465,7 @@
 		D92C7DFF2650906000AA7096 /* ExitGameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExitGameLayer.h; sourceTree = "<group>"; };
 		D92C7E0226509CF100AA7096 /* ShutdownClientCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShutdownClientCommand.h; sourceTree = "<group>"; };
 		D92C7E0326509CF100AA7096 /* ShutdownClientCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShutdownClientCommand.cpp; sourceTree = "<group>"; };
+		D934AA07265330330007495E /* PlayerNameUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerNameUtil.h; sourceTree = "<group>"; };
 		D94AFA7F262B9B6B00278953 /* BackButtonPressedEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackButtonPressedEvent.cpp; sourceTree = "<group>"; };
 		D94AFA83262C223F00278953 /* FollowNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowNode.h; sourceTree = "<group>"; };
 		D94AFA84262C223F00278953 /* FollowNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FollowNode.cpp; sourceTree = "<group>"; };
@@ -1008,6 +1009,7 @@
 				D9B24F9324C48EA400EAFA5B /* GameTableView.cpp */,
 				D9B24F9724C48EA400EAFA5B /* GameTableView.h */,
 				D98BEDD7264896C300125847 /* NumberFormatter.h */,
+				D934AA07265330330007495E /* PlayerNameUtil.h */,
 				D98DFA8624E80E23007A1997 /* RaycastUtil.cpp */,
 				D98DFA8824E80E23007A1997 /* RaycastUtil.h */,
 			);

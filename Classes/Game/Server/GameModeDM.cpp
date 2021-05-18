@@ -13,13 +13,31 @@ GameModeDM::GameModeDM(std::shared_ptr<EntitiesController> entitiesController,
 : GameMode(entitiesController, entitiesModel, levelModel)
 , m_seed(seed)
 , m_maxKills(10)
-, m_maxTime(5)
+, m_maxTime(5.f * 60.f)
+, m_time(0.f)
 {
 }
 
 void GameModeDM::update(const float deltaTime)
 {
-    
+    m_time += deltaTime;
+    if (m_time >= m_maxTime)
+    {
+        if (m_winConditionCallback)
+        {
+            uint32_t mostKills = 0;
+            uint32_t playerWithMostKillsID = 0;
+            for (const auto& pair : m_playerKills)
+            {
+                if (mostKills < pair.second)
+                {
+                    mostKills = pair.second;
+                    playerWithMostKillsID = pair.first;
+                }
+            }
+            m_winConditionCallback(playerWithMostKillsID);
+        }
+    }
 }
 
 void GameModeDM::onLevelLoaded(const bool isHost)
@@ -30,14 +48,22 @@ void GameModeDM::onLevelLoaded(const bool isHost)
     }
 }
 
-void GameModeDM::onPlayerReady(const uint8_t playerID)
+void GameModeDM::onPlayerGotAKill(const uint8_t playerID)
 {
+    if (m_playerKills.find(playerID) == m_playerKills.end())
+    {
+        m_playerKills[playerID] = 1;
+        return;
+    }
+    m_playerKills[playerID]++;
     
-}
-
-void GameModeDM::onPlayerDied(const uint8_t playerID)
-{
-    
+    if (m_playerKills.at(playerID) >= m_maxKills)
+    {
+        if (m_winConditionCallback)
+        {
+            m_winConditionCallback(playerID);
+        }
+    }
 }
 
 void GameModeDM::spawnThings()

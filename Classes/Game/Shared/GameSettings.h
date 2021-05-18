@@ -8,6 +8,7 @@ class GameSettings
 public:
     static const std::string DEFAULT_SETTINGS_FILE;
     static const std::string SETTING_SAVE_SETTINGS_ON_EXIT;
+    static const std::string SETTING_PLAYER_NAME;
 
     GameSettings();
     ~GameSettings();

@@ -19,13 +19,17 @@ public:
     bool allowRespawn() const override { return true; }
     
     void onLevelLoaded(const bool isHost) override;
-    void onPlayerReady(const uint8_t playerID) override;
-    void onPlayerDied(const uint8_t playerID) override;
+    void onPlayerReady(const uint8_t playerID) override {};
+    void onPlayerDied(const uint8_t playerID) override {};
+    void onPlayerGotAKill(const uint8_t playerID) override;
 
 private:
     const int m_seed;
     const uint32_t m_maxKills;
-    const uint32_t m_maxTime;
+    const float m_maxTime;
+    float m_time;
+    
+    std::map<uint8_t, uint32_t> m_playerKills;
     
     void spawnThings();
     void spawnRandomGunWithAmmo(const cocos2d::Vec2& position);

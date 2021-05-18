@@ -117,6 +117,18 @@ const std::shared_ptr<Player> EntitiesModel::getPlayerByEntityID(const uint16_t 
     return nullptr;
 }
 
+const uint8_t getPlayerIDByEntityID(const uint16_t entityID)
+{
+    auto it = std::find_if(m_players.begin(), m_players.end(), [entityID](const std::pair<uint8_t, const std::shared_ptr<Player>>& player) {
+        return player.second->getEntityID() == entityID;
+    });
+    if (it != m_players.end())
+    {
+        return it->first;
+    }
+    return 0;
+}
+
 const std::vector<std::shared_ptr<Entity>> EntitiesModel::getEntitiesNearPosition(const cocos2d::Vec2 position,
                                                                                   const float radius) const
 {

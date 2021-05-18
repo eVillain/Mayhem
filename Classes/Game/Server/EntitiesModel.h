@@ -29,6 +29,7 @@ public:
     void setPlayer(const uint8_t playerID, const std::shared_ptr<Player>& player) { m_players[playerID] = player; }
     
     const std::shared_ptr<Player> getPlayerByEntityID(const uint16_t entityID);
+    const uint8_t getPlayerIDByEntityID(const uint16_t entityID);
 
     uint8_t getLocalPlayerID() const { return m_localPlayerID; }
     void setLocalPlayerID(const uint8_t playerID) { m_localPlayerID = playerID; }
