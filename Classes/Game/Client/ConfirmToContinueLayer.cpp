@@ -32,8 +32,7 @@ void ConfirmToContinueLayer::setup(const std::string& text,
                                            m_layer->getContentSize().height * 0.66f));
     
     m_continueLabel = HUDHelper::createLabel5x7(continueText);
-    m_continueLabel->setPosition(cocos2d::Vec2(center.x,
-                                               m_layer->getContentSize().height * 0.33f));
+    m_continueLabel->setPosition(center);
     m_continueLabel->enableOutline(cocos2d::Color4B::BLACK, 1.f);
     
     m_confirmButton = ButtonUtils::createButton(cocos2d::Vec2(center.x, layerSize.height * 0.33f),

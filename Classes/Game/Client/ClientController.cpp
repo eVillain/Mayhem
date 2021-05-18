@@ -558,6 +558,11 @@ void ClientController::onSpectateReceived(const std::shared_ptr<Net::Message>& d
     if (auto spectateMessage = std::dynamic_pointer_cast<ServerSpectateMessage>(data))
     {
         m_gameViewController->getCameraModel()->setCameraFollowPlayerID(spectateMessage->spectatingPlayerID);
+        if (m_hudView->getViewLayer() &&
+            m_hudView->getViewLayer()->getDescriptor() == ConfirmToContinueLayer::DESCRIPTOR)
+        {
+            m_hudView->removeViewLayer();
+        }
     }
     else
     {
