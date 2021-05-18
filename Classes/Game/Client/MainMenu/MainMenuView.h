@@ -11,7 +11,7 @@ public:
     
     CREATE_FUNC(MainMenuView);
     
-    cocos2d::Label* getTitle() const { return m_title; }
+    cocos2d::Label* getTitle() const { return m_title; }
     cocos2d::Label* getPlayerName() const { return m_playerName; }
     cocos2d::ui::Button* getStartGameButton() const { return m_startGameButton; }
     cocos2d::ui::Button* getHostGameButton() const { return m_hostGameButton; }

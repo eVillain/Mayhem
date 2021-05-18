@@ -10,6 +10,7 @@
 #include "Message.h"
 #include "cocos2d.h"
 #include "GameSettings.h"
+#include "AddressResolver.h"
 
 const int NetworkController::BUFFER_SIZE = 2 * 1024 * 1024;
 const std::string NetworkController::SETTING_NETWORK_TYPE = "NetworkType";
@@ -62,7 +63,12 @@ void NetworkController::initialize(const NetworkMode mode)
     const cocos2d::Value& timeoutSetting = m_gameSettings->getValue(SETTING_NETWORK_TIMEOUT, cocos2d::Value(10));
     const cocos2d::Value& maxNodesSetting = m_gameSettings->getValue(SETTING_NETWORK_MAX_NODES, cocos2d::Value(100));
 
-    const Net::Address masterServerAddress = Net::Address(masterServerAddressSetting.asString()); //getAddressFromString(masterServerAddressSetting.asString());
+    const std::string hostNameWithPort = masterServerAddressSetting.asString();
+    const size_t colon = hostNameWithPort.find(":") + 1;
+    const std::string portString = hostNameWithPort.substr(colon, hostNameWithPort.length() - colon);
+    const std::string hostString = hostNameWithPort.substr(0, colon - 1);
+    
+    const Net::Address masterServerAddress = Net::AddressResolver::getAddressForHost(hostString, portString);
     const Net::Port masterServerConnectPort = masterServerPortSetting.asInt();
     const Net::Port meshPort = meshPortSetting.asInt();
     const Net::Port serverPort = serverPortSetting.asInt();
@@ -165,6 +171,13 @@ Net::MessageID NetworkController::sendMessage(const Net::NodeID nodeID,
                                               std::shared_ptr<Net::Message>& message,
                                               bool reliable /*= false*/)
 {
+    if (m_mode == NetworkMode::HOST &&
+        nodeID == m_drudgeNet->getTransport()->GetLocalNodeId())
+    {
+        // local client loopback
+        onMessageReceived(message, nodeID);
+        return 0;
+    }
     return m_drudgeNet->sendMessage(nodeID, message, reliable);
 }
 

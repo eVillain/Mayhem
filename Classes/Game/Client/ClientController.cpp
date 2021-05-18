@@ -114,12 +114,19 @@ void ClientController::setMode(const ClientMode mode)
     }
 
     m_stopping = false;
-        
+
     // Send client level loaded message to server
     std::shared_ptr<ClientStateUpdateMessage> levelLoadedMessage = std::make_shared<ClientStateUpdateMessage>();
     levelLoadedMessage->state = ClientState::LEVEL_LOADED;
     std::shared_ptr<Net::Message> message = levelLoadedMessage;
     m_networkController->sendMessage(0, message, true);
+    
+    if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_LOCAL)
+    {
+        // beautiful hack to prevent local client from running ahead of local server
+        m_gameModel->setCurrentTime(-m_gameModel->getFrameTime());
+        m_gameModel->setCurrentTick(-1);
+    }
 }
 
 void ClientController::stop()
@@ -166,11 +173,11 @@ void ClientController::update(const float deltaTime)
         m_networkController->receiveMessages();
 
         m_networkController->update(deltaTime);
-
-        if (m_stopping)
-        {
-            return;
-        }
+    }
+    
+    if (m_stopping)
+    {
+        return;
     }
     
     float deltaAccumulator = m_gameModel->getDeltaAccumulator();

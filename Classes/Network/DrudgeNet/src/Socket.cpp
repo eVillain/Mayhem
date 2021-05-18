@@ -13,6 +13,52 @@ namespace Net
 {
 	bool Socket::s_socketsInitialized = false;
 
+    bool Socket::InitializeSockets()
+    {
+        if (s_socketsInitialized)
+        {
+            return true;
+        }
+        s_socketsInitialized = true;
+#if PLATFORM == PLATFORM_WINDOWS
+        WSADATA WsaData;
+
+        int err_code = WSAStartup( MAKEWORD(2,2), &WsaData ) != NO_ERROR;
+
+        // I get error from outputdebug string using sysinternal debugview tool.
+        switch(err_code)
+        {
+            case WSASYSNOTREADY:
+                OutputDebugStringW(L"The underlying network subsystem is not ready for network communication.");
+                break;
+            case WSAVERNOTSUPPORTED:
+                OutputDebugStringW(L"The version of Windows Sockets support requested is not provided by this particular Windows Sockets implementation.");
+                break;
+            case WSAEINPROGRESS:
+                OutputDebugStringW(L"A blocking Windows Sockets 1.1 operation is in progress");
+                break;
+            case WSAEPROCLIM:
+                OutputDebugStringW(L"A limit on the number of tasks supported by the Windows Sockets implementation has been reached.");
+                break;
+            case WSAEFAULT:
+                OutputDebugStringW(L"The lpWSAData parameter is not a valid pointer.");
+                break;
+            default:
+                break;
+        }
+        return err_code == 0;
+#else
+        return true;
+#endif
+    }
+
+    void Socket::ShutdownSockets()
+    {
+    #if PLATFORM == PLATFORM_WINDOWS
+        WSACleanup();
+    #endif
+    }
+
     Socket::Socket(int32_t options) :
     _options(options),
     _socket(0)
@@ -20,7 +66,6 @@ namespace Net
 		if (!s_socketsInitialized)
 		{
 			InitializeSockets();
-			s_socketsInitialized = true;
 		}
 	}
     
@@ -121,12 +166,12 @@ namespace Net
         if (_socket == 0)
             return false;
         
-        assert(destination.GetAddress() != 0);
+        assert(destination.GetAddressIP4() != 0);
         assert(destination.GetPort() != 0);
         
         sockaddr_in address;
         address.sin_family = AF_INET;
-        address.sin_addr.s_addr = htonl( destination.GetAddress() );
+        address.sin_addr.s_addr = htonl( destination.GetAddressIP4() );
         address.sin_port = htons( (unsigned short) destination.GetPort() );
         
         int sent_bytes = (int)sendto(_socket,

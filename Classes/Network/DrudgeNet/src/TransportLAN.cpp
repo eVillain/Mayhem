@@ -27,16 +27,6 @@
 
 namespace Net
 {
-    bool TransportLAN::Initialize()
-    {
-        return InitializeSockets();
-    }
-    
-    void TransportLAN::Shutdown()
-    {
-        return ShutdownSockets();
-    }
-    
     TransportLAN::TransportLAN()
     : mesh(nullptr)
     , node(nullptr)
@@ -233,15 +223,6 @@ namespace Net
         entry.name = e.name;
         entry.maxClients = 0;
         entry.currentClients = 0;
-//        sprintf(entry.address.GetAddress(),
-//                "%d.%d.%d.%d:%d",
-//                e.address.GetA(),
-//                e.address.GetB(),
-//                e.address.GetC(),
-//                e.address.GetD(),
-//                e.address.GetPort());
-//        strncpy(entry.name, e.name, entry.name.length());
-//        entry.name[sizeof(entry.name) - 1] = '\0';
         return true;
     }
     

@@ -31,6 +31,7 @@ public:
             return std::string(username);
         }
 #endif
+        return "";
     }
 
 };

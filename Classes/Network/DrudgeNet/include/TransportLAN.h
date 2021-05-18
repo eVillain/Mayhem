@@ -21,13 +21,7 @@ namespace Net
     //  + a node runs on each transport, including a local node on the server
     class TransportLAN : public Transport
     {
-    public:        
-        // static interface
-        
-        static bool Initialize();
-        
-        static void Shutdown();
-        
+    public:
         // lan specific interface
         
         TransportLAN();

@@ -105,7 +105,7 @@ namespace Net
     bool Connection::sendPacket(const unsigned char data[], int size)
     {
         assert(m_running);
-        if (m_address.GetAddress() == 0)
+        if (m_address.GetAddressIP4() == 0)
         {
             return false;
         }

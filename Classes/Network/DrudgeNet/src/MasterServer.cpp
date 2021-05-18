@@ -355,10 +355,10 @@ void MasterServer::onGameConnectionRequest(const Net::Address& sender)
     {
         const auto& hostData = *hostIt;
         std::shared_ptr<GameHostConnectionResponseMessage> hostResponse = std::make_shared<GameHostConnectionResponseMessage>();
-        hostResponse->clientAddress = Net::Address(clientData.address.GetAddress(), clientData.clientPort);
+        hostResponse->clientAddress = Net::Address(clientData.address.GetAddressIP4(), clientData.clientPort);
         hostResponse->success = true;
         sendMessage(hostResponse, hostData.address);
-        response->hostAddress = Net::Address(hostData.address.GetAddress(), hostData.gameClientPort);
+        response->hostAddress = Net::Address(hostData.address.GetAddressIP4(), hostData.gameClientPort);
         onInfo("MasterServer: establishing link between host " + hostData.address.GetString() + " and client: " + clientData.address.GetString());
     }
     

@@ -141,9 +141,9 @@ public:
         {
             for (Net::Transport::LobbyEntry& data : hosts)
             {
-                uint32_t addressInt = data.address.GetAddress();
+                uint32_t addressIP4 = data.address.GetAddressIP4();
                 Net::Port port = data.address.GetPort();
-                stream.SerializeInteger(addressInt);
+                stream.SerializeInteger(addressIP4);
                 stream.SerializeShort(port);
                 stream.SerializeString(data.name);
                 stream.SerializeInteger(data.maxClients);
@@ -183,9 +183,9 @@ public:
         }
         else
         {
-            uint32_t addressInt = hostAddress.GetAddress();
+            uint32_t addressIP4 = hostAddress.GetAddressIP4();
             Net::Port port = hostAddress.GetPort();
-            stream.SerializeInteger(addressInt);
+            stream.SerializeInteger(addressIP4);
             stream.SerializeShort(port);
             stream.SerializeShort(clientPort);
         }
@@ -221,9 +221,9 @@ public:
         }
         else
         {
-            uint32_t addressInt = hostAddress.GetAddress();
+            uint32_t addressIP4 = hostAddress.GetAddressIP4();
             Net::Port port = hostAddress.GetPort();
-            stream.SerializeInteger(addressInt);
+            stream.SerializeInteger(addressIP4);
             stream.SerializeShort(port);
             stream.SerializeBoolean(success);
         }
@@ -259,9 +259,9 @@ public:
         }
         else
         {
-            uint32_t addressInt = clientAddress.GetAddress();
+            uint32_t addressIP4 = clientAddress.GetAddressIP4();
             Net::Port port = clientAddress.GetPort();
-            stream.SerializeInteger(addressInt);
+            stream.SerializeInteger(addressIP4);
             stream.SerializeShort(port);
             stream.SerializeBoolean(success);
         }

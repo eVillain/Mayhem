@@ -142,7 +142,7 @@ namespace Net
             Address sender;
             unsigned char *data;
             data = new unsigned char[m_maxPacketSize];
-            int32_t size = m_socket.Receive(sender, data, m_maxPacketSize);
+            int32_t size = (int32_t)m_socket.Receive(sender, data, m_maxPacketSize);
             if (!size)
                 break;
 //            printf("Node %i: received %i bytes\n", m_localNodeID, size);
@@ -322,10 +322,10 @@ namespace Net
                 d = m_meshAddress.GetD();
             }
             Address address( a, b, c, d, port );
-            if ( address.GetAddress() != 0 )
+            if (address.GetAddressIP4() != 0)
             {
                 // node is connected
-                if ( address != m_nodes[i].address )
+                if (address != m_nodes[i].address)
                 {
                     m_nodes[i].connected = true;
                     m_nodes[i].address = address;
@@ -348,7 +348,7 @@ namespace Net
             else
             {
                 // node is not connected
-                if ( m_nodes[i].connected )
+                if (m_nodes[i].connected)
                 {
                     if (m_onNodeDisconnectedCallback)
                     {
