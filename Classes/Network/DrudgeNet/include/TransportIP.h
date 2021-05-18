@@ -116,7 +116,6 @@ namespace Net
         int32_t m_tickAccumulator;
         float m_connectAccumulator;
 
-        bool m_connectingByName;
         bool m_connectFailed;
         
         char connectName[65];
@@ -133,7 +132,6 @@ namespace Net
         std::map<NodeID, float> m_sendAccumulators;
         std::vector<LobbyEntry> m_lobbyEntries;
         
-        void AttemptConnection(const float deltaTime);
         void UpdateReliabilitySystems(const float deltaTime);
         
         void WriteHeader(unsigned char* header,

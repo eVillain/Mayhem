@@ -1,6 +1,7 @@
 #include "InitNetworkClientCommand.h"
 
 #include "Core/Injector.h"
+#include "GameSettings.h"
 #include "NetworkModel.h"
 #include "NetworkController.h"
 #include "NetworkConstants.h"
@@ -26,7 +27,8 @@ bool InitNetworkClientCommand::run()
     }
     if (!injector.hasMapping<INetworkController>())
     {
-        injector.mapSingleton<NetworkController>();
+        injector.mapSingleton<NetworkController,
+            NetworkModel, GameSettings>();
         injector.mapInterfaceToType<INetworkController, NetworkController>();
     }
 

@@ -3,6 +3,7 @@
 #include "Core/Injector.h"
 #include "NetworkConstants.h"
 #include "NetworkModel.h"
+#include "GameSettings.h"
 #include "NetworkController.h"
 #include "NetworkHostViewController.h"
 #include "cocos2d.h"
@@ -20,9 +21,14 @@ bool InitNetworkHostCommand::run()
     {
         injector.mapSingleton<NetworkModel>();
     }
+    if (!injector.hasMapping<GameSettings>())
+    {
+        injector.mapSingleton<GameSettings>();
+    }
     if (!injector.hasMapping<INetworkController>())
     {
-        injector.mapSingleton<NetworkController>();
+        injector.mapSingleton<NetworkController,
+            NetworkModel, GameSettings>();
         injector.mapInterfaceToType<INetworkController, NetworkController>();
     }
     if (!injector.hasMapping<NetworkHostViewController>())

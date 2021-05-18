@@ -13,8 +13,7 @@ public:
 
 private:
     GameMode::Config m_config;
-    
-    void initControllers();
+    void mapDependencies();
 };
 
 #endif /* InitServerCommand_h */

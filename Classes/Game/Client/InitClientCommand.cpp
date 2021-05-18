@@ -73,9 +73,6 @@ bool InitClientCommand::run()
     lightController->initialize();
     
     auto clientController = injector.getInstance<ClientController>();
-    auto networkController = injector.getInstance<INetworkController>();
-    networkController->initialize(NetworkMode::CLIENT);
-    networkController->setDeltaDataCallback(std::bind(&ClientController::getDeltaData, clientController, std::placeholders::_1));
 
     if (m_mode == HOST)
     {
@@ -225,6 +222,9 @@ void InitClientCommand::mapDependencies()
         {
             injector.mapSingleton<FakeNetworkController, FakeNet>();
             injector.mapInterfaceToType<INetworkController, FakeNetworkController>();
+            auto networkController = injector.getInstance<INetworkController>();
+            networkController->initialize(NetworkMode::CLIENT);
+//            networkController->setDeltaDataCallback(std::bind(&ClientController::getDeltaData, clientController, std::placeholders::_1));
         }
         
         InitLocalServerCommand initLocalServer(m_config);

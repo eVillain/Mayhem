@@ -25,6 +25,7 @@ NetworkHostViewController::NetworkHostViewController()
 {
     m_gameModeConfig.type = GameModeType::GAME_MODE_DEATHMATCH;
     m_gameModeConfig.maxPlayers = 100;
+    m_gameModeConfig.tickRate = 20;
     m_gameModeConfig.playersPerTeam = 1;
     m_gameModeConfig.level = "BitTileMap.tmx";
 }

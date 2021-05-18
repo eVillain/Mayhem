@@ -8,6 +8,7 @@
 class Event;
 class NetworkModel;
 class NetworkMessageFactory;
+class GameSettings;
 
 namespace Net {
     class Stream;
@@ -17,7 +18,8 @@ namespace Net {
 class NetworkController : public INetworkController
 {
 public:
-    NetworkController();
+    NetworkController(std::shared_ptr<NetworkModel> model,
+                      std::shared_ptr<GameSettings> gameSettings);
     virtual ~NetworkController();
     
     void initialize(const NetworkMode mode) override;
@@ -59,6 +61,7 @@ private:
     static const std::string SETTING_NETWORK_MAX_NODES;
 
     std::shared_ptr<NetworkModel> m_model;
+    std::shared_ptr<GameSettings> m_gameSettings;
     std::shared_ptr<Net::DrudgeNet> m_drudgeNet;
     std::shared_ptr<NetworkMessageFactory> m_messageFactory;
     std::shared_ptr<Net::Stream> m_readStream;

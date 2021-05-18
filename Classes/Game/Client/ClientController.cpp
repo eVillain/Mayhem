@@ -82,6 +82,7 @@ ClientController::~ClientController()
 void ClientController::setMode(const ClientMode mode)
 {
     m_clientModel->setMode(mode);
+
     m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_SNAPSHOT,
                                             std::bind(&ClientController::onSnapshotReceived, this,
                                                       std::placeholders::_1, std::placeholders::_2));
@@ -133,15 +134,20 @@ void ClientController::stop()
     }
     
     m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_SNAPSHOT);
+    m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_SNAPSHOT_DIFF);
     m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_STARTGAME);
+    m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_PLAYER_DEATH);
+    m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_TILE_DEATH);
+    m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_SPECTATE);
+    m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_GAME_OVER);
     m_networkController->setNodeDisconnectedCallback(nullptr);
+    
     if (m_networkController->getTransport())
     {
         m_networkController->getTransport()->setDisconnectedCallback(nullptr);
     }
     m_networkController->terminate();
     
-
     ShutdownLocalServerCommand shutdownServer;
     shutdownServer.run();
     
@@ -155,12 +161,11 @@ void ClientController::stop()
 
 void ClientController::update(const float deltaTime)
 {
-    m_networkController->receiveMessages();
-
-    m_networkController->update(deltaTime);
-
     if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_NETWORK)
     {
+        m_networkController->receiveMessages();
+
+        m_networkController->update(deltaTime);
 
         if (m_stopping)
         {
@@ -197,7 +202,10 @@ void ClientController::update(const float deltaTime)
         }
     }
 
-    m_networkController->sendMessages();
+    if (m_clientModel->getMode() == ClientMode::CLIENT_MODE_NETWORK)
+    {
+        m_networkController->sendMessages();
+    }
 
     if (m_clientModel->getGameStarted())
     {

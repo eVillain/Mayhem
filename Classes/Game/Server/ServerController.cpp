@@ -104,6 +104,8 @@ void ServerController::update(float deltaTime)
     {
         sendUpdateMessages();
     }
+    
+    m_networkController->sendMessages();
 }
 
 void ServerController::stop()
@@ -1117,6 +1119,5 @@ void ServerController::sendUpdateMessages()
         }
     }
             
-    m_networkController->sendMessages();
     m_frameHitData.clear();
 }

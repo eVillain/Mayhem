@@ -3,7 +3,6 @@
 #include "NetworkModel.h"
 #include "NetworkMessageFactory.h"
 
-#include "Core/Injector.h"
 #include "ReadStream.h"
 #include "WriteStream.h"
 #include "TransportLAN.h"
@@ -24,8 +23,10 @@ const std::string NetworkController::SETTING_NETWORK_MESH_SEND_RATE = "NetworkMe
 const std::string NetworkController::SETTING_NETWORK_TIMEOUT = "NetworkTimeout";
 const std::string NetworkController::SETTING_NETWORK_MAX_NODES = "NetworkMaxNodes";
 
-NetworkController::NetworkController()
-: m_model(nullptr)
+NetworkController::NetworkController(std::shared_ptr<NetworkModel> model,
+                                     std::shared_ptr<GameSettings> gameSettings)
+: m_model(model)
+, m_gameSettings(gameSettings)
 , m_drudgeNet(nullptr)
 , m_messageFactory(nullptr)
 , m_readBuffer(nullptr)
@@ -37,6 +38,9 @@ NetworkController::NetworkController()
 , m_isListening(false)
 , m_isConnected(false)
 {
+    m_messageFactory = std::make_shared<NetworkMessageFactory>();
+    auto messageFactory = std::static_pointer_cast<Net::MessageFactory>(m_messageFactory);
+    m_drudgeNet = std::make_shared<Net::DrudgeNet>(messageFactory);
 }
 
 NetworkController::~NetworkController()
@@ -47,24 +51,16 @@ void NetworkController::initialize(const NetworkMode mode)
 {
     m_mode = mode;
     
-    Injector& injector = Injector::globalInjector();
-    m_model = injector.getInstance<NetworkModel>();
-    
-    m_messageFactory = std::make_shared<NetworkMessageFactory>();
-    auto messageFactory = std::static_pointer_cast<Net::MessageFactory>(m_messageFactory);
-    m_drudgeNet = std::make_shared<Net::DrudgeNet>(messageFactory);
-    
-    auto gameSettings = injector.getInstance<GameSettings>();
-    const cocos2d::Value& netTypeSetting = gameSettings->getValue(SETTING_NETWORK_TYPE, cocos2d::Value("LAN"));
-    const cocos2d::Value& netProtocolIDSetting = gameSettings->getValue(SETTING_NETWORK_PROTOCOL_ID, cocos2d::Value(666666));
-    const cocos2d::Value& masterServerAddressSetting = gameSettings->getValue(SETTING_NETWORK_MASTER_SERVER_ADDRESS, cocos2d::Value("0"));
-    const cocos2d::Value& masterServerPortSetting = gameSettings->getValue(SETTING_NETWORK_MASTER_SERVER_PORT, cocos2d::Value(12345));
-    const cocos2d::Value& meshPortSetting = gameSettings->getValue(SETTING_NETWORK_MESH_PORT, cocos2d::Value(12346));
-    const cocos2d::Value& serverPortSetting = gameSettings->getValue(SETTING_NETWORK_SERVER_PORT, cocos2d::Value(12347));
-    const cocos2d::Value& clientPortSetting = gameSettings->getValue(SETTING_NETWORK_CLIENT_PORT, cocos2d::Value(12348));
-    const cocos2d::Value& meshSendRateSetting = gameSettings->getValue(SETTING_NETWORK_MESH_SEND_RATE, cocos2d::Value(5));
-    const cocos2d::Value& timeoutSetting = gameSettings->getValue(SETTING_NETWORK_TIMEOUT, cocos2d::Value(10));
-    const cocos2d::Value& maxNodesSetting = gameSettings->getValue(SETTING_NETWORK_MAX_NODES, cocos2d::Value(100));
+    const cocos2d::Value& netTypeSetting = m_gameSettings->getValue(SETTING_NETWORK_TYPE, cocos2d::Value("LAN"));
+    const cocos2d::Value& netProtocolIDSetting = m_gameSettings->getValue(SETTING_NETWORK_PROTOCOL_ID, cocos2d::Value(666666));
+    const cocos2d::Value& masterServerAddressSetting = m_gameSettings->getValue(SETTING_NETWORK_MASTER_SERVER_ADDRESS, cocos2d::Value("0"));
+    const cocos2d::Value& masterServerPortSetting = m_gameSettings->getValue(SETTING_NETWORK_MASTER_SERVER_PORT, cocos2d::Value(12345));
+    const cocos2d::Value& meshPortSetting = m_gameSettings->getValue(SETTING_NETWORK_MESH_PORT, cocos2d::Value(12346));
+    const cocos2d::Value& serverPortSetting = m_gameSettings->getValue(SETTING_NETWORK_SERVER_PORT, cocos2d::Value(12347));
+    const cocos2d::Value& clientPortSetting = m_gameSettings->getValue(SETTING_NETWORK_CLIENT_PORT, cocos2d::Value(12348));
+    const cocos2d::Value& meshSendRateSetting = m_gameSettings->getValue(SETTING_NETWORK_MESH_SEND_RATE, cocos2d::Value(5));
+    const cocos2d::Value& timeoutSetting = m_gameSettings->getValue(SETTING_NETWORK_TIMEOUT, cocos2d::Value(10));
+    const cocos2d::Value& maxNodesSetting = m_gameSettings->getValue(SETTING_NETWORK_MAX_NODES, cocos2d::Value(100));
 
     const Net::Address masterServerAddress = Net::Address(masterServerAddressSetting.asString()); //getAddressFromString(masterServerAddressSetting.asString());
     const Net::Port masterServerConnectPort = masterServerPortSetting.asInt();

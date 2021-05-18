@@ -136,61 +136,7 @@ namespace Net
         }
         setupNodeCallbacks();
         m_node->Join(host.address);
-        // connect by address?
-//        uint32_t  a = 0;
-//        uint32_t  b = 0;
-//        uint32_t  c = 0;
-//        uint32_t  d = 0;
-//        uint32_t  port = 0;
-//        bool isAddress = false;
-//        if (sscanf(server.c_str(), "%d.%d.%d.%d:%d", &a, &b, &c, &d, &port))
-//        {
-//            isAddress = true;
-//        }
-//        else
-//        {
-//            port = m_config.m_meshPort;
-//            if (sscanf(server.c_str(), "%d.%d.%d.%d", &a, &b, &c, &d))
-//            {
-//                isAddress = true;
-//            }
-//        }
-        
-//        if (isAddress)
-//        {
-//            printf("TransportIP: client connect to address: %d.%d.%d.%d:%d\n", a, b, c, d, port);
-//            m_node = new Node(m_config.protocolID, m_config.m_meshSendRate, m_config.timeout, MAXIMUM_TRANSMISSION_UNIT_BYTES);
-//            if (!m_node->Start( m_config.clientPort))
-//            {
-//                printf( "TransportIP: failed to start m_node on port %d\n", m_config.serverPort );
-//                Stop();
-//                return 1;
-//            }
-//            setupNodeCallbacks();
-//
-//            m_node->Join(Address((unsigned char)a,
-//                               (unsigned char)b,
-//                               (unsigned char)c,
-//                               (unsigned char)d,
-//                               (unsigned short)port));
-//            return true;
-//        }
-//        else
-//        {
-//            printf("TransportIP: client connect by name \"%s\"\n", server.c_str());
-//            listener = new Listener( m_config.protocolID, m_config.timeout );
-//            if (!listener->Start(m_config.listenerPort))
-//            {
-//                printf("TransportIP: failed to start listener on port %d\n", m_config.listenerPort);
-//                Stop();
-//                return false;
-//            }
-//            m_connectingByName = true;
-//            strncpy(connectName, server.c_str(), sizeof(connectName) - 1);
-//            connectName[sizeof(connectName) - 1] = '\0';
-//            m_connectAccumulator = 0.0f;
-//            m_connectFailed = false;
-//        }
+
         return true;
     }
     
@@ -248,21 +194,6 @@ namespace Net
         entry.name = lobbyEntry.name;
         entry.maxClients = lobbyEntry.maxClients;
         entry.currentClients = lobbyEntry.currentClients;
-//        if (!listener || index < 0 || index >= listener->GetEntryCount())
-//        {
-//            return false;
-//        }
-//
-//        const ListenerEntry & e = listener->GetEntry(index);
-//        sprintf(entry.address,
-//                "%d.%d.%d.%d:%d",
-//                e.address.GetA(),
-//                e.address.GetB(),
-//                e.address.GetC(),
-//                e.address.GetD(),
-//                e.address.GetPort());
-//        strncpy(entry.name, e.name, sizeof(entry.name));
-//        entry.name[sizeof(entry.name) - 1] = '\0';
         return true;
     }
     
@@ -272,7 +203,6 @@ namespace Net
         m_mesh = nullptr;
         m_node = nullptr;
         m_masterServerConnection = nullptr;
-        m_connectingByName = false;
         m_connectFailed = false;
         
         memset(m_readBuffer, 0, BUFFER_SIZE_BYTES);
@@ -406,10 +336,6 @@ namespace Net
     {
         m_tickAccumulator++;
         
-//        if (m_connectingByName && !m_connectFailed)
-//        {
-//            AttemptConnection(deltaTime);
-//        }
         if (m_masterServerConnection)
         {
             m_masterServerConnection->update(deltaTime);
@@ -451,48 +377,7 @@ namespace Net
     {
         return Transport_LAN;
     }
-    
-    void TransportIP::AttemptConnection(const float deltaTime)
-    {
-//        assert(listener);
-//        const int32_t entryCount = listener->GetEntryCount();
-//        for (int32_t i = 0; i < entryCount; ++i)
-//        {
-//            const ListenerEntry & entry = listener->GetEntry(i);
-//            if (strcmp(entry.name, connectName) == 0)
-//            {
-//                printf("TransportIP: found server %d.%d.%d.%d:%d\n",
-//                       entry.address.GetA(),
-//                       entry.address.GetB(),
-//                       entry.address.GetC(),
-//                       entry.address.GetD(),
-//                       entry.address.GetPort());
-//                m_node = new Node(m_config.protocolID, m_config.m_meshSendRate, m_config.timeout, MAXIMUM_TRANSMISSION_UNIT_BYTES);
-//                if (!m_node->Start(m_config.clientPort))
-//                {
-//                    printf("TransportIP: failed to start m_node on port %d\n", m_config.serverPort);
-//                    Stop();
-//                    m_connectFailed = true;
-//                    return;
-//                }
-//                setupNodeCallbacks();
-//
-//                m_node->Join(entry.address);
-//                delete listener;
-//                listener = NULL;
-//                m_connectingByName = false;
-//            }
-//        }
-//        if (m_connectingByName)
-//        {
-//            m_connectAccumulator += deltaTime;
-//            if (m_connectAccumulator > m_config.timeout)
-//            {
-//                m_connectFailed = true;
-//            }
-//        }
-    }
-    
+        
     void TransportIP::UpdateReliabilitySystems(const float deltaTime)
     {
         for (auto& reliabilityPair : m_reliabilitySystems)
