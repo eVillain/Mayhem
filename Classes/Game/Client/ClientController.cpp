@@ -613,31 +613,62 @@ void ClientController::onGameOverReceived(const std::shared_ptr<Net::Message>& d
     }
 }
 
-void ClientController::debugSnapshots(const size_t targetIndex, const float newAlpha)
+void ClientController::debugSnapshots(const size_t targetIndex, const float alphaTime)
 {
-    const float xOffset = 100.f;
-    const float spacing = 50.f;
+    // Zoomed-in detail view of frames
+     const float DETAIL_WIDTH = 400.f;
+     const float DETAIL_HEIGHT = 30.f;
+     const float DETAIL_POS_X = 500.f - DETAIL_WIDTH;
+     const float DETAIL_POS_Y = 38.f;
+     m_gameView->getDebugDrawNode()->drawRect(cocos2d::Vec2(DETAIL_POS_X,
+                                                            DETAIL_POS_Y),
+                                              cocos2d::Vec2(DETAIL_POS_X + DETAIL_WIDTH,
+                                                            DETAIL_POS_Y + DETAIL_HEIGHT),
+                                              cocos2d::Color4F::BLACK);
+     
+     // Detail view cursor
+     m_gameView->getDebugDrawNode()->drawLine(cocos2d::Vec2(DETAIL_POS_X + DETAIL_WIDTH*0.5f, DETAIL_POS_Y),
+                                              cocos2d::Vec2(DETAIL_POS_X + DETAIL_WIDTH*0.5f, DETAIL_POS_Y + DETAIL_HEIGHT),
+                                              cocos2d::Color4F::GREEN);
+
+     const uint32_t VISIBLE_FRAMES = 10;
+     const uint32_t VISIBLE_RANGE = VISIBLE_FRAMES/2;
+
+     const float FRAME_WIDTH = DETAIL_WIDTH / VISIBLE_FRAMES;
+     const float FRAME_HEIGHT = DETAIL_HEIGHT - (8.f * 2);
+     const uint32_t targetFrame = std::floor(m_gameModel->getCurrentTime() * m_gameModel->getTickRate());
+     const uint32_t firstVisibleFrame = targetFrame >= VISIBLE_RANGE ? targetFrame - VISIBLE_RANGE : 0;
+     const uint32_t lastVisibleFrame = targetFrame > m_snapshotModel->getSnapshots().size() - VISIBLE_RANGE ? (uint32_t)m_snapshotModel->getSnapshots().size() : targetFrame + VISIBLE_RANGE;
+
+     const float offsetX = -alphaTime * FRAME_WIDTH;
+     const float posY = DETAIL_POS_Y + 8.f;
+
     // Debug render snapshot playback
-    for (size_t i = 0; i < m_snapshotModel->getSnapshots().size(); i++)
+    for (const auto& snapshot : m_snapshotModel->getSnapshots())
     {
-        const cocos2d::Vec2 outerRectPos = cocos2d::Vec2(xOffset + (i * spacing), 20.f);
-        const cocos2d::Vec2 innerRectPos = cocos2d::Vec2(xOffset + 1.f + (i * spacing), 21.f);
-        m_gameView->getDebugDrawNode()->drawRect(outerRectPos, outerRectPos + cocos2d::Vec2(10.f, 20.f), cocos2d::Color4F::GRAY);
-        if (i == targetIndex - 1)
+        if (snapshot.serverTick < firstVisibleFrame ||
+            snapshot.serverTick > lastVisibleFrame)
         {
-            m_gameView->getDebugDrawNode()->drawSolidRect(innerRectPos, innerRectPos + cocos2d::Vec2(9.f, 9.f), cocos2d::Color4F::GREEN);
+            continue;
         }
-        else if (i == targetIndex)
+
+        const float posX = DETAIL_POS_X + offsetX + ((snapshot.serverTick - (targetFrame - VISIBLE_RANGE)) * FRAME_WIDTH);
+        const float alpha = 1.f-fabs((float(snapshot.serverTick) - targetFrame) / VISIBLE_RANGE);
+        
+        cocos2d::Color4F color = (snapshot.serverTick % m_gameModel->getTickRate() == 0) ? cocos2d::Color4F::WHITE : cocos2d::Color4F::GRAY;
+        color.a = alpha;
+        m_gameView->getDebugDrawNode()->drawRect(cocos2d::Vec2(posX, posY),
+                                                 cocos2d::Vec2(posX + FRAME_WIDTH - 1, posY + FRAME_HEIGHT),
+                                                 color);
+        
+        if (!snapshot.hitData.empty())
         {
-            m_gameView->getDebugDrawNode()->drawSolidRect(innerRectPos, innerRectPos + cocos2d::Vec2(9.f, 9.f), cocos2d::Color4F::YELLOW);
-        }
-        else if (i < targetIndex - 1)
-        {
-            m_gameView->getDebugDrawNode()->drawSolidRect(innerRectPos, innerRectPos + cocos2d::Vec2(9.f, 9.f), cocos2d::Color4F::RED);
+            m_gameView->getDebugDrawNode()->drawSolidRect(cocos2d::Vec2(posX+1, posY+1),
+                                                          cocos2d::Vec2(posX + FRAME_WIDTH - 2, posY + FRAME_HEIGHT - 1),
+                                                          cocos2d::Color4F(1.f, 0.f, 0.f, alpha));
+
         }
     }
-    const float markerPos = xOffset + ((targetIndex - 1) * spacing) + (newAlpha * spacing);
-    m_gameView->getDebugDrawNode()->drawLine(cocos2d::Vec2(markerPos, 5.f), cocos2d::Vec2(markerPos, 35.f), cocos2d::Color4F::BLUE);
 }
 
 void ClientController::checkShot(const SnapshotData& snapshot)
