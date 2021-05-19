@@ -289,24 +289,8 @@
 		D9B250FD24C48EA500EAFA5B /* NetworkHostViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FF624C48EA400EAFA5B /* NetworkHostViewController.cpp */; };
 		D9B250FE24C48EA500EAFA5B /* AudioController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FF824C48EA400EAFA5B /* AudioController.cpp */; };
 		D9B250FF24C48EA500EAFA5B /* AudioController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FF824C48EA400EAFA5B /* AudioController.cpp */; };
-		D9B2510024C48EA500EAFA5B /* SetAudioListenerPositionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FFB24C48EA400EAFA5B /* SetAudioListenerPositionEvent.cpp */; };
-		D9B2510124C48EA500EAFA5B /* SetAudioListenerPositionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FFB24C48EA400EAFA5B /* SetAudioListenerPositionEvent.cpp */; };
-		D9B2510224C48EA500EAFA5B /* StopBGMEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FFD24C48EA400EAFA5B /* StopBGMEvent.cpp */; };
-		D9B2510324C48EA500EAFA5B /* StopBGMEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FFD24C48EA400EAFA5B /* StopBGMEvent.cpp */; };
-		D9B2510424C48EA500EAFA5B /* ToggleMuteBGMEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FFE24C48EA400EAFA5B /* ToggleMuteBGMEvent.cpp */; };
-		D9B2510524C48EA500EAFA5B /* ToggleMuteBGMEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FFE24C48EA400EAFA5B /* ToggleMuteBGMEvent.cpp */; };
-		D9B2510624C48EA500EAFA5B /* PitchAudioEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2500024C48EA400EAFA5B /* PitchAudioEvent.cpp */; };
-		D9B2510724C48EA500EAFA5B /* PitchAudioEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2500024C48EA400EAFA5B /* PitchAudioEvent.cpp */; };
-		D9B2510824C48EA500EAFA5B /* StopAudioEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2500324C48EA400EAFA5B /* StopAudioEvent.cpp */; };
-		D9B2510924C48EA500EAFA5B /* StopAudioEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2500324C48EA400EAFA5B /* StopAudioEvent.cpp */; };
-		D9B2510A24C48EA500EAFA5B /* PitchBGMEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2500524C48EA400EAFA5B /* PitchBGMEvent.cpp */; };
-		D9B2510B24C48EA500EAFA5B /* PitchBGMEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2500524C48EA400EAFA5B /* PitchBGMEvent.cpp */; };
 		D9B2510C24C48EA500EAFA5B /* AudioModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2500624C48EA400EAFA5B /* AudioModel.cpp */; };
 		D9B2510D24C48EA500EAFA5B /* AudioModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2500624C48EA400EAFA5B /* AudioModel.cpp */; };
-		D9B2510E24C48EA500EAFA5B /* PlayAudioEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2500824C48EA400EAFA5B /* PlayAudioEvent.cpp */; };
-		D9B2510F24C48EA500EAFA5B /* PlayAudioEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2500824C48EA400EAFA5B /* PlayAudioEvent.cpp */; };
-		D9B2511024C48EA500EAFA5B /* PlayBGMEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2500A24C48EA400EAFA5B /* PlayBGMEvent.cpp */; };
-		D9B2511124C48EA500EAFA5B /* PlayBGMEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2500A24C48EA400EAFA5B /* PlayBGMEvent.cpp */; };
 		D9B2516424C48EA500EAFA5B /* ReplayEditorScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2506F24C48EA400EAFA5B /* ReplayEditorScene.cpp */; };
 		D9B2516524C48EA500EAFA5B /* ReplayEditorScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2506F24C48EA400EAFA5B /* ReplayEditorScene.cpp */; };
 		D9B2516624C48EA500EAFA5B /* TimeLineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B2507024C48EA400EAFA5B /* TimeLineView.cpp */; };
@@ -710,24 +694,8 @@
 		D9B24FF624C48EA400EAFA5B /* NetworkHostViewController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NetworkHostViewController.cpp; sourceTree = "<group>"; };
 		D9B24FF824C48EA400EAFA5B /* AudioController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioController.cpp; sourceTree = "<group>"; };
 		D9B24FF924C48EA400EAFA5B /* AudioModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioModel.h; sourceTree = "<group>"; };
-		D9B24FFA24C48EA400EAFA5B /* PlayAudioEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayAudioEvent.h; sourceTree = "<group>"; };
-		D9B24FFB24C48EA400EAFA5B /* SetAudioListenerPositionEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetAudioListenerPositionEvent.cpp; sourceTree = "<group>"; };
-		D9B24FFC24C48EA400EAFA5B /* PitchAudioEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PitchAudioEvent.h; sourceTree = "<group>"; };
-		D9B24FFD24C48EA400EAFA5B /* StopBGMEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StopBGMEvent.cpp; sourceTree = "<group>"; };
-		D9B24FFE24C48EA400EAFA5B /* ToggleMuteBGMEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ToggleMuteBGMEvent.cpp; sourceTree = "<group>"; };
 		D9B24FFF24C48EA400EAFA5B /* AudioController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioController.h; sourceTree = "<group>"; };
-		D9B2500024C48EA400EAFA5B /* PitchAudioEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PitchAudioEvent.cpp; sourceTree = "<group>"; };
-		D9B2500124C48EA400EAFA5B /* ToggleMuteBGMEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToggleMuteBGMEvent.h; sourceTree = "<group>"; };
-		D9B2500224C48EA400EAFA5B /* PlayBGMEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayBGMEvent.h; sourceTree = "<group>"; };
-		D9B2500324C48EA400EAFA5B /* StopAudioEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StopAudioEvent.cpp; sourceTree = "<group>"; };
-		D9B2500424C48EA400EAFA5B /* StopAudioEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StopAudioEvent.h; sourceTree = "<group>"; };
-		D9B2500524C48EA400EAFA5B /* PitchBGMEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PitchBGMEvent.cpp; sourceTree = "<group>"; };
 		D9B2500624C48EA400EAFA5B /* AudioModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioModel.cpp; sourceTree = "<group>"; };
-		D9B2500724C48EA400EAFA5B /* PitchBGMEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PitchBGMEvent.h; sourceTree = "<group>"; };
-		D9B2500824C48EA400EAFA5B /* PlayAudioEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayAudioEvent.cpp; sourceTree = "<group>"; };
-		D9B2500924C48EA400EAFA5B /* StopBGMEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StopBGMEvent.h; sourceTree = "<group>"; };
-		D9B2500A24C48EA400EAFA5B /* PlayBGMEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayBGMEvent.cpp; sourceTree = "<group>"; };
-		D9B2500B24C48EA400EAFA5B /* SetAudioListenerPositionEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetAudioListenerPositionEvent.h; sourceTree = "<group>"; };
 		D9B2506D24C48EA400EAFA5B /* ReplayEditorScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayEditorScene.h; sourceTree = "<group>"; };
 		D9B2506E24C48EA400EAFA5B /* TimeLineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeLineView.h; sourceTree = "<group>"; };
 		D9B2506F24C48EA400EAFA5B /* ReplayEditorScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplayEditorScene.cpp; sourceTree = "<group>"; };
@@ -1154,22 +1122,6 @@
 				D9B24FFF24C48EA400EAFA5B /* AudioController.h */,
 				D9B2500624C48EA400EAFA5B /* AudioModel.cpp */,
 				D9B24FF924C48EA400EAFA5B /* AudioModel.h */,
-				D9B2500024C48EA400EAFA5B /* PitchAudioEvent.cpp */,
-				D9B24FFC24C48EA400EAFA5B /* PitchAudioEvent.h */,
-				D9B2500524C48EA400EAFA5B /* PitchBGMEvent.cpp */,
-				D9B2500724C48EA400EAFA5B /* PitchBGMEvent.h */,
-				D9B2500824C48EA400EAFA5B /* PlayAudioEvent.cpp */,
-				D9B24FFA24C48EA400EAFA5B /* PlayAudioEvent.h */,
-				D9B2500A24C48EA400EAFA5B /* PlayBGMEvent.cpp */,
-				D9B2500224C48EA400EAFA5B /* PlayBGMEvent.h */,
-				D9B24FFB24C48EA400EAFA5B /* SetAudioListenerPositionEvent.cpp */,
-				D9B2500B24C48EA400EAFA5B /* SetAudioListenerPositionEvent.h */,
-				D9B2500324C48EA400EAFA5B /* StopAudioEvent.cpp */,
-				D9B2500424C48EA400EAFA5B /* StopAudioEvent.h */,
-				D9B24FFD24C48EA400EAFA5B /* StopBGMEvent.cpp */,
-				D9B2500924C48EA400EAFA5B /* StopBGMEvent.h */,
-				D9B24FFE24C48EA400EAFA5B /* ToggleMuteBGMEvent.cpp */,
-				D9B2500124C48EA400EAFA5B /* ToggleMuteBGMEvent.h */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -1576,14 +1528,11 @@
 				D9B250CC24C48EA500EAFA5B /* NetworkHostGameLevelCell.cpp in Sources */,
 				D92ACF5E254444F4006351A7 /* TransportIP.cpp in Sources */,
 				D96CBCE22531C356006DF3A4 /* Projectile.cpp in Sources */,
-				D9B2510A24C48EA500EAFA5B /* PitchBGMEvent.cpp in Sources */,
 				D94AFA85262C223F00278953 /* FollowNode.cpp in Sources */,
 				D9B2518C24C48EA500EAFA5B /* HUDView.cpp in Sources */,
 				D9B250E024C48EA500EAFA5B /* Socket.cpp in Sources */,
 				D96CBC9E2531C342006DF3A4 /* EntityDataModel.cpp in Sources */,
-				D9B2510E24C48EA500EAFA5B /* PlayAudioEvent.cpp in Sources */,
 				D9B250A824C48EA500EAFA5B /* Event.cpp in Sources */,
-				D9B2510024C48EA500EAFA5B /* SetAudioListenerPositionEvent.cpp in Sources */,
 				D9B250B224C48EA500EAFA5B /* NetworkHostView.cpp in Sources */,
 				D98BEDD52648892200125847 /* EntityInfoView.cpp in Sources */,
 				D9E046F7254AF0780055E1E6 /* ClientModel.cpp in Sources */,
@@ -1595,7 +1544,6 @@
 				D96CBCDA2531C356006DF3A4 /* Item.cpp in Sources */,
 				D9B250DC24C48EA500EAFA5B /* TransportLAN.cpp in Sources */,
 				D96CBD4B2531C3BB006DF3A4 /* GameView.cpp in Sources */,
-				D9B2510624C48EA500EAFA5B /* PitchAudioEvent.cpp in Sources */,
 				D96CBD3F2531C3BB006DF3A4 /* CrosshairView.cpp in Sources */,
 				D92C7E0426509CF100AA7096 /* ShutdownClientCommand.cpp in Sources */,
 				D9B2516824C48EA500EAFA5B /* ReplayEditorView.cpp in Sources */,
@@ -1641,7 +1589,6 @@
 				D96CBCCE2531C356006DF3A4 /* Explosion.cpp in Sources */,
 				D9B250C224C48EA500EAFA5B /* NetworkHostGameModeCell.cpp in Sources */,
 				D934AA0F2653E77F0007495E /* GameMode.cpp in Sources */,
-				D9B2510224C48EA500EAFA5B /* StopBGMEvent.cpp in Sources */,
 				D96CBD712531C3BB006DF3A4 /* ClientController.cpp in Sources */,
 				D92ACF652544457D006351A7 /* MasterServerConnection.cpp in Sources */,
 				D9B2510C24C48EA500EAFA5B /* AudioModel.cpp in Sources */,
@@ -1655,7 +1602,6 @@
 				D9B2518A24C48EA500EAFA5B /* HUDHelper.cpp in Sources */,
 				D9B250F824C48EA500EAFA5B /* Connection.cpp in Sources */,
 				D96CBD552531C3BB006DF3A4 /* CameraController.cpp in Sources */,
-				D9B2510424C48EA500EAFA5B /* ToggleMuteBGMEvent.cpp in Sources */,
 				D96CBD3B2531C3BB006DF3A4 /* ToggleInventoryEvent.cpp in Sources */,
 				D96CBD612531C3BB006DF3A4 /* InitServerCommand.cpp in Sources */,
 				D9B250D424C48EA500EAFA5B /* FragmentBuffer.cpp in Sources */,
@@ -1668,7 +1614,6 @@
 				D9B2509E24C48EA500EAFA5B /* LightModel.cpp in Sources */,
 				D9B2516424C48EA500EAFA5B /* ReplayEditorScene.cpp in Sources */,
 				D9B2509C24C48EA500EAFA5B /* AddLightEvent.cpp in Sources */,
-				D9B2511024C48EA500EAFA5B /* PlayBGMEvent.cpp in Sources */,
 				D96CBD5F2531C3BB006DF3A4 /* ToggleSlowMotionEvent.cpp in Sources */,
 				D96CBC9A2531C342006DF3A4 /* LevelModel.cpp in Sources */,
 				D96CBD5D2531C3BB006DF3A4 /* SpawnTextBlimpEvent.cpp in Sources */,
@@ -1704,7 +1649,6 @@
 				D9B250AE24C48EA500EAFA5B /* ActionUtils.cpp in Sources */,
 				D96CBD512531C3BB006DF3A4 /* ParticlesController.cpp in Sources */,
 				D9B250D224C48EA500EAFA5B /* ReliabilitySystem.cpp in Sources */,
-				D9B2510824C48EA500EAFA5B /* StopAudioEvent.cpp in Sources */,
 				D9B250AC24C48EA500EAFA5B /* GameTableView.cpp in Sources */,
 				D9B250CE24C48EA500EAFA5B /* NetworkClientView.cpp in Sources */,
 			);
@@ -1737,7 +1681,6 @@
 				D96CBCF92531C356006DF3A4 /* GameModeDM.cpp in Sources */,
 				46880B8919C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				D96CBD6C2531C3BB006DF3A4 /* TogglePhysicsDebugEvent.cpp in Sources */,
-				D9B2510F24C48EA500EAFA5B /* PlayAudioEvent.cpp in Sources */,
 				D9B250F124C48EA500EAFA5B /* Stream.cpp in Sources */,
 				D9B2516F24C48EA500EAFA5B /* BackToMainMenuEvent.cpp in Sources */,
 				D9B250A924C48EA500EAFA5B /* Event.cpp in Sources */,
@@ -1793,7 +1736,6 @@
 				D96CBD4A2531C3BB006DF3A4 /* EntityView.cpp in Sources */,
 				D9B250DD24C48EA500EAFA5B /* TransportLAN.cpp in Sources */,
 				D9B250D724C48EA500EAFA5B /* Mesh.cpp in Sources */,
-				D9B2511124C48EA500EAFA5B /* PlayBGMEvent.cpp in Sources */,
 				D96CBD582531C3BB006DF3A4 /* InitClientCommand.cpp in Sources */,
 				D92C7E0526509CF100AA7096 /* ShutdownClientCommand.cpp in Sources */,
 				D9B250C724C48EA500EAFA5B /* NetworkModel.cpp in Sources */,
@@ -1814,13 +1756,10 @@
 				D96CBD4E2531C3BB006DF3A4 /* InventoryLayer.cpp in Sources */,
 				D9B250C924C48EA500EAFA5B /* NetworkClientHostCell.cpp in Sources */,
 				D9B250EF24C48EA500EAFA5B /* ReadStream.cpp in Sources */,
-				D9B2510724C48EA500EAFA5B /* PitchAudioEvent.cpp in Sources */,
 				D96CBCF72531C356006DF3A4 /* EntitiesController.cpp in Sources */,
 				D9B2518F24C48EA500EAFA5B /* SettingCell.cpp in Sources */,
-				D9B2510924C48EA500EAFA5B /* StopAudioEvent.cpp in Sources */,
 				D96CBD642531C3BB006DF3A4 /* ToggleClientPredictionEvent.cpp in Sources */,
 				D96CBD722531C3BB006DF3A4 /* ClientController.cpp in Sources */,
-				D9B2510524C48EA500EAFA5B /* ToggleMuteBGMEvent.cpp in Sources */,
 				D9B2517124C48EA500EAFA5B /* MainMenuView.cpp in Sources */,
 				D9B250EB24C48EA500EAFA5B /* DrudgeNet.cpp in Sources */,
 				D9B250ED24C48EA500EAFA5B /* ReliableConnection.cpp in Sources */,
@@ -1829,14 +1768,12 @@
 				D9B250A724C48EA500EAFA5B /* Dispatcher.cpp in Sources */,
 				D9B250A124C48EA500EAFA5B /* LightController.cpp in Sources */,
 				D9B250AB24C48EA500EAFA5B /* ButtonUtils.cpp in Sources */,
-				D9B2510B24C48EA500EAFA5B /* PitchBGMEvent.cpp in Sources */,
 				D9B250FB24C48EA500EAFA5B /* BitPacker.cpp in Sources */,
 				D96CBD442531C3BB006DF3A4 /* InputController.cpp in Sources */,
 				D9B250B324C48EA500EAFA5B /* NetworkHostView.cpp in Sources */,
 				D9B2517324C48EA500EAFA5B /* MainMenuController.cpp in Sources */,
 				D96CBD702531C3BB006DF3A4 /* InputModel.cpp in Sources */,
 				D9B250F524C48EA500EAFA5B /* FlowControl.cpp in Sources */,
-				D9B2510124C48EA500EAFA5B /* SetAudioListenerPositionEvent.cpp in Sources */,
 				D9B250B124C48EA500EAFA5B /* CollisionUtils.cpp in Sources */,
 				D92ACF682544457D006351A7 /* MasterServer.cpp in Sources */,
 				D9B2509B24C48EA500EAFA5B /* RemoveLightEvent.cpp in Sources */,
@@ -1852,7 +1789,6 @@
 				D96CBD502531C3BB006DF3A4 /* SpawnParticlesEvent.cpp in Sources */,
 				D98BEDD62648892200125847 /* EntityInfoView.cpp in Sources */,
 				D9D593F72651EE81005B7DFD /* ShutdownLocalServerCommand.cpp in Sources */,
-				D9B2510324C48EA500EAFA5B /* StopBGMEvent.cpp in Sources */,
 				D96CBC992531C342006DF3A4 /* MovementIntegrator.cpp in Sources */,
 				D9B251A924C789A400EAFA5B /* ReplayEditorController.cpp in Sources */,
 			);

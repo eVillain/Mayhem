@@ -1,6 +1,6 @@
 #include "NetworkClientView.h"
+
 #include "NetworkClientViewController.h"
-#include "SimpleAudioEngine.h"
 #include "ButtonUtils.h"
 #include "GameViewConstants.h"
 #include "HUDHelper.h"

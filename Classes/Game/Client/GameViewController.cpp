@@ -1,5 +1,6 @@
 #include "GameViewController.h"
 
+#include "AudioController.h"
 #include "AddLightEvent.h"
 #include "CameraController.h"
 #include "CameraModel.h"
@@ -14,8 +15,6 @@
 #include "Game/Client/InputModel.h"
 #include "LightController.h"
 #include "ParticlesController.h"
-#include "PlayAudioEvent.h"
-#include "SetAudioListenerPositionEvent.h"
 #include "Pseudo3DItem.h"
 #include "Pseudo3DParticle.h"
 #include "Pseudo3DSprite.h"
@@ -34,7 +33,8 @@ GameViewController::GameViewController(std::shared_ptr<GameSettings> gameSetting
                                        std::shared_ptr<InputModel> inputModel,
                                        std::shared_ptr<LightController> lightController,
                                        std::shared_ptr<ParticlesController> particlesController,
-                                       std::shared_ptr<HUDView> hudView)
+                                       std::shared_ptr<HUDView> hudView,
+                                       std::shared_ptr<AudioController> audioController)
 : m_gameSettings(gameSettings)
 , m_cameraController(nullptr)
 , m_cameraModel(nullptr)
@@ -44,6 +44,7 @@ GameViewController::GameViewController(std::shared_ptr<GameSettings> gameSetting
 , m_lightController(lightController)
 , m_particlesController(particlesController)
 , m_hudView(hudView)
+, m_audioController(audioController)
 , m_postProcessShader(nullptr)
 , m_postProcessNoLightShader(nullptr)
 , m_shotHitLastFrame(false)
@@ -121,7 +122,7 @@ void GameViewController::onEntityDestroyed(const uint32_t entityID,
 
         Dispatcher::globalDispatcher().dispatch(AddLightEvent({position, EXPLOSION_RADIUS, cocos2d::Color4F::WHITE, 0.06f}));
         const StaticEntityData& itemData = EntityDataModel::getStaticEntityData((EntityType)type);
-        Dispatcher::globalDispatcher().dispatch(PlayPositionalAudioEvent(itemData.weapon.sound, position));
+        m_audioController->playPositionalAudio(itemData.weapon.sound, position);
 
         // Shake up previous pseudo-3D particles
         std::vector<std::shared_ptr<Pseudo3DItem>>& pseudo3DItems = m_gameView->getPseudo3DItems();
@@ -334,7 +335,7 @@ void GameViewController::renderShot(const uint32_t shooterEntityID,
                                            32.f,
                                            3.f,
                                            0.3f);
-        Dispatcher::globalDispatcher().dispatch(PlayPositionalAudioEvent(itemData.weapon.sound, data.projectilePosition));
+        m_audioController->playPositionalAudio(itemData.weapon.sound, data.projectilePosition);
     }
     
     if (shooterPlayerID == m_cameraModel->getCameraFollowPlayerID())
@@ -664,7 +665,7 @@ void GameViewController::updateView(const float deltaTime)
         m_gameView->renderToTexture();
     }
     
-    Dispatcher::globalDispatcher().dispatch(SetAudioListenerPositionEvent(m_cameraModel->getPosition()));
+    m_audioController->setListenerPosition(m_cameraModel->getPosition());
 }
 
 void GameViewController::updatePlayerAnimations(const uint8_t playerID,
@@ -740,11 +741,11 @@ void GameViewController::updatePlayerAnimations(const uint8_t playerID,
         rightArmSprite->runAction(entityView->getAnimations().at(armRanim));
         if (isReloading)
         {
-            Dispatcher::globalDispatcher().dispatch(PlayPositionalAudioEvent("SFX_Gun_Reload_1.wav", rightArmSprite->getPosition()));
+            m_audioController->playPositionalAudio("SFX_Gun_Reload_1.wav", rightArmSprite->getPosition());
         }
         else if (wasReloading)
         {
-            Dispatcher::globalDispatcher().dispatch(PlayPositionalAudioEvent("SFX_Gun_Reload_2.wav", rightArmSprite->getPosition()));
+            m_audioController->playPositionalAudio("SFX_Gun_Reload_2.wav", rightArmSprite->getPosition());
         }
     }
     

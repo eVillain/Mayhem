@@ -7,6 +7,7 @@
 #include "Network/NetworkMessages.h"
 #include "Game/Shared/WeaponConstants.h"
 
+class AudioController;
 class CameraController;
 class CameraModel;
 class EntityView;
@@ -28,7 +29,8 @@ public:
                        std::shared_ptr<InputModel> inputModel,
                        std::shared_ptr<LightController> lightController,
                        std::shared_ptr<ParticlesController> particlesController,
-                       std::shared_ptr<HUDView> hudView);
+                       std::shared_ptr<HUDView> hudView,
+                       std::shared_ptr<AudioController> audioController);
     ~GameViewController();
     
     void update(const float deltaTime,
@@ -107,6 +109,7 @@ private:
     std::shared_ptr<LightController> m_lightController;
     std::shared_ptr<ParticlesController> m_particlesController;
     std::shared_ptr<HUDView> m_hudView;
+    std::shared_ptr<AudioController> m_audioController;
     cocos2d::RefPtr<cocos2d::GLProgram> m_postProcessShader;
     cocos2d::RefPtr<cocos2d::GLProgram> m_postProcessNoLightShader;
 

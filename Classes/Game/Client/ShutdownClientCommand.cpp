@@ -7,6 +7,7 @@
 
 #include "InitMainMenuCommand.h"
 
+#include "AudioModel.h"
 #include "AudioController.h"
 #include "ClientController.h"
 #include "ClientModel.h"
@@ -45,8 +46,6 @@ bool ShutdownClientCommand::run()
     lightController->shutdown();
     auto particlesController = injector.getInstance<ParticlesController>();
     particlesController->shutdown();
-    auto audioController = injector.getInstance<AudioController>();
-    audioController->terminate();
 
     injector.removeMapping<GameModel>();
     injector.removeMapping<LevelModel>();
@@ -58,6 +57,7 @@ bool ShutdownClientCommand::run()
     injector.removeMapping<ClientModel>();
     injector.removeMapping<ParticlesController>();
     injector.removeMapping<AudioController>();
+    injector.removeMapping<AudioModel>();
     injector.removeMapping<LightModel>();
     injector.removeMapping<LightController>();
     injector.removeMapping<ClientController>();

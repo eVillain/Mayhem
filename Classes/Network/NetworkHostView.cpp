@@ -1,6 +1,6 @@
 #include "NetworkHostView.h"
+
 #include "NetworkHostViewController.h"
-#include "SimpleAudioEngine.h"
 #include "GameViewConstants.h"
 #include "HUDHelper.h"
 

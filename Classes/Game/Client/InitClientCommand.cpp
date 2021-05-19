@@ -6,6 +6,7 @@
 #include "LoadStaticEntityDataCommand.h"
 
 #include "AudioController.h"
+#include "AudioModel.h"
 #include "ClientController.h"
 #include "ClientModel.h"
 #include "cocos2d.h"
@@ -148,9 +149,15 @@ void InitClientCommand::mapDependencies()
     {
         injector.mapSingleton<ParticlesController>();
     }
+    if (!Injector::globalInjector().hasMapping<AudioModel>())
+    {
+        Injector::globalInjector().mapSingleton<AudioModel>();
+    }
+    
     if (!injector.hasMapping<AudioController>())
     {
         injector.mapSingleton<AudioController,
+            AudioModel,
             GameSettings>();
     }
 
@@ -209,7 +216,8 @@ void InitClientCommand::mapDependencies()
             InputModel,
             LightController,
             ParticlesController,
-            HUDView>();
+            HUDView,
+            AudioController>();
     }
     
     if (m_mode == FAKE_CLIENT)

@@ -1,27 +1,27 @@
 #include "InitReplayEditorCommand.h"
 
-#include "Core/Injector.h"
-#include "ReplayEditorScene.h"
-#include "GameSettings.h"
+#include "AudioController.h"
+#include "AudioModel.h"
+#include "ClientModel.h"
 #include "cocos2d.h"
-#include "LoadLevelCommand.h"
-#include "LevelModel.h"
-#include "ReplayEditorController.h"
+#include "Core/Injector.h"
+#include "EntityDataModel.h"
+#include "GameModel.h"
+#include "GameSettings.h"
 #include "GameView.h"
 #include "GameViewController.h"
-#include "GameSettings.h"
+#include "HUDView.h"
 #include "InputController.h"
+#include "InputModel.h"
+#include "LevelModel.h"
 #include "LightController.h"
 #include "LightModel.h"
-#include "HUDView.h"
-#include "InputModel.h"
-#include "ReplayModel.h"
-#include "ClientModel.h"
+#include "LoadLevelCommand.h"
 #include "LoadStaticEntityDataCommand.h"
-#include "EntityDataModel.h"
 #include "ParticlesController.h"
-#include "GameModel.h"
-#include "AudioController.h"
+#include "ReplayEditorController.h"
+#include "ReplayEditorScene.h"
+#include "ReplayModel.h"
 
 bool InitReplayEditorCommand::run()
 {
@@ -58,6 +58,7 @@ bool InitReplayEditorCommand::run()
     if (!injector.hasMapping<AudioController>())
     {
         injector.mapSingleton<AudioController,
+            AudioModel,
             GameSettings>();
     }
     if (!injector.hasMapping<HUDView>())
@@ -96,7 +97,8 @@ bool InitReplayEditorCommand::run()
             InputModel,
             LightController,
             ParticlesController,
-            HUDView>();
+            HUDView,
+            AudioController>();
     }
     
     auto hudView = injector.getInstance<HUDView>();
