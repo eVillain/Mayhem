@@ -472,6 +472,7 @@
 		D934AA0A2653DFA10007495E /* GameOverLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameOverLayer.h; sourceTree = "<group>"; };
 		D934AA0D2653E77E0007495E /* GameMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameMode.cpp; sourceTree = "<group>"; };
 		D934AA0E2653E77E0007495E /* GameMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameMode.h; sourceTree = "<group>"; };
+		D934AA112654702B0007495E /* AddressResolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddressResolver.h; sourceTree = "<group>"; };
 		D94AFA7F262B9B6B00278953 /* BackButtonPressedEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackButtonPressedEvent.cpp; sourceTree = "<group>"; };
 		D94AFA83262C223F00278953 /* FollowNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowNode.h; sourceTree = "<group>"; };
 		D94AFA84262C223F00278953 /* FollowNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FollowNode.cpp; sourceTree = "<group>"; };
@@ -1078,6 +1079,7 @@
 			isa = PBXGroup;
 			children = (
 				D9B24FC724C48EA400EAFA5B /* Address.h */,
+				D934AA112654702B0007495E /* AddressResolver.h */,
 				D9B24FC524C48EA400EAFA5B /* Beacon.h */,
 				D9B24FD924C48EA400EAFA5B /* BitPacker.h */,
 				D9B24FC324C48EA400EAFA5B /* Channel.h */,
