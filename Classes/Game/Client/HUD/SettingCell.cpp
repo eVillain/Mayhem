@@ -20,17 +20,24 @@ bool SettingCell::init()
         return false;
     }
     
-    setContentSize(GameViewConstants::SETTING_CELL_SIZE);
+    const cocos2d::Size winSize = cocos2d::Director::getInstance()->getWinSize();
+    setContentSize(cocos2d::Size(winSize.width, GameViewConstants::SETTING_CELL_SIZE.height));
 
-    auto box = HUDHelper::createItemBox(GameViewConstants::SETTING_CELL_SIZE);
+    auto box = HUDHelper::createItemBox(getContentSize());
     addChild(box);
     
-    m_name = HUDHelper::createLabel3x6("Setting Key", GameViewConstants::FONT_SIZE_MEDIUM);
+    m_name = HUDHelper::createLabel5x7("Setting Key", GameViewConstants::FONT_SIZE_MEDIUM);
     m_name->enableOutline(cocos2d::Color4B::BLACK, 1);
+    m_name->setAlignment(cocos2d::TextHAlignment::LEFT, cocos2d::TextVAlignment::CENTER);
+    m_name->setAnchorPoint(cocos2d::Vec2::ANCHOR_TOP_LEFT);
+    m_name->setContentSize(cocos2d::Size(winSize.width * 0.5f, 20.f));
     addChild(m_name, 1);
 
     m_value = HUDHelper::createLabel3x6("Setting Value", GameViewConstants::FONT_SIZE_MEDIUM);
     m_value->enableOutline(cocos2d::Color4B::BLACK, 1);
+    m_value->setAlignment(cocos2d::TextHAlignment::LEFT, cocos2d::TextVAlignment::CENTER);
+    m_value->setAnchorPoint(cocos2d::Vec2::ANCHOR_BOTTOM_LEFT);
+    m_value->setContentSize(cocos2d::Size(winSize.width * 0.5f, 20.f));
     addChild(m_value, 1);
     
     return true;
@@ -84,13 +91,12 @@ void SettingCell::setup(const std::string& name,
 void SettingCell::refreshPositions()
 {
     const float PADDING = 8.f;
-    const cocos2d::Vec2 VALUE_POS = cocos2d::Vec2(PADDING + m_value->getContentSize().width * 0.5f,
-                                                  PADDING + m_value->getContentSize().height * 0.5f);
-    const cocos2d::Vec2 NAME_POS = cocos2d::Vec2(PADDING + m_name->getContentSize().width * 0.5f,
-                                                 VALUE_POS.y + m_name->getContentSize().height * 0.5f);
+    const float PADDING_VERTICAL = 4.f;
+    const cocos2d::Vec2 NAME_POS = cocos2d::Vec2(PADDING, getContentSize().height - PADDING_VERTICAL);
+    const cocos2d::Vec2 VALUE_POS = cocos2d::Vec2(PADDING, PADDING_VERTICAL);
 
-    m_value->setPosition(VALUE_POS);
     m_name->setPosition(NAME_POS);
+    m_value->setPosition(VALUE_POS);
     if (m_toggleButton)
     {
         const cocos2d::Vec2 BUTTON_POS = cocos2d::Vec2(getContentSize().width - (PADDING + m_toggleButton->getContentSize().width * 0.5f),
@@ -133,7 +139,8 @@ void SettingCell::addEditBox(cocos2d::ui::EditBox::InputMode mode)
 {
     if (!m_editBox)
     {
-        m_editBox = cocos2d::ui::EditBox::create(GameViewConstants::EDIT_BOX_SIZE_SETTING,
+        m_editBox = cocos2d::ui::EditBox::create(cocos2d::Size(getContentSize().width * 0.5f,
+                                                               GameViewConstants::EDIT_BOX_SIZE_SETTING.height),
                                                  GameViewConstants::HUD_SCALE9_BUTTON);
         m_editBox->setInputMode(mode);
         m_editBox->setFont(GameViewConstants::FONT_5X7.c_str(),

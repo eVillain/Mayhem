@@ -2,8 +2,6 @@
 
 #include "Address.h"
 #include "Socket.h"
-//#include "Beacon.h"
-//#include "Listener.h"
 #include "MasterServerConnection.h"
 #include "ReliabilitySystem.h"
 #include "Serialization.h"

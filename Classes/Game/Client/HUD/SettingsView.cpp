@@ -35,12 +35,13 @@ void SettingsView::initialize()
     m_layer->addChild(m_exitButton);
     
     m_settingsTitleLabel = HUDHelper::createLabel5x7("Settings", GameViewConstants::FONT_SIZE_LARGE);
-    m_settingsTitleLabel->setPosition(cocos2d::Vec2(winSize.width * 0.5f, winSize.height - 40.f));
+    m_settingsTitleLabel->setPosition(cocos2d::Vec2(winSize.width * 0.5f, winSize.height - 8.f));
+    m_settingsTitleLabel->setAnchorPoint(cocos2d::Vec2::ANCHOR_MIDDLE_TOP);
     m_layer->addChild(m_settingsTitleLabel);
     
-    const cocos2d::Size TABLE_SIZE = cocos2d::Size(GameViewConstants::SETTING_CELL_SIZE.width, winSize.height - 100);
+    const cocos2d::Size TABLE_SIZE = cocos2d::Size(winSize.width, winSize.height - 40.f);
     m_settingsTable = cocos2d::extension::TableView::create(this, TABLE_SIZE);
-    m_settingsTable->setPosition(cocos2d::Vec2(100, 0));
+    m_settingsTable->setPosition(cocos2d::Vec2::ZERO);
     m_settingsTable->setDelegate(this);
     
     m_settingsTableBG = HUDHelper::createHUDFill();
