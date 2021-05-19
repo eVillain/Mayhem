@@ -1,5 +1,5 @@
 #include "ReplayEditorView.h"
-#include "Core/Dispatcher.h"
+
 #include "HUDHelper.h"
 
 ReplayEditorView::ReplayEditorView()

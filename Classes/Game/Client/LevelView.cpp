@@ -1,6 +1,5 @@
 #include "LevelView.h"
 
-#include "Core/Dispatcher.h"
 #include "TogglePhysicsDebugEvent.h"
 #include "Pseudo3DParticle.h"
 #include "Pseudo3DSprite.h"

@@ -1,7 +1,6 @@
 #include "ServerController.h"
 
 #include "BaseAI.h"
-#include "Core/Dispatcher.h"
 #include "EntitiesController.h"
 #include "EntitiesModel.h"
 #include "Entity.h"

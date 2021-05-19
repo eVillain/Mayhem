@@ -1,5 +1,4 @@
 #include "Item.h"
-#include "Core/Dispatcher.h"
 
 Item::Item(const uint16_t entityID,
            const EntityType& type)

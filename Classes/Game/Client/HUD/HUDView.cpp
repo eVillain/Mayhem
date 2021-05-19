@@ -2,7 +2,6 @@
 #include "HUDHelper.h"
 
 #include "CrosshairView.h"
-#include "Core/Dispatcher.h"
 #include "GameViewConstants.h"
 #include "Core/Injector.h"
 #include "InventoryLayer.h"
