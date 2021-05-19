@@ -178,6 +178,10 @@ void GameModeBR::fillDeadTiles()
 
 void GameModeBR::removeNextDeadTile()
 {
+    if (m_deadTiles.empty())
+    {
+        return;
+    }
     const cocos2d::Vec2 tile = m_deadTiles.back();
     m_deadTiles.pop_back();
 

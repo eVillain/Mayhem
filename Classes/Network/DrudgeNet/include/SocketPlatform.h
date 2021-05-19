@@ -17,6 +17,7 @@
 
     #include <winsock2.h>
     #pragma comment( lib, "wsock32.lib" )
+    #include <WS2tcpip.h>
 
 #elif PLATFORM == PLATFORM_MAC || PLATFORM == PLATFORM_UNIX
 
@@ -24,6 +25,8 @@
     #include <netinet/in.h>
     #include <fcntl.h>
 
+    #include <arpa/inet.h>
+    #include <netdb.h>
 #else
 
     #error unsupported platform!

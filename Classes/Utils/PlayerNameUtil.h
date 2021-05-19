@@ -17,7 +17,8 @@ public:
         TCHAR username[UNLEN + 1];
         DWORD size = UNLEN + 1;
         GetUserName((TCHAR*)username, &size);
-        return std::string(username);
+        std::wstring ws(username);
+        return std::string(ws.begin(), ws.end());
 #elif defined(__APPLE__)
         char* username = getenv("USER");
         if (username != NULL)

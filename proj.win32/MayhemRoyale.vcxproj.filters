@@ -174,9 +174,6 @@
     <ClCompile Include="..\Classes\Game\Client\ReplayModel.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Game\Client\ShootToContinueLayer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Game\Client\ShowInventoryEvent.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -220,9 +217,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Server\GameController.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Server\GameMode.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Server\GameModeBR.cpp">
@@ -420,6 +414,24 @@
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Game\Shared\GameMode.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Client\ConfirmToContinueLayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Client\ExitGameLayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Client\GameOverLayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Client\ShutdownClientCommand.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Client\ShutdownLocalServerCommand.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -602,9 +614,6 @@
     <ClInclude Include="..\Classes\Game\Client\ReplayModel.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Game\Client\ShootToContinueLayer.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Game\Client\ShowInventoryEvent.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -651,9 +660,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Server\GameController.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Game\Server\GameMode.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Server\GameModeBR.h">
@@ -909,6 +915,27 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Utils\RaycastUtil.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Shared\GameMode.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Client\ConfirmToContinueLayer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Client\ExitGameLayer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Client\GameOverLayer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utils\StringUtils.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Client\ShutdownClientCommand.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Client\ShutdownLocalServerCommand.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

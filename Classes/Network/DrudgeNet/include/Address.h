@@ -4,13 +4,6 @@
 #include "DataTypes.h"
 #include <string>
 
-#if PLATFORM == PLATFORM_MAC || PLATFORM == PLATFORM_UNIX
-#include <arpa/inet.h>
-#include <netdb.h>
-#elif PLATFORM == PLATFORM_WINDOWS
-#include <WS2tcpip.h>
-#endif
-
 namespace Net
 {
     class Address

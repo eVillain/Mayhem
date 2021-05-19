@@ -31,7 +31,12 @@ namespace Net
             const int status = getaddrinfo(host.c_str(), port.c_str(), &hints, &addrs);
             if (status != 0)
             {
+#if PLATFORM == PLATFORM_WINDOWS
+                std::wstring ws = gai_strerror(status);
+                std::string errorString = std::string(ws.begin(), ws.end());
+#else
                 std::string errorString = gai_strerror(status);
+#endif
                 printf("Socket::getAddressForHost error %s", errorString.c_str());
             }
             

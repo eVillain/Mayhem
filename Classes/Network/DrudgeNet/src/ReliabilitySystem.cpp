@@ -211,7 +211,7 @@ namespace Net
             sentQueue.pop_front();
         }
         
-        if (receivedQueue.size())
+        if (!receivedQueue.empty())
         {
             const uint32_t latest_sequence = receivedQueue.back().sequence;
             const uint32_t minimum_sequence = latest_sequence >= 34 ? (latest_sequence - 34) : max_sequence - (34 - latest_sequence);

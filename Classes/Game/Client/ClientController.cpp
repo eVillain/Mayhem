@@ -674,6 +674,10 @@ void ClientController::debugSnapshots(const size_t targetIndex, const float alph
 void ClientController::checkShot(const SnapshotData& snapshot)
 {
     // Check for predicted local player effects
+    if (m_clientModel->getInputData().empty())
+    {
+        return;
+    }
     std::shared_ptr<ClientInputMessage>& currentInput = m_clientModel->getInputData().back();
     if (!currentInput->shoot)
     {
@@ -732,7 +736,7 @@ std::shared_ptr<ClientInputMessage> ClientController::getInputData() const
 
     std::shared_ptr<ClientInputMessage> data = std::make_shared<ClientInputMessage>();
     data->inputSequence = m_gameModel->getCurrentTick();
-    data->lastReceivedSnapshot = snapshots.size() ? snapshots.back().serverTick : 0;
+    data->lastReceivedSnapshot = snapshots.empty() ? 0 : snapshots.back().serverTick;
     data->directionX = m_inputModel->getDirection().x;
     data->directionY = m_inputModel->getDirection().y;
     const cocos2d::Vec2 aimPoint = m_gameViewController->getAimPosition(m_inputModel->getMouseCoord());

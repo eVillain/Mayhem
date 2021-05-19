@@ -41,9 +41,12 @@ void ReplayEditorController::initialize()
     m_gameModel->setTickRate(m_replayModel->getTickRate());
     
     const auto& snapshots = m_replayModel->getSnapshots();
-    const float maxTime = snapshots.back().serverTick * m_gameModel->getFrameTime();
-    m_view->getTimeLineView()->setCurrentTime(0.f);
-    m_view->getTimeLineView()->setMaxTime(maxTime);
+    if (!snapshots.empty())
+    {
+        const float maxTime = snapshots.back().serverTick * m_gameModel->getFrameTime();
+        m_view->getTimeLineView()->setCurrentTime(0.f);
+        m_view->getTimeLineView()->setMaxTime(maxTime);
+    }
 
     auto playButton = m_view->getTimeLineView()->getButtons().at(TimeLineView::TimeLineButtonType::BUTTON_PLAY_PAUSE);
     playButton->addTouchEventListener(CC_CALLBACK_2(ReplayEditorController::onPlayPauseButton, this));
@@ -93,11 +96,18 @@ void ReplayEditorController::onMouseMoved(cocos2d::EventMouse *event)
         jumpToMouseCoord(event->getLocationInView());
         return;
     }
-    
+
+    const auto& snapshots = m_replayModel->getSnapshots();
+    if (snapshots.empty())
+    {
+        return;
+    }
+
     const cocos2d::Vec2 aimPosition = m_gameViewController->getAimPosition(event->getLocationInView());
     const float time = m_view->getTimeLineView()->getCurrentTime();
     size_t currentFrame = m_replayModel->getSnapshotIndexForTime(time);
-    const auto& snapshots = m_replayModel->getSnapshots();
+
+
     const SnapshotData& snapshot = snapshots.at(currentFrame);
     uint32_t entityID = 0;
     const bool isEntityUnderCursor = PlayerLogic::getEntityAtPoint(entityID,
@@ -220,10 +230,13 @@ void ReplayEditorController::onFastForwardButton(cocos2d::Ref* ref, cocos2d::ui:
     }
     
     const auto& snapshots = m_replayModel->getSnapshots();
-    const float maxTime = snapshots.back().serverTick * m_gameModel->getFrameTime();
-    const float previousTime = m_view->getTimeLineView()->getCurrentTime();
-    const float time = std::min(previousTime + 1.f, maxTime);
-    m_view->getTimeLineView()->setCurrentTime(time);
+    if (!snapshots.empty())
+    {
+        const float maxTime = snapshots.back().serverTick * m_gameModel->getFrameTime();
+        const float previousTime = m_view->getTimeLineView()->getCurrentTime();
+        const float time = std::min(previousTime + 1.f, maxTime);
+        m_view->getTimeLineView()->setCurrentTime(time);
+    }
 }
 
 static const std::vector<float> PLAYBACK_SPEEDS = { 0.1f, 0.25f, 0.5f, 1.f, 2.f, 10.f };

@@ -166,8 +166,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Game\Client\CameraModel.cpp" />
     <ClCompile Include="..\Classes\Game\Client\ClientController.cpp" />
     <ClCompile Include="..\Classes\Game\Client\ClientModel.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ConfirmToContinueLayer.cpp" />
     <ClCompile Include="..\Classes\Game\Client\CrosshairView.cpp" />
     <ClCompile Include="..\Classes\Game\Client\EntityView.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ExitGameLayer.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\GameOverLayer.cpp" />
     <ClCompile Include="..\Classes\Game\Client\GameScene.cpp" />
     <ClCompile Include="..\Classes\Game\Client\GameView.cpp" />
     <ClCompile Include="..\Classes\Game\Client\GameViewController.cpp" />
@@ -200,8 +203,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Game\Client\ReplayEditor\ReplayEditorView.cpp" />
     <ClCompile Include="..\Classes\Game\Client\ReplayEditor\TimeLineView.cpp" />
     <ClCompile Include="..\Classes\Game\Client\ReplayModel.cpp" />
-    <ClCompile Include="..\Classes\Game\Client\ShootToContinueLayer.cpp" />
     <ClCompile Include="..\Classes\Game\Client\ShowInventoryEvent.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ShutdownClientCommand.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\ShutdownLocalServerCommand.cpp" />
     <ClCompile Include="..\Classes\Game\Client\SnapshotModel.cpp" />
     <ClCompile Include="..\Classes\Game\Client\SpawnParticlesEvent.cpp" />
     <ClCompile Include="..\Classes\Game\Client\SpawnTextBlimpEvent.cpp" />
@@ -216,7 +220,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Game\Server\Explosion.cpp" />
     <ClCompile Include="..\Classes\Game\Server\FrameCache.cpp" />
     <ClCompile Include="..\Classes\Game\Server\GameController.cpp" />
-    <ClCompile Include="..\Classes\Game\Server\GameMode.cpp" />
     <ClCompile Include="..\Classes\Game\Server\GameModeBR.cpp" />
     <ClCompile Include="..\Classes\Game\Server\GameModeDM.cpp" />
     <ClCompile Include="..\Classes\Game\Server\InputCache.cpp" />
@@ -226,6 +229,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Game\Server\Projectile.cpp" />
     <ClCompile Include="..\Classes\Game\Server\ServerController.cpp" />
     <ClCompile Include="..\Classes\Game\Shared\EntityDataModel.cpp" />
+    <ClCompile Include="..\Classes\Game\Shared\GameMode.cpp" />
     <ClCompile Include="..\Classes\Game\Shared\GameModel.cpp" />
     <ClCompile Include="..\Classes\Game\Shared\GameSettings.cpp" />
     <ClCompile Include="..\Classes\Game\Shared\LevelModel.cpp" />
@@ -305,8 +309,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Game\Client\CameraModel.h" />
     <ClInclude Include="..\Classes\Game\Client\ClientController.h" />
     <ClInclude Include="..\Classes\Game\Client\ClientModel.h" />
+    <ClInclude Include="..\Classes\Game\Client\ConfirmToContinueLayer.h" />
     <ClInclude Include="..\Classes\Game\Client\CrosshairView.h" />
     <ClInclude Include="..\Classes\Game\Client\EntityView.h" />
+    <ClInclude Include="..\Classes\Game\Client\ExitGameLayer.h" />
+    <ClInclude Include="..\Classes\Game\Client\GameOverLayer.h" />
     <ClInclude Include="..\Classes\Game\Client\GameScene.h" />
     <ClInclude Include="..\Classes\Game\Client\GameView.h" />
     <ClInclude Include="..\Classes\Game\Client\GameViewConstants.h" />
@@ -343,8 +350,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Game\Client\ReplayEditor\ReplayEditorView.h" />
     <ClInclude Include="..\Classes\Game\Client\ReplayEditor\TimeLineView.h" />
     <ClInclude Include="..\Classes\Game\Client\ReplayModel.h" />
-    <ClInclude Include="..\Classes\Game\Client\ShootToContinueLayer.h" />
     <ClInclude Include="..\Classes\Game\Client\ShowInventoryEvent.h" />
+    <ClInclude Include="..\Classes\Game\Client\ShutdownClientCommand.h" />
+    <ClInclude Include="..\Classes\Game\Client\ShutdownLocalServerCommand.h" />
     <ClInclude Include="..\Classes\Game\Client\SnapshotModel.h" />
     <ClInclude Include="..\Classes\Game\Client\SpawnParticlesEvent.h" />
     <ClInclude Include="..\Classes\Game\Client\SpawnTextBlimpEvent.h" />
@@ -360,7 +368,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Game\Server\Explosion.h" />
     <ClInclude Include="..\Classes\Game\Server\FrameCache.h" />
     <ClInclude Include="..\Classes\Game\Server\GameController.h" />
-    <ClInclude Include="..\Classes\Game\Server\GameMode.h" />
     <ClInclude Include="..\Classes\Game\Server\GameModeBR.h" />
     <ClInclude Include="..\Classes\Game\Server\GameModeDM.h" />
     <ClInclude Include="..\Classes\Game\Server\InputCache.h" />
@@ -371,6 +378,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Game\Server\ServerController.h" />
     <ClInclude Include="..\Classes\Game\Shared\EntityConstants.h" />
     <ClInclude Include="..\Classes\Game\Shared\EntityDataModel.h" />
+    <ClInclude Include="..\Classes\Game\Shared\GameMode.h" />
     <ClInclude Include="..\Classes\Game\Shared\GameModel.h" />
     <ClInclude Include="..\Classes\Game\Shared\GameSettings.h" />
     <ClInclude Include="..\Classes\Game\Shared\LevelModel.h" />
@@ -446,6 +454,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Utils\GameTableView.h" />
     <ClInclude Include="..\Classes\Utils\NumberFormatter.h" />
     <ClInclude Include="..\Classes\Utils\RaycastUtil.h" />
+    <ClInclude Include="..\Classes\Utils\StringUtils.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
