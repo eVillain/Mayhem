@@ -55,6 +55,10 @@ bool InitReplayEditorCommand::run()
     {
         injector.mapSingleton<ParticlesController>();
     }
+    if (!injector.hasMapping<AudioModel>())
+    {
+        injector.mapSingleton<AudioModel>();
+    }
     if (!injector.hasMapping<AudioController>())
     {
         injector.mapSingleton<AudioController,
