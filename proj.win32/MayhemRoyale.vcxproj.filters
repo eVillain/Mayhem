@@ -21,30 +21,6 @@
     <ClCompile Include="..\Classes\Audio\AudioModel.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Audio\PitchAudioEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Audio\PitchBGMEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Audio\PlayAudioEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Audio\PlayBGMEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Audio\SetAudioListenerPositionEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Audio\StopAudioEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Audio\StopBGMEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Audio\ToggleMuteBGMEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Core\Dispatcher.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -444,30 +420,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Audio\AudioModel.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Audio\PitchAudioEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Audio\PitchBGMEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Audio\PlayAudioEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Audio\PlayBGMEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Audio\SetAudioListenerPositionEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Audio\StopAudioEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Audio\StopBGMEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Audio\ToggleMuteBGMEvent.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Core\Command.h">

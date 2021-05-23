@@ -31,9 +31,7 @@
 #include "base/CCEventListenerKeyboard.h"
 #include "base/CCEventListenerCustom.h"
 #include "base/CCEventListenerFocus.h"
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
 #include "base/CCEventListenerController.h"
-#endif
 #include "2d/CCScene.h"
 #include "base/CCDirector.h"
 #include "base/CCEventType.h"
