@@ -1,4 +1,6 @@
 #include "InputController.h"
+
+#include "base/CCController.h"
 #include "Game/Client/InputModel.h"
 #include "Core/Injector.h"
 #include "Core/Dispatcher.h"
@@ -24,6 +26,7 @@ void InputController::initialize(cocos2d::Node* parent)
     m_parent = parent;
     setupKeyboardListener(parent->getEventDispatcher());
     setupMouseListener(parent->getEventDispatcher());
+    setupControllerListener(parent->getEventDispatcher());
 }
 
 void InputController::shutdown()
@@ -32,10 +35,12 @@ void InputController::shutdown()
     {
         m_parent->getEventDispatcher()->removeEventListener(m_keyListener);
         m_parent->getEventDispatcher()->removeEventListener(m_mouseListener);
+        m_parent->getEventDispatcher()->removeEventListener(m_controllerListener);
     }
     m_parent = nullptr;
     m_keyListener = nullptr;
     m_mouseListener = nullptr;
+    m_controllerListener = nullptr;
 }
 
 void InputController::setupKeyboardListener(cocos2d::EventDispatcher* dispatcher)
@@ -59,100 +64,52 @@ void InputController::setupMouseListener(cocos2d::EventDispatcher* dispatcher)
     dispatcher->addEventListenerWithFixedPriority(m_mouseListener, 1);
 }
 
+void InputController::setupControllerListener(cocos2d::EventDispatcher *dispatcher)
+{
+    m_controllerListener = cocos2d::EventListenerController::create();
+    m_controllerListener->onConnected = std::bind(&InputController::onControllerConnected, this,
+                                                  std::placeholders::_1, std::placeholders::_2);
+    m_controllerListener->onDisconnected = std::bind(&InputController::onControllerDisconnected, this,
+                                                     std::placeholders::_1, std::placeholders::_2);
+    m_controllerListener->onKeyDown = std::bind(&InputController::onControllerKeyDown, this,
+                                                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    m_controllerListener->onKeyUp = std::bind(&InputController::onControllerKeyUp, this,
+                                                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    m_controllerListener->onKeyRepeat = std::bind(&InputController::onControllerKeyRepeat, this,
+                                                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    m_controllerListener->onAxisEvent = std::bind(&InputController::onControllerAxis, this,
+                                                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+}
+
 void InputController::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode,
                                    cocos2d::Event *event)
 {
-    cocos2d::Vec2 direction = m_model->getDirection();
-    
-    switch(keyCode)
+    const auto& map = m_model->getKeyboardMap();
+    const auto& it = map.find(keyCode);
+    if (it == map.end())
     {
-        case cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW:
-        case cocos2d::EventKeyboard::KeyCode::KEY_A:
-            direction.x -= 1.0f;
-            m_model->setDirection(direction);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
-        case cocos2d::EventKeyboard::KeyCode::KEY_D:
-            direction.x += 1.0f;
-            m_model->setDirection(direction);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_UP_ARROW:
-        case cocos2d::EventKeyboard::KeyCode::KEY_W:
-            direction.y -= 1.0f;
-            m_model->setDirection(direction);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW:
-        case cocos2d::EventKeyboard::KeyCode::KEY_S:
-            direction.y += 1.0f;
-            m_model->setDirection(direction);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_SHIFT:
-            m_model->setRun(true);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_F:
-            m_model->setInteract(true);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_R:
-            m_model->setReload(true);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_Q:
-            m_model->setAim(true);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_COMMA:
-            m_model->setZoomIn(true);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_PERIOD:
-            m_model->setZoomOut(true);
-            break;
-        default:
-            break;
+        return;
     }
+    const InputAction& action = it->second;
+    const float value = m_model->getInputValue(action.action);
+    m_model->setInputValue(action.action, value + action.value);
 }
 
 void InputController::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event)
 {
-    cocos2d::Vec2 direction = m_model->getDirection();
+    const auto& map = m_model->getKeyboardMap();
+    const auto& it = map.find(keyCode);
+    if (it != map.end())
+    {
+        const InputAction& action = it->second;
+        const float value = m_model->getInputValue(action.action);
+        m_model->setInputValue(action.action, value - action.value);
+
+        return;
+    }
     
     switch(keyCode)
     {
-        case cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW:
-        case cocos2d::EventKeyboard::KeyCode::KEY_A:
-            direction.x += 1.0f;
-            m_model->setDirection(direction);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
-        case cocos2d::EventKeyboard::KeyCode::KEY_D:
-            direction.x -= 1.0f;
-            m_model->setDirection(direction);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_UP_ARROW:
-        case cocos2d::EventKeyboard::KeyCode::KEY_W:
-            direction.y += 1.0f;
-            m_model->setDirection(direction);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW:
-        case cocos2d::EventKeyboard::KeyCode::KEY_S:
-            direction.y -= 1.0f;
-            m_model->setDirection(direction);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_SHIFT:
-            m_model->setRun(false);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_F:
-            m_model->setInteract(false);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_R:
-            m_model->setReload(false);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_COMMA:
-            m_model->setZoomIn(false);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_PERIOD:
-            m_model->setZoomOut(false);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_Q:
-            m_model->setAim(false);
-            break;
         case cocos2d::EventKeyboard::KeyCode::KEY_0:
         case cocos2d::EventKeyboard::KeyCode::KEY_1:
         case cocos2d::EventKeyboard::KeyCode::KEY_2:
@@ -187,8 +144,16 @@ void InputController::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, coc
     }
 }
 
-void InputController::onMouseMoved(cocos2d::EventMouse *event)
+void InputController::onMouseMoved(cocos2d::EventMouse* event)
 {
+//    const auto& map = m_model->getMouseAxisMap();
+//    const auto& it = map.find(0);
+//    if (it != map.end())
+//    {
+//        const InputAction& action = it->second;
+//        m_model->setInputValue(action.action, 1.f * action.value);
+//        return;
+//    }
     const cocos2d::Size winSize = cocos2d::Director::getInstance()->getWinSize();
     const cocos2d::Vec2 delta = event->getLocationInView() - m_prevMouseCoord;
     m_prevMouseCoord = event->getLocationInView();
@@ -200,25 +165,83 @@ void InputController::onMouseMoved(cocos2d::EventMouse *event)
 
 void InputController::onMouseDown(cocos2d::EventMouse* event)
 {
-    if (event->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT)
+    const auto& map = m_model->getMouseButtonMap();
+    const auto& it = map.find(event->getMouseButton());
+    if (it == map.end())
     {
-        m_model->setShoot(true);
+        return;
     }
-    else if (event->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_RIGHT)
+    const InputAction& action = it->second;
+    m_model->setInputValue(action.action, 1.f * action.value);
+}
+
+void InputController::onMouseUp(cocos2d::EventMouse* event)
+{
+    const auto& map = m_model->getMouseButtonMap();
+    const auto& it = map.find(event->getMouseButton());
+    if (it == map.end())
     {
-        m_model->setAim(true);
+        return;
+    }
+    const InputAction& action = it->second;
+    m_model->setInputValue(action.action, 0.f);
+}
+
+void InputController::onControllerConnected(cocos2d::Controller* controller, cocos2d::Event* event)
+{
+    
+}
+
+void InputController::onControllerDisconnected(cocos2d::Controller* controller, cocos2d::Event* event)
+{
+    
+}
+
+void InputController::onControllerKeyDown(cocos2d::Controller* controller, int key, cocos2d::Event* event)
+{
+    const auto& map = m_model->getControllerButtonMap();
+    const auto& it = map.find(key);
+    if (it != map.end())
+    {
+        const InputAction& action = it->second;
+        m_model->setInputValue(action.action, 1.f * action.value);
+        return;
     }
 }
 
-void InputController::onMouseUp(cocos2d::EventMouse *event)
+void InputController::onControllerKeyUp(cocos2d::Controller* controller, int key, cocos2d::Event* event)
 {
-    if (event->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT)
+    const auto& map = m_model->getControllerButtonMap();
+    const auto& it = map.find(key);
+    if (it != map.end())
     {
-        m_model->setShoot(false);
+        const InputAction& action = it->second;
+        m_model->setInputValue(action.action, 0.f);
+        return;
     }
-    else if (event->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_RIGHT)
+}
+
+void InputController::onControllerKeyRepeat(cocos2d::Controller* controller, int key, cocos2d::Event* event)
+{
+    const auto& map = m_model->getControllerButtonMap();
+    const auto& it = map.find(key);
+    if (it != map.end())
     {
-        m_model->setAim(false);
+        const InputAction& action = it->second;
+        m_model->setInputValue(action.action, 1.f * action.value);
+        return;
+    }
+}
+
+void InputController::onControllerAxis(cocos2d::Controller* controller, int axis, cocos2d::Event* event)
+{
+    const auto& map = m_model->getControllerAxisMap();
+    const auto& it = map.find(axis);
+    if (it != map.end())
+    {
+        const InputAction& action = it->second;
+        m_model->setInputValue(action.action, controller->getKeyStatus(axis).value * action.value);
+        return;
     }
 }
 

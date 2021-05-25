@@ -3,21 +3,18 @@
 
 #include "cocos2d.h"
 
+struct InputAction {
+    std::string action;
+    float value;
+};
+
 class InputModel
 {
 public:
     InputModel();
     ~InputModel();
 
-    void setDirection(const cocos2d::Vec2& direction) { m_direction = direction; }
     void setMouseCoord(const cocos2d::Vec2 coord) { m_mouseCoord = coord; }
-    void setRun(bool run) { m_run = run; }
-    void setInteract(bool interact) { m_interact = interact; }
-    void setReload(bool reload) { m_reload = reload; }
-    void setShoot(const bool shoot) { m_shoot = shoot; }
-    void setAim(const bool aim) { m_aim = aim; }
-    void setZoomIn(bool zoomIn) { m_zoomIn = zoomIn; }
-    void setZoomOut(bool zoomOut) { m_zoomOut = zoomOut; }
     void setSlot(int slot) { m_slot = slot; }
     void setChangeWeapon(bool changeWeapon) { m_changeWeapon = changeWeapon; }
 
@@ -25,15 +22,7 @@ public:
     void setPickupAmount(uint16_t amount) { m_pickupAmount = amount; }
     void setPickupID(uint16_t pickupID) { m_pickupID = pickupID; }
 
-    const cocos2d::Vec2& getDirection() const { return m_direction; }
     const cocos2d::Vec2& getMouseCoord() const { return m_mouseCoord; }
-    bool getRun() const { return m_run; }
-    bool getInteract() const { return m_interact; }
-    bool getReload() const { return m_reload; }
-    bool getShoot() const { return m_shoot; }
-    bool getAim() const { return m_aim; }
-    bool getZoomIn() const { return m_zoomIn; }
-    bool getZoomOut() const { return m_zoomOut; }
     
     bool getChangeWeapon() const { return m_changeWeapon; }
     int getSlot() const { return m_slot; }
@@ -41,16 +30,34 @@ public:
     uint8_t getPickupType() const { return m_pickupType; }
     uint16_t getPickupAmount() const { return m_pickupAmount; }
     uint16_t getPickupID() const { return m_pickupID; }
+
+    void setInputValue(const std::string& input, const float value);
+    float getInputValue(const std::string& input);
+
+    void mapKeyboard(const cocos2d::EventKeyboard::KeyCode key,
+                     const std::string& action,
+                     const float value);
+    void mapMouseButton(const cocos2d::EventMouse::MouseButton button,
+                        const std::string& action,
+                        const float value);
+    void mapMouseAxis(const int axis,
+                      const std::string& action,
+                      const float value);
+    void mapControllerButton(const int button,
+                             const std::string& action,
+                             const float value);
+    void mapControllerAxis(const int axis,
+                           const std::string& action,
+                           const float value);
+
+    const std::map<cocos2d::EventKeyboard::KeyCode, InputAction>& getKeyboardMap() const { return m_keyboardMappings; }
+    const std::map<cocos2d::EventMouse::MouseButton, InputAction>& getMouseButtonMap() const { return m_mouseButtonMappings; }
+    const std::map<int, InputAction>& getMouseAxisMap() const { return m_mouseAxisMappings; }
+    const std::map<int, InputAction>& getControllerButtonMap() const { return m_controllerButtonMappings; }
+    const std::map<int, InputAction>& getControllerAxisMap() const { return m_controllerAxisMappings; }
+
 private:
-    cocos2d::Vec2 m_direction;
     cocos2d::Vec2 m_mouseCoord;
-    bool m_run;
-    bool m_interact;
-    bool m_reload;
-    bool m_shoot;
-    bool m_aim;
-    bool m_zoomIn;
-    bool m_zoomOut;
     
     bool m_changeWeapon;
     int m_slot;
@@ -58,6 +65,16 @@ private:
     uint8_t m_pickupType;
     uint16_t m_pickupAmount;
     uint16_t m_pickupID;
+    
+    std::map<cocos2d::EventKeyboard::KeyCode, InputAction> m_keyboardMappings;
+    std::map<cocos2d::EventMouse::MouseButton, InputAction> m_mouseButtonMappings;
+    std::map<int, InputAction> m_mouseAxisMappings;
+    std::map<int, InputAction> m_controllerButtonMappings;
+    std::map<int, InputAction> m_controllerAxisMappings;
+
+    std::map<std::string, float> m_inputs;
+    
+    int m_activeController;
 };
 
 #endif /* InputModel_h */

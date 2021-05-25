@@ -26,6 +26,7 @@
 #include "RaycastUtil.h"
 #include "base/ccUtils.h"
 #include "SnapshotModel.h"
+#include "InputConstants.h"
 
 GameViewController::GameViewController(std::shared_ptr<GameSettings> gameSettings,
                                        std::shared_ptr<LevelModel> levelModel,
@@ -570,17 +571,18 @@ void GameViewController::updateCamera(const float deltaTime,
     }
     else
     {
-        const cocos2d::Vec2 inputDir = m_inputModel->getDirection();
+        const cocos2d::Vec2 inputDir = cocos2d::Vec2(m_inputModel->getInputValue(InputConstants::ACTION_MOVE_RIGHT),
+                                                     -m_inputModel->getInputValue(InputConstants::ACTION_MOVE_UP));
         const cocos2d::Vec2 targetPosition = m_cameraModel->getTargetPosition() + cocos2d::Vec2(inputDir.x, -inputDir.y) * 4.f;
         m_cameraModel->setTargetPosition(targetPosition);
     }
 
     float zoom = m_cameraModel->getTargetZoom();
-    if (m_inputModel->getZoomIn())
+    if (m_inputModel->getInputValue(InputConstants::ACTION_ZOOM_IN))
     {
         zoom *= 1.05f;
     }
-    if (m_inputModel->getZoomOut())
+    if (m_inputModel->getInputValue(InputConstants::ACTION_ZOOM_OUT))
     {
         zoom *= 0.95f;
     }
@@ -956,11 +958,11 @@ void GameViewController::updateCursor(const SnapshotData& snapshot)
             {
                 auto itemData = EntityDataModel::getStaticEntityData((EntityType)weapon.type);
 
-                m_hudView->getCrosshairView()->setMode(m_inputModel->getAim() ?
+                m_hudView->getCrosshairView()->setMode(m_inputModel->getInputValue(InputConstants::ACTION_AIM) ?
                                                        CrosshairView::CrosshairMode::NARROW :
                                                        CrosshairView::CrosshairMode::WIDE);
                 float targetZoom = CameraModel::DEFAULT_ZOOM_LEVEL;
-                if (m_inputModel->getAim())
+                if (m_inputModel->getInputValue(InputConstants::ACTION_AIM))
                 {
                     if (itemData.weapon.type == WeaponType::Weapon_Type_Sniper)
                     {
@@ -1109,7 +1111,7 @@ void GameViewController::renderPostProcess(const SnapshotData& snapshot)
     const PlayerState& playerState = playerIt->second;
     const EntityType heldItemType = (EntityType)playerState.weaponSlots.at(playerState.activeWeaponSlot).type;
     const auto& itemData = EntityDataModel::getStaticEntityData(heldItemType);
-    const float zoomRadius = m_inputModel->getAim() && itemData.weapon.type == WeaponType::Weapon_Type_Sniper ? 64.f : 0.f;
+    const float zoomRadius = m_inputModel->getInputValue(InputConstants::ACTION_AIM) > 0.5f && itemData.weapon.type == WeaponType::Weapon_Type_Sniper ? 64.f : 0.f;
     updatePostProcess(zoomRadius);
     
     const cocos2d::Value& losRenderSetting = m_gameSettings->getValue(GameView::SETTING_RENDER_LINE_OF_SIGHT, cocos2d::Value(true));

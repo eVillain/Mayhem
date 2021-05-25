@@ -727,6 +727,7 @@
 		D9B251A724C789A400EAFA5B /* ReplayEditorController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplayEditorController.cpp; sourceTree = "<group>"; };
 		D9BF0925253B1C5F0053998C /* MasterServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MasterServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9BF0927253B1C600053998C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		D9D4290626592FDA008364FD /* InputConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputConstants.h; sourceTree = "<group>"; };
 		D9D593F32651EE80005B7DFD /* ShutdownLocalServerCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShutdownLocalServerCommand.cpp; sourceTree = "<group>"; };
 		D9D593F52651EE81005B7DFD /* ShutdownLocalServerCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShutdownLocalServerCommand.h; sourceTree = "<group>"; };
 		D9E046F5254AF0770055E1E6 /* ClientModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientModel.cpp; sourceTree = "<group>"; };
@@ -1240,6 +1241,7 @@
 				D96CBD152531C3B2006DF3A4 /* InitServerCommand.h */,
 				D96CBD042531C3AC006DF3A4 /* InputController.cpp */,
 				D96CBD102531C3B0006DF3A4 /* InputController.h */,
+				D9D4290626592FDA008364FD /* InputConstants.h */,
 				D96CBD352531C3BA006DF3A4 /* InputModel.cpp */,
 				D96CBD092531C3AD006DF3A4 /* InputModel.h */,
 				D96CBD0E2531C3AF006DF3A4 /* InventoryLayer.cpp */,

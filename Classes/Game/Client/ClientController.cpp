@@ -25,6 +25,7 @@
 #include "SnapshotModel.h"
 #include "Utils/CollisionUtils.h"
 #include "WeaponConstants.h"
+#include "InputConstants.h"
 
 #include "ShutdownClientCommand.h"
 #include "ShutdownLocalServerCommand.h"
@@ -477,7 +478,7 @@ void ClientController::onToggleInventoryEvent(const Event& event)
     inventoryLayer->setItemPickupCallback([this](const EntityType type,
                                                  const uint16_t amount,
                                                  const uint16_t entityID){
-        m_inputModel->setInteract(true);
+        m_inputModel->setInputValue(InputConstants::ACTION_INTERACT, 1.f);
         m_inputModel->setPickupType((uint8_t)type);
         m_inputModel->setPickupAmount(amount);
         m_inputModel->setPickupID(entityID);
@@ -736,17 +737,17 @@ std::shared_ptr<ClientInputMessage> ClientController::getInputData() const
     std::shared_ptr<ClientInputMessage> data = std::make_shared<ClientInputMessage>();
     data->inputSequence = m_gameModel->getCurrentTick();
     data->lastReceivedSnapshot = snapshots.empty() ? 0 : snapshots.back().serverTick;
-    data->directionX = m_inputModel->getDirection().x;
-    data->directionY = m_inputModel->getDirection().y;
+    data->directionX = m_inputModel->getInputValue(InputConstants::ACTION_MOVE_RIGHT);
+    data->directionY = -m_inputModel->getInputValue(InputConstants::ACTION_MOVE_UP);
     const cocos2d::Vec2 aimPoint = m_gameViewController->getAimPosition(m_inputModel->getMouseCoord());
     data->aimPointX = aimPoint.x;
     data->aimPointY = aimPoint.y;
     
     bool blockInput = !m_clientModel->getLocalPlayerAlive() || m_hudView->getViewLayer();
-    data->shoot = blockInput ? false : m_inputModel->getShoot();
-    data->interact = blockInput ? false : m_inputModel->getInteract();
-    data->run = m_inputModel->getRun();
-    data->reload = m_inputModel->getReload();
+    data->shoot = blockInput ? false : m_inputModel->getInputValue(InputConstants::ACTION_SHOOT);
+    data->interact = blockInput ? false : m_inputModel->getInputValue(InputConstants::ACTION_INTERACT);
+    data->run = m_inputModel->getInputValue(InputConstants::ACTION_RUN);
+    data->reload = m_inputModel->getInputValue(InputConstants::ACTION_RELOAD);
     data->changeWeapon = m_inputModel->getChangeWeapon();
     data->slot = m_inputModel->getSlot();
     
