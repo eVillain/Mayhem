@@ -166,18 +166,17 @@ void GameViewController::onEntityDestroyed(const uint32_t entityID,
         }
         
         const auto playerIt = snapshot.playerData.find(m_cameraModel->getCameraFollowPlayerID());
-        if (playerIt == snapshot.playerData.end())
+        if (playerIt != snapshot.playerData.end())
         {
-            return;
-        }
-        const PlayerState& playerState = playerIt->second;
-        const EntitySnapshot& entitySnapshot = snapshot.entityData.at(playerState.entityID);
-        const cocos2d::Vec2 entityPosition = cocos2d::Vec2(entitySnapshot.positionX, entitySnapshot.positionY);
-        const float playerToExplosion = (entityPosition - position).length();
-        if (playerToExplosion < EXPLOSION_RADIUS)
-        {
-            const float impact = (playerToExplosion / EXPLOSION_RADIUS) * 50.f;
-            m_cameraModel->setScreenShake(cocos2d::Vec2(impact, impact));
+            const PlayerState& playerState = playerIt->second;
+            const EntitySnapshot& entitySnapshot = snapshot.entityData.at(playerState.entityID);
+            const cocos2d::Vec2 entityPosition = cocos2d::Vec2(entitySnapshot.positionX, entitySnapshot.positionY);
+            const float playerToExplosion = (entityPosition - position).length();
+            if (playerToExplosion < EXPLOSION_RADIUS)
+            {
+                const float impact = (playerToExplosion / EXPLOSION_RADIUS) * 50.f;
+                m_cameraModel->setScreenShake(cocos2d::Vec2(impact, impact));
+            }
         }
     }
     else if (type == EntityType::Projectile_Smoke)
