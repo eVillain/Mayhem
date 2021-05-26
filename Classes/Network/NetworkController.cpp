@@ -196,9 +196,14 @@ void NetworkController::setDeltaDataCallback(std::function<const SnapshotData&(c
     m_messageFactory->setDeltaDataCallback(dataCallback);
 }
 
-float NetworkController::GetRoundTripTime(const Net::NodeID nodeID)
+float NetworkController::getRoundTripTime(const Net::NodeID nodeID)
 {
     return m_drudgeNet->getTransport()->GetReliability(nodeID)->GetRoundTripTime();
+}
+
+const Net::NodeID NetworkController::getLocalNodeID() const
+{
+    return m_drudgeNet->getTransport()->GetLocalNodeId();
 }
 
 void NetworkController::onNodeConnected(const Net::NodeID nodeID)

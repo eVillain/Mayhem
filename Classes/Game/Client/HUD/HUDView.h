@@ -25,7 +25,12 @@ public:
     void setHealth(const float health);
     void setAmmo(const size_t magAmmo, const size_t inventoryAmmo);
     void setPlayersAlive(const size_t playersAlive);
-    
+    void setTeamsAlive(const size_t teamsAlive);
+    void setKills(const size_t kills);
+    void setSpectators(const size_t spectators);
+    void setTeamsVisible(const bool visible);
+    void setSpectatorsVisible(const bool visible);
+
     cocos2d::RefPtr<cocos2d::Node> getRoot() { return m_root; }
     cocos2d::RefPtr<cocos2d::DrawNode> getDrawNode() { return m_drawNode; }
 
@@ -60,8 +65,16 @@ private:
     cocos2d::RefPtr<cocos2d::ui::Scale9Sprite> m_ammoBG;
     cocos2d::RefPtr<cocos2d::Label> m_ammoLabel;
     
-    cocos2d::RefPtr<cocos2d::ui::Scale9Sprite> m_playersAliveBG;
+    cocos2d::RefPtr<cocos2d::Label> m_killsLabel;
     cocos2d::RefPtr<cocos2d::Label> m_playersAliveLabel;
+    cocos2d::RefPtr<cocos2d::Label> m_teamsAliveLabel;
+    cocos2d::RefPtr<cocos2d::Label> m_spectatorsLabel;
+    
+    cocos2d::RefPtr<cocos2d::Sprite> m_killsIcon;
+    cocos2d::RefPtr<cocos2d::Sprite> m_playersIcon;
+    cocos2d::RefPtr<cocos2d::Sprite> m_teamsIcon;
+    cocos2d::RefPtr<cocos2d::Sprite> m_spectatorsIcon;
+
 
     cocos2d::RefPtr<cocos2d::Label> m_highlightLabel;
     std::shared_ptr<CrosshairView> m_crosshair;

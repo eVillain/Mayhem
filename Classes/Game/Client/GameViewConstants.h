@@ -5,17 +5,6 @@
 
 namespace GameViewConstants
 {
-    static const std::string FONT_3X6 = "fonts/m3x6.ttf";
-    static const std::string FONT_5X7 = "fonts/m5x7.ttf";
-    static const std::string PIXEL_RECT = "res/HUD/Scale9-PixelRect.png";
-    static const std::string PIXEL_OUTLINE = "res/HUD/Scale9-PixelOutline.png";
-    static const std::string PIXEL_FILL = "res/HUD/Scale9-PixelFill.png";
-    static const std::string HUD_SPRITE_BATCH_FILE = "res/HUD/HudSprites.plist";
-    static const std::string HUD_SPRITE_BATCH_TEXTURE_FILE = "res/HUD/HudSprites.png";
-    static const std::string HUD_SCALE9_BUTTON = "res/HUD/Scale9-Button.png";
-    static const std::string HUD_SCALE9_BUTTON_PRESSED = "res/HUD/Scale9-ButtonPressed.png";
-    static const std::string HUD_SCALE9_BUTTON_INACTIVE = "res/HUD/Scale9-ButtonInactive.png";
-
     static const cocos2d::Size BUTTON_SIZE_EXIT = cocos2d::Size(160, 30);
     static const cocos2d::Size BUTTON_SIZE_SEND = cocos2d::Size(50, 20);
     static const cocos2d::Size BUTTON_SIZE_READY = cocos2d::Size(100, 40);

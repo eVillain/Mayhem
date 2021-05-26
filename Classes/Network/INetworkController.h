@@ -45,7 +45,8 @@ public:
     virtual void sendMessages() = 0;
     
     virtual const std::shared_ptr<Net::Transport> getTransport() = 0;
-    virtual float GetRoundTripTime(const Net::NodeID nodeID) = 0;
+    virtual float getRoundTripTime(const Net::NodeID nodeID) = 0;
+    virtual const Net::NodeID getLocalNodeID() const = 0;
 
     void setMessageReceivedCallback(MessageReceivedCallback callback) { m_messageReceivedCallback = callback; }
     void setNodeConnectedCallback(NodeConnectionCallback callback) { m_onNodeConnectedCallback = callback; }

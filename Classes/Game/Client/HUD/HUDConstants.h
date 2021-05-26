@@ -22,6 +22,8 @@ namespace HUDConstants
     static const std::string HUD_SCALE9_SLIDER_BAR = "res/hud/Scale9-SliderBar.png";
     static const std::string HUD_SCALE9_SLIDER_PROGRESSBAR = "res/hud/Scale9-SliderProgressBar.png";
     static const std::string HUD_SCALE9_SLIDER_BALL = "res/hud/Scale9-SliderBall.png";
+    static const std::string HUD_SPRITE_BATCH_FILE = "res/HUD/HudSprites.plist";
+    static const std::string HUD_SPRITE_BATCH_TEXTURE_FILE = "res/HUD/HudSprites.png";
 
     static const cocos2d::Color3B HUD_FILL_COLOR = cocos2d::Color3B(127, 127, 160);
     static const cocos2d::Color3B HUD_BORDER_COLOR = cocos2d::Color3B(255, 255, 255);

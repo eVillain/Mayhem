@@ -1,13 +1,16 @@
 #include "HUDView.h"
-#include "HUDHelper.h"
+
 
 #include "CrosshairView.h"
 #include "GameViewConstants.h"
 #include "Core/Injector.h"
+#include "HUDConstants.h"
+#include "HUDHelper.h"
 #include "InventoryLayer.h"
 #include "ViewLayer.h"
 #include "KillFeed.h"
 #include "EntityDataModel.h"
+#include "NumberFormatter.h"
 
 static const cocos2d::Size HEALTH_BAR_SIZE = cocos2d::Size(200.f, 26.f);
 
@@ -19,9 +22,15 @@ HUDView::HUDView()
 , m_healthBar(nullptr)
 , m_ammoBG(nullptr)
 , m_ammoLabel(nullptr)
-, m_playersAliveBG(nullptr)
+, m_killsLabel(nullptr)
 , m_playersAliveLabel(nullptr)
+, m_teamsAliveLabel(nullptr)
+, m_spectatorsLabel(nullptr)
 , m_highlightLabel(nullptr)
+, m_killsIcon(nullptr)
+, m_playersIcon(nullptr)
+, m_teamsIcon(nullptr)
+, m_spectatorsIcon(nullptr)
 , m_crosshair(nullptr)
 , m_killFeed(nullptr)
 , m_blockInput(false)
@@ -37,7 +46,7 @@ HUDView::~HUDView()
 void HUDView::initialize()
 {
     cocos2d::SpriteFrameCache* cache = cocos2d::SpriteFrameCache::getInstance();
-    cache->addSpriteFramesWithFile(GameViewConstants::HUD_SPRITE_BATCH_FILE);
+    cache->addSpriteFramesWithFile(HUDConstants::HUD_SPRITE_BATCH_FILE);
         
     m_healthBarBG = HUDHelper::createHUDFill();
     m_healthBarBG->setAnchorPoint(cocos2d::Vec2::ZERO);
@@ -47,13 +56,32 @@ void HUDView::initialize()
     m_healthBar = HUDHelper::createHUDFill();
     m_healthBar->setPreferredSize(HEALTH_BAR_SIZE);
     m_healthBar->setAnchorPoint(cocos2d::Vec2::ZERO);
-    
-    m_playersAliveBG = HUDHelper::createHUDFill();
-    m_playersAliveBG->setPreferredSize(cocos2d::Size(162, 32));
-    m_playersAliveBG->setColor(cocos2d::Color3B::BLACK);
-    m_playersAliveBG->setOpacity(127);
 
-    m_playersAliveLabel = HUDHelper::createLabel5x7("## | Alive", 48);
+    m_killsLabel = HUDHelper::createLabel5x7("##", 32);
+    m_killsLabel->setAlignment(cocos2d::TextHAlignment::LEFT);
+    m_killsLabel->setAnchorPoint(cocos2d::Vec2::ANCHOR_TOP_LEFT);
+    m_killsLabel->enableOutline(cocos2d::Color4B::BLACK, 1);
+    m_playersAliveLabel = HUDHelper::createLabel5x7("##", 32);
+    m_playersAliveLabel->setAlignment(cocos2d::TextHAlignment::LEFT);
+    m_playersAliveLabel->setAnchorPoint(cocos2d::Vec2::ANCHOR_TOP_LEFT);
+    m_playersAliveLabel->enableOutline(cocos2d::Color4B::BLACK, 1);
+    m_teamsAliveLabel = HUDHelper::createLabel5x7("##", 32);
+    m_teamsAliveLabel->setAlignment(cocos2d::TextHAlignment::LEFT);
+    m_teamsAliveLabel->setAnchorPoint(cocos2d::Vec2::ANCHOR_TOP_LEFT);
+    m_teamsAliveLabel->enableOutline(cocos2d::Color4B::BLACK, 1);
+    m_spectatorsLabel = HUDHelper::createLabel5x7("##", 32);
+    m_spectatorsLabel->setAlignment(cocos2d::TextHAlignment::LEFT);
+    m_spectatorsLabel->setAnchorPoint(cocos2d::Vec2::ANCHOR_TOP_LEFT);
+    m_spectatorsLabel->enableOutline(cocos2d::Color4B::BLACK, 1);
+
+    m_killsIcon = cocos2d::Sprite::createWithSpriteFrameName("Icon-Kills.png");
+    m_killsIcon->setAnchorPoint(cocos2d::Vec2::ANCHOR_TOP_LEFT);
+    m_playersIcon = cocos2d::Sprite::createWithSpriteFrameName("Icon-Players.png");
+    m_playersIcon->setAnchorPoint(cocos2d::Vec2::ANCHOR_TOP_LEFT);
+    m_teamsIcon = cocos2d::Sprite::createWithSpriteFrameName("Icon-Teams.png");
+    m_teamsIcon->setAnchorPoint(cocos2d::Vec2::ANCHOR_TOP_LEFT);
+    m_spectatorsIcon = cocos2d::Sprite::createWithSpriteFrameName("Icon-Spectators.png");
+    m_spectatorsIcon->setAnchorPoint(cocos2d::Vec2::ANCHOR_TOP_LEFT);
 
     m_ammoBG = HUDHelper::createHUDFill();
     m_ammoBG->setPreferredSize(cocos2d::Size(182, 32));
@@ -78,8 +106,15 @@ void HUDView::initialize()
     m_root->addChild(m_ammoBG);
     m_root->addChild(m_ammoLabel);
 
-    m_root->addChild(m_playersAliveBG);
+    m_root->addChild(m_killsLabel);
     m_root->addChild(m_playersAliveLabel);
+    m_root->addChild(m_teamsAliveLabel);
+    m_root->addChild(m_spectatorsLabel);
+
+    m_root->addChild(m_killsIcon);
+    m_root->addChild(m_playersIcon);
+    m_root->addChild(m_teamsIcon);
+    m_root->addChild(m_spectatorsIcon);
     
     for (size_t i = 0; i < 5; i++)
     {
@@ -106,8 +141,14 @@ void HUDView::shutdown()
     m_healthBar = nullptr;
     m_ammoBG = nullptr;
     m_ammoLabel = nullptr;
-    m_playersAliveBG = nullptr;
     m_playersAliveLabel = nullptr;
+    m_teamsAliveLabel = nullptr;
+    m_killsLabel = nullptr;
+    m_spectatorsLabel = nullptr;
+    m_killsIcon = nullptr;
+    m_playersIcon = nullptr;
+    m_teamsIcon = nullptr;
+    m_spectatorsIcon = nullptr;
     m_highlightLabel = nullptr;
     m_crosshair = nullptr;
     m_killFeed = nullptr;
@@ -116,6 +157,7 @@ void HUDView::shutdown()
 
 void HUDView::update(const SnapshotData &snapshot, const uint8_t localPlayerID)
 {
+    uint8_t kills = 0;
     size_t playersAlive = 0;
     uint16_t inventoryAmmo = 0;
     uint16_t weaponAmmo = 0;
@@ -126,6 +168,7 @@ void HUDView::update(const SnapshotData &snapshot, const uint8_t localPlayerID)
     {
         const PlayerState& playerState = localPlayerIt->second;
         health = playerState.health;
+        kills = playerState.kills;
         
         const WeaponSlot activeSlot = (WeaponSlot)playerState.activeWeaponSlot;
         for (size_t i = 0; i < 5; i++)
@@ -164,6 +207,7 @@ void HUDView::update(const SnapshotData &snapshot, const uint8_t localPlayerID)
         }
     }
 
+    setKills(kills);
     setPlayersAlive(playersAlive);
     setAmmo(weaponAmmo, inventoryAmmo);
     setHealth(health);
@@ -206,7 +250,34 @@ void HUDView::setAmmo(const size_t magAmmo, const size_t inventoryAmmo)
 
 void HUDView::setPlayersAlive(const size_t playersAlive)
 {
-    m_playersAliveLabel->setString(std::to_string(playersAlive) + " | Alive");
+    m_playersAliveLabel->setString(NumberFormatter::toString(playersAlive, 0));
+}
+
+void HUDView::setTeamsAlive(const size_t teamsAlive)
+{
+    m_teamsAliveLabel->setString(NumberFormatter::toString(teamsAlive, 0));
+}
+
+void HUDView::setKills(const size_t kills)
+{
+    m_killsLabel->setString(NumberFormatter::toString(kills, 0));
+}
+
+void HUDView::setSpectators(const size_t spectators)
+{
+    m_spectatorsLabel->setString(NumberFormatter::toString(spectators, 0));
+}
+
+void HUDView::setTeamsVisible(const bool visible)
+{
+    m_teamsAliveLabel->setVisible(visible);
+    m_teamsIcon->setVisible(visible);
+}
+
+void HUDView::setSpectatorsVisible(const bool visible)
+{
+    m_spectatorsLabel->setVisible(visible);
+    m_spectatorsIcon->setVisible(visible);
 }
 
 void HUDView::showHighlightLabel(const std::string& text, const cocos2d::Vec2 position)
@@ -276,14 +347,33 @@ void HUDView::removeViewLayer()
 
 void HUDView::updatePositions()
 {
-    const float PADDING = 20.f;
+    const float PADDING = 8.f;
     const cocos2d::Size windowSize = cocos2d::Director::getInstance()->getWinSize();
     m_healthBar->setPosition(cocos2d::Vec2((windowSize.width * 0.5f) - (HEALTH_BAR_SIZE.width * 0.5f), 22.f));
     m_healthBarBG->setPosition(cocos2d::Vec2((windowSize.width - m_healthBarBG->getPreferredSize().width) * 0.5f, 20.f));
     
-    m_playersAliveLabel->setPosition(windowSize - (m_playersAliveLabel->getContentSize() + cocos2d::Size(PADDING - 2, PADDING - 2)));
-    m_playersAliveBG->setPosition(windowSize - (m_playersAliveLabel->getContentSize() + cocos2d::Size(PADDING, PADDING)));
-    
+    const float LABEL_SIZE = 20.f;
+    const float ICON_SIZE = 32.f;
+    // Top HUD labels, they go at the top-right
+    cocos2d::Vec2 labelPos = windowSize - cocos2d::Size(LABEL_SIZE + PADDING, PADDING);
+    m_killsLabel->setPosition(labelPos);
+    m_killsIcon->setPosition(labelPos - cocos2d::Vec2(ICON_SIZE, 0.f));
+    labelPos -= cocos2d::Vec2(LABEL_SIZE + ICON_SIZE + PADDING, 0.f);
+    m_playersAliveLabel->setPosition(labelPos);
+    m_playersIcon->setPosition(labelPos - cocos2d::Vec2(ICON_SIZE, 0.f));
+    if (m_teamsAliveLabel->isVisible())
+    {
+        labelPos -= cocos2d::Vec2(LABEL_SIZE + ICON_SIZE + PADDING, 0.f);
+        m_teamsAliveLabel->setPosition(labelPos);
+        m_teamsIcon->setPosition(labelPos - cocos2d::Vec2(ICON_SIZE, 0.f));
+    }
+    if (m_spectatorsLabel->isVisible())
+    {
+        labelPos -= cocos2d::Vec2(LABEL_SIZE + ICON_SIZE + PADDING, 0.f);
+        m_spectatorsLabel->setPosition(labelPos);
+        m_spectatorsIcon->setPosition(labelPos - cocos2d::Vec2(ICON_SIZE, 0.f));
+    }
+
     m_ammoLabel->setPosition(cocos2d::Vec2(windowSize.width * 0.5f, 65.f));
     m_ammoBG->setPosition(cocos2d::Vec2(windowSize.width * 0.5f, 65.f));
     
@@ -303,7 +393,7 @@ void HUDView::updatePositions()
 
 void HUDView::showHealthBlimp(const int health, const cocos2d::Vec2& position)
 {
-    auto label = HUDHelper::createLabel3x6(std::to_string(health), 48);
+    auto label = HUDHelper::createLabel3x6(NumberFormatter::toString(health, 0), 48);
     label->setTextColor(health > 0 ? cocos2d::Color4B::GREEN : cocos2d::Color4B::RED);
     label->setScale(0.1f);
     label->setPosition(position);

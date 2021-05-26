@@ -1,35 +1,37 @@
 #include "NetworkClientViewController.h"
-#include "NetworkClientView.h"
-#include "NetworkChatView.h"
-#include "NetworkConstants.h"
-#include "INetworkController.h"
-#include "TransportLAN.h"
-#include "NetworkView.h"
-#include "InitClientCommand.h"
-#include "Core/Injector.h"
-#include "NetworkClientHostCell.h"
-#include "GameViewConstants.h"
-#include "Network/NetworkMessages.h"
-#include "Core/Dispatcher.h"
-#include "BackToMainMenuEvent.h"
-#include "BackButtonPressedEvent.h"
 
-NetworkClientViewController::NetworkClientViewController()
-: m_networkController(nullptr)
-, m_refreshHostsTimer(0)
+#include "BackButtonPressedEvent.h"
+#include "BackToMainMenuEvent.h"
+#include "ClientModel.h"
+#include "Core/Dispatcher.h"
+#include "GameSettings.h"
+#include "GameViewConstants.h"
+#include "INetworkController.h"
+#include "InitClientCommand.h"
+#include "Network/NetworkMessages.h"
+#include "NetworkChatView.h"
+#include "NetworkClientHostCell.h"
+#include "NetworkClientView.h"
+#include "NetworkConstants.h"
+#include "NetworkView.h"
+#include "Transport.h"
+
+NetworkClientViewController::NetworkClientViewController(std::shared_ptr<INetworkController> networkController,
+                                                         std::shared_ptr<GameSettings> gameSettings,
+                                                         std::shared_ptr<ClientModel> clientModel)
+: m_networkController(networkController)
+, m_gameSettings(gameSettings)
+, m_clientModel(clientModel)
+, m_refreshHostsTimer(0.f)
 {
 }
 
 NetworkClientViewController::~NetworkClientViewController()
 {
- 
 }
 
 void NetworkClientViewController::initialize()
 {
-    Injector& injector = Injector::globalInjector();
-    m_networkController = injector.getInstance<INetworkController>();
-    
     registerNetworkCallbacks();
     
     cocos2d::Director::getInstance()->getScheduler()->scheduleUpdate(this, 0, false);
@@ -64,7 +66,7 @@ void NetworkClientViewController::update(float deltaTime)
             const int hostCount = m_networkController->getTransport()->GetLobbyEntryCount();
             for (int i = 0; i < hostCount; i++)
             {
-                Net::TransportLAN::LobbyEntry entry;
+                Net::Transport::LobbyEntry entry;
                 if (!m_networkController->getTransport()->GetLobbyEntryAtIndex(i, entry))
                 {
                     continue;
@@ -160,6 +162,9 @@ void NetworkClientViewController::registerNetworkCallbacks()
     m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_CHAT_MESSAGE,
                                             std::bind(&NetworkClientViewController::onChatMessageReceived, this,
                                                       std::placeholders::_1, std::placeholders::_2));
+    m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_INFO,
+                                            std::bind(&NetworkClientViewController::onServerInfoReceived, this,
+                                                      std::placeholders::_1, std::placeholders::_2));
 }
 
 void NetworkClientViewController::unregisterNetworkCallbacks()
@@ -170,7 +175,7 @@ void NetworkClientViewController::unregisterNetworkCallbacks()
 
 void NetworkClientViewController::onConnected(const Net::NodeID nodeID)
 {
-    if (nodeID == 0)
+    if (nodeID == m_networkController->getLocalNodeID())
     {
         m_hostData.clear();
         m_view->setHostTableVisible(false);
@@ -179,11 +184,18 @@ void NetworkClientViewController::onConnected(const Net::NodeID nodeID)
         m_view->setupChatView();
         m_view->getChatView()->getMessageEditBox()->setDelegate(this);
         m_view->getChatView()->getSendMessageButton()->addTouchEventListener(CC_CALLBACK_2(NetworkClientViewController::onSendButton, this));
-        m_view->getChatView()->addMessage("Connected to server as Player " + std::to_string(nodeID), 0);
+        m_view->getChatView()->addMessage("Connected to server as Player: " + std::to_string(nodeID), "CLIENT");
+
+        const cocos2d::Value& playerNameSetting = m_gameSettings->getValue(GameSettings::SETTING_PLAYER_NAME, cocos2d::Value(""));
+        // Send client info to server:
+        std::shared_ptr<ClientInfoMessage> infoMessage = std::make_shared<ClientInfoMessage>();
+        infoMessage->name = playerNameSetting.asString();
+        std::shared_ptr<Net::Message> message = infoMessage;
+        m_networkController->sendMessage(0, message);
     }
     else
     {
-        m_view->getChatView()->addMessage("Player " + std::to_string(nodeID) + " connected to server", 0);
+        m_view->getChatView()->addMessage("Player " + std::to_string(nodeID) + " connected to server", "HOST");
     }
 }
 
@@ -265,7 +277,7 @@ void NetworkClientViewController::onLoadLevelReceived(const std::shared_ptr<Net:
         return;
     }
 
-    CCLOG("client received LOAD_LEVEL from server %i, level %s\n",
+    CCLOG("client received LOAD_LEVEL from server %i, level %s",
           nodeID, loadLevelMessage->level.c_str());
     
     terminate();
@@ -291,8 +303,28 @@ void NetworkClientViewController::onChatMessageReceived(const std::shared_ptr<Ne
         return;
     }
 
-    CCLOG("client received CHAT_MESSAGE from server %i, sender: %i, message %s\n",
+    CCLOG("client received CHAT_MESSAGE from server %i, sender: %i, message %s",
           nodeID, chatMessage->playerID, chatMessage->text.c_str());
     
-    m_view->getChatView()->addMessage(chatMessage->text, chatMessage->playerID);
+    m_view->getChatView()->addMessage(chatMessage->text,
+                                      m_clientModel->getPlayerName(chatMessage->playerID));
+}
+
+void NetworkClientViewController::onServerInfoReceived(const std::shared_ptr<Net::Message>& message,
+                                                       const Net::NodeID nodeID)
+{
+    auto infoMessage = std::dynamic_pointer_cast<ServerInfoMessage>(message);
+    if (!infoMessage)
+    {
+        return;
+    }
+
+    CCLOG("client received INFO_MESSAGE from server %i with %i players", nodeID, infoMessage->playerCount);
+    
+    for (size_t i = 0; i < infoMessage->playerCount; i++)
+    {
+        const uint8_t playerID = infoMessage->playerIDs.at(i);
+        const std::string& name = infoMessage->names.at(i);
+        m_clientModel->setPlayerName(playerID, name);
+    }
 }

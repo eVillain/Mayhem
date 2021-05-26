@@ -195,7 +195,7 @@ cocos2d::RefPtr<cocos2d::Animation> EntityView::createAnimation(const std::strin
     char str[100] = {0};
     for(size_t i = 0; i < numFrames; i++)
     {
-        sprintf(str, "%s%i.png", frameName.c_str(), i);
+        sprintf(str, "%s%zu.png", frameName.c_str(), i);
         cocos2d::SpriteFrame* frame = cache->getSpriteFrameByName( str );
         animFrames.pushBack(frame);
     }

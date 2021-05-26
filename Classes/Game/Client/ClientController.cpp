@@ -127,6 +127,14 @@ void ClientController::setMode(const ClientMode mode)
         m_gameModel->setCurrentTime(-m_gameModel->getFrameTime());
         m_gameModel->setCurrentTick(-1);
     }
+    
+    m_hudView->setTeamsVisible(m_gameModel->getPlayersPerTeam() > 1);
+    m_hudView->setSpectatorsVisible(false);
+    m_hudView->setKills(0);
+    m_hudView->setPlayersAlive(0);
+
+    const cocos2d::Value& playerNameSetting = m_gameSettings->getValue(GameSettings::SETTING_PLAYER_NAME, cocos2d::Value(""));
+    m_clientModel->setPlayerName(m_clientModel->getLocalPlayerID(), playerNameSetting.asString());
 }
 
 void ClientController::stop()
@@ -515,13 +523,8 @@ void ClientController::onPlayerDeathReceived(const std::shared_ptr<Net::Message>
         CCLOG("ClientController::onPlayerDeathReceived %i killed by %i with %i",
               deathMessage->deadPlayerID, deathMessage->killerEntityID, deathMessage->killerType);
         
-        std::string deadPlayerName = "DEAD_PLAYER";
-        std::string killerPlayerName = "KILLER_PLAYER";
-        const auto& names = m_clientModel->getPlayerNames();
-        if (names.find(deathMessage->deadPlayerID) != names.end())
-        {
-            deadPlayerName = names.at(deathMessage->deadPlayerID);
-        }
+        std::string deadPlayerName = m_clientModel->getPlayerName(deathMessage->deadPlayerID);
+        std::string killerPlayerName = m_clientModel->getPlayerName(m_clientModel->getLocalPlayerID());
         m_hudView->getKillFeed()->onPlayerKilled(deadPlayerName,
                                                  killerPlayerName,
                                                  deathMessage->killerType,

@@ -12,6 +12,8 @@ namespace Net {
 class Event;
 class INetworkController;
 class NetworkClientView;
+class GameSettings;
+class ClientModel;
 
 class NetworkClientViewController
 : public cocos2d::extension::TableViewDataSource
@@ -19,7 +21,9 @@ class NetworkClientViewController
 , public cocos2d::ui::EditBoxDelegate
 {
 public:
-    NetworkClientViewController();
+    NetworkClientViewController(std::shared_ptr<INetworkController> networkController,
+                                std::shared_ptr<GameSettings> gameSettings,
+                                std::shared_ptr<ClientModel> clientModel);
     ~NetworkClientViewController();
     
     void initialize();
@@ -52,7 +56,8 @@ private:
     };
     
     std::shared_ptr<INetworkController> m_networkController;
-
+    std::shared_ptr<GameSettings> m_gameSettings;
+    std::shared_ptr<ClientModel> m_clientModel;
     NetworkClientView* m_view;
     
     float m_refreshHostsTimer;
@@ -73,6 +78,8 @@ private:
                              const Net::NodeID nodeID);
     void onChatMessageReceived(const std::shared_ptr<Net::Message>& message,
                                const Net::NodeID nodeID);
+    void onServerInfoReceived(const std::shared_ptr<Net::Message>& data,
+                              const Net::NodeID nodeID);
 };
 
 #endif /* NETWORK_CLIENT_CONTROLLER_H */

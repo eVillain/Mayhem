@@ -7,6 +7,7 @@
 #include "NetworkConstants.h"
 #include "NetworkClientViewController.h"
 #include "cocos2d.h"
+#include "ClientModel.h"
 
 InitNetworkClientCommand::InitNetworkClientCommand(NetworkClientView* view)
 : m_view(view)
@@ -21,15 +22,20 @@ bool InitNetworkClientCommand::run()
     {
         injector.mapSingleton<NetworkModel>();
     }
-    if (!injector.hasMapping<NetworkClientViewController>())
-    {
-        injector.mapSingleton<NetworkClientViewController>();
-    }
     if (!injector.hasMapping<INetworkController>())
     {
         injector.mapSingleton<NetworkController,
             NetworkModel, GameSettings>();
         injector.mapInterfaceToType<INetworkController, NetworkController>();
+    }
+    if (!injector.hasMapping<ClientModel>())
+    {
+        injector.mapSingleton<ClientModel>();
+    }
+    if (!injector.hasMapping<NetworkClientViewController>())
+    {
+        injector.mapSingleton<NetworkClientViewController,
+            INetworkController, GameSettings, ClientModel>();
     }
 
     auto networkController = injector.getInstance<INetworkController>();

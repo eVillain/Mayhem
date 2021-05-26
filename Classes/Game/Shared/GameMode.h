@@ -64,6 +64,9 @@ public:
     virtual void onPlayerDied(const uint8_t playerID) = 0;
     virtual void onPlayerGotAKill(const uint8_t playerID) = 0;
 
+    uint8_t getPlayersAlive() const;
+    uint8_t getTeamsAlive() const;
+    uint16_t getPlayerKills(const uint8_t playerID) const;
     uint8_t getMaxPlayers() const { return m_maxPlayers; }
     uint8_t getPlayersPerTeam() const { return m_playersPerTeam; }
     void setPlayersPerTeam(uint8_t players) { m_playersPerTeam = players; }
@@ -79,6 +82,9 @@ protected:
     uint8_t m_maxPlayers;
     uint8_t m_playersPerTeam;
     std::vector<TeamData> m_teams;
+    std::map<uint8_t, uint32_t> m_playerKills;
+    std::map<uint8_t, bool> m_playerStates;
+
     std::function<void(int, int)> m_tileDeathCallback; // Tile x, y coords as params
     std::function<void(uint8_t)> m_winConditionCallback; // Winning team / winning player as param
 };

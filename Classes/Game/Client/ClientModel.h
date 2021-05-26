@@ -52,6 +52,7 @@ public:
     std::vector<std::shared_ptr<ClientInputMessage>>& getInputData() { return m_inputData; }
     
     void setPlayerName(uint8_t playerID, const std::string name) { m_playerNames[playerID] = name; }
+    const std::string& getPlayerName(const uint8_t playerID) const;
     const std::map<uint8_t, std::string>& getPlayerNames() const { return m_playerNames; }
 
 private:

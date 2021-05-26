@@ -121,7 +121,7 @@ void ServerController::stop()
     m_networkController->terminate();
     
     m_preRollbackState.clear();
-    m_clientStates.clear();
+    m_clientData.clear();
     m_clientSnapshots.clear();
     m_frameHitData.clear();
     m_botPlayers.clear();
@@ -595,14 +595,7 @@ void ServerController::onTileDeath(const int tileX, const int tileY)
     deathMessage->tileX = tileX;
     deathMessage->tileY = tileY;
     std::shared_ptr<Net::Message> message = std::dynamic_pointer_cast<Net::Message>(deathMessage);
-    for (const auto& clientState : m_clientStates)
-    {
-        const uint8_t playerID = clientState.first;
-        if (clientState.second == ClientPlayerState::CONNECTED)
-        {
-            m_networkController->sendMessage(playerID, message);
-        }
-    }
+    sendToAllConnectedClients(message);
 }
 
 void ServerController::onGameModeWinConditionReached(uint8_t winner)
@@ -610,14 +603,8 @@ void ServerController::onGameModeWinConditionReached(uint8_t winner)
     std::shared_ptr<ServerGameOverMessage> gameOverMessage = std::make_shared<ServerGameOverMessage>();
     gameOverMessage->winnerID = winner;
     std::shared_ptr<Net::Message> message = std::dynamic_pointer_cast<Net::Message>(gameOverMessage);
-    for (const auto& clientState : m_clientStates)
-    {
-        const uint8_t playerID = clientState.first;
-        if (clientState.second == ClientPlayerState::CONNECTED)
-        {
-            m_networkController->sendMessage(playerID, message);
-        }
-    }
+    sendToAllConnectedClients(message);
+
     m_gameOverTimer = 0.f;
 }
 
@@ -631,7 +618,7 @@ void ServerController::applyDamage(const std::shared_ptr<Player>& player,
     const bool isHeadshot = hitShapeIndex == 1;
     const float totalDamage = damage * (isHeadshot ? DEFAULT_HEADSHOT_DAMAGE_MULTIPLIER : 1.f);
     const float newHealth = player->getHealth() - totalDamage;
-    const bool isLethal = newHealth <= 0.f;
+    const bool isLethal = (player->getHealth() > 0.f) && (newHealth <= 0.f);
     FrameHitData hit;
     hit.hitterEntityID = damagerID;
     hit.hitEntityID = player->getEntityID();
@@ -768,7 +755,7 @@ void ServerController::rollbackForPlayer(const uint8_t playerID, const uint32_t 
     m_preRollbackState = m_gameController->getEntitiesModel()->getSnapshot();
     
     // Roll back network latency + client-side buffer for everyone else before processing frame interactions
-    const float networkLatency = m_networkController->GetRoundTripTime(playerID) * 0.5f; // 0.5 because only one-way latency counts here
+    const float networkLatency = m_networkController->getRoundTripTime(playerID) * 0.5f; // 0.5 because only one-way latency counts here
     const uint32_t rollbackLatencyTicks = (networkLatency / m_gameModel->getFrameTime()) + DEFAULT_CLIENT_TICKS_BUFFERED;
     if (m_frameCache->getFrameCount() < rollbackLatencyTicks)
     {
@@ -804,12 +791,12 @@ void ServerController::onNodeConnected(const Net::NodeID nodeID)
     {
         if (nodeID != 0)
         {
-            m_clientStates[nodeID] = ClientPlayerState::JOINING;
+            m_clientData[nodeID] = { ClientPlayerState::JOINING, "" };
         }
         else
         {
             onPlayerJoined(0);
-            m_clientStates[0] = ClientPlayerState::CONNECTED;
+            m_clientData[0] = { ClientPlayerState::CONNECTED, "" };
         }
     }
 }
@@ -817,7 +804,7 @@ void ServerController::onNodeConnected(const Net::NodeID nodeID)
 void ServerController::onNodeDisconnected(const Net::NodeID nodeID)
 {
     CCLOG("ServerController::onNodeDisconnected %i", nodeID);
-    m_clientStates[nodeID] = ClientPlayerState::DISCONNECTED;
+    m_clientData[nodeID].state = ClientPlayerState::DISCONNECTED;
     if (nodeID == 0)
     {
         stop();
@@ -857,6 +844,17 @@ void ServerController::onPlayerJoined(const uint8_t playerID)
     m_gameController->getGameMode()->onPlayerReady(playerID);
 }
 
+void ServerController::onClientInfoReceived(const std::shared_ptr<Net::Message>& message,
+                                            const Net::NodeID nodeID)
+{
+    if (auto infoMessage = std::dynamic_pointer_cast<ClientInfoMessage>(message))
+    {
+        m_clientData[nodeID].name = infoMessage->name;
+    }
+
+    sendInfoMessages();
+}
+
 void ServerController::onClientStateMessageReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID playerID)
 {
     if (auto stateMessage = std::dynamic_pointer_cast<ClientStateUpdateMessage>(data))
@@ -868,7 +866,7 @@ void ServerController::onClientStateMessageReceived(const std::shared_ptr<Net::M
             startGameMessage->playerID = playerID;
             std::shared_ptr<Net::Message> message = startGameMessage;
             m_networkController->sendMessage(playerID, message);
-            m_clientStates[playerID] = ClientPlayerState::CONNECTED;
+            m_clientData[playerID].state = ClientPlayerState::CONNECTED;
 
             const auto players = m_gameController->getEntitiesModel()->getPlayers();
             if (players.find(playerID) != players.end())
@@ -916,7 +914,7 @@ void ServerController::onInputMessageReceived(const std::shared_ptr<Net::Message
 //        CCLOG("ServerController::onInputMessageReceived - player %i input %u received, last %u",
 //              playerID, inputMessage->inputSequence, m_inputCache->getLastReceivedSequence(playerID));
 
-        const float networkLatency = m_networkController->GetRoundTripTime(playerID) * 0.5f; // half because only one-way latency counts here
+        const float networkLatency = m_networkController->getRoundTripTime(playerID) * 0.5f; // half because only one-way latency counts here
         const float inputGameTime = m_gameModel->getCurrentTime() - networkLatency;
         
         // Save input data
@@ -970,7 +968,6 @@ std::shared_ptr<ServerSnapshotMessage> ServerController::getWorldStateDiff(const
     return nullptr;
 }
 
-
 void ServerController::initDebugStuff()
 {
     for (int x = 1; x < 10; x++)
@@ -978,6 +975,8 @@ void ServerController::initDebugStuff()
         size_t playerID = x;
         onPlayerJoined(playerID);
         m_botPlayers[playerID] = std::make_shared<BaseAI>();
+        
+        m_clientData[playerID] = { ClientPlayerState::AI, "Bot-" + std::to_string(playerID) };
     }
 }
 
@@ -1028,28 +1027,31 @@ void ServerController::sendUpdateMessages()
 
     for (auto player : players)
     {
-        snapshot.playerData[player.first].entityID = player.second->getEntityID();
-        snapshot.playerData[player.first].animationState = player.second->getAnimationState();
-        snapshot.playerData[player.first].aimPointX = player.second->getAimPosition().x;
-        snapshot.playerData[player.first].aimPointY = player.second->getAimPosition().y;
-        snapshot.playerData[player.first].health = player.second->getHealth();
-        snapshot.playerData[player.first].flipX = player.second->getFlipX();
-        snapshot.playerData[player.first].activeWeaponSlot = player.second->getActiveSlot();
-        const auto& weaponSlots = player.second->getWeaponSlots();
+        const uint8_t playerID = player.first;
+        const auto& playerState = player.second;
+        snapshot.playerData[playerID].entityID = playerState->getEntityID();
+        snapshot.playerData[playerID].kills = m_gameController->getGameMode()->getPlayerKills(playerID);
+        snapshot.playerData[playerID].animationState = playerState->getAnimationState();
+        snapshot.playerData[playerID].aimPointX = playerState->getAimPosition().x;
+        snapshot.playerData[playerID].aimPointY = playerState->getAimPosition().y;
+        snapshot.playerData[playerID].health = playerState->getHealth();
+        snapshot.playerData[playerID].flipX = playerState->getFlipX();
+        snapshot.playerData[playerID].activeWeaponSlot = playerState->getActiveSlot();
+        const auto& weaponSlots = playerState->getWeaponSlots();
         for (size_t i = 0; i < 5; i++)
         {
-            snapshot.playerData[player.first].weaponSlots.push_back({(uint8_t)weaponSlots.at(i).type, weaponSlots.at(i).amount});
+            snapshot.playerData[playerID].weaponSlots.push_back({(uint8_t)weaponSlots.at(i).type, weaponSlots.at(i).amount});
         }
     }
     
-    for (const auto& clientState : m_clientStates)
+    for (const auto& clientData : m_clientData)
     {
-        const uint8_t playerID = clientState.first;
-        if (clientState.second == ClientPlayerState::DISCONNECTED)
+        const uint8_t playerID = clientData.first;
+        if (clientData.second.state == ClientPlayerState::DISCONNECTED)
         {
             continue;
         }
-        else if (clientState.second == ClientPlayerState::JOINING)
+        else if (clientData.second.state == ClientPlayerState::JOINING)
         {
             std::shared_ptr<ServerLoadLevelMessage> loadLevelMessage = std::make_shared<ServerLoadLevelMessage>();
             loadLevelMessage->tickRate = m_gameModel->getTickRate();
@@ -1119,4 +1121,29 @@ void ServerController::sendUpdateMessages()
     }
             
     m_frameHitData.clear();
+}
+
+void ServerController::sendInfoMessages()
+{
+    std::shared_ptr<ServerInfoMessage> infoMessage = std::make_shared<ServerInfoMessage>();
+    infoMessage->playerCount = (uint8_t)m_clientData.size();
+    for (const auto& pair : m_clientData)
+    {
+        infoMessage->playerIDs.push_back(pair.first);
+        infoMessage->names.push_back(pair.second.name);
+    }
+    
+    std::shared_ptr<Net::Message> outMessage = infoMessage;
+    sendToAllConnectedClients(outMessage);
+}
+
+void ServerController::sendToAllConnectedClients(std::shared_ptr<Net::Message>& message)
+{
+    for (const auto& pair : m_clientData)
+    {
+        if (pair.second.state == ClientPlayerState::CONNECTED)
+        {
+            m_networkController->sendMessage(pair.first, message);
+        }
+    }
 }

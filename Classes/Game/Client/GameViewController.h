@@ -86,9 +86,7 @@ private:
     void updateEntities(const SnapshotData& snapshot);
     
     void updateCursor(const SnapshotData& snapshot);
-    
-    void updateHUD(const SnapshotData& snapshot);
-    
+        
     void updateShotTrails(const float deltaTime);
 
     void updatePostProcess(const float zoomRadius);

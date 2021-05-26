@@ -48,6 +48,12 @@ private:
         DISCONNECTED = 0,
         JOINING,
         CONNECTED,
+        AI
+    };
+    
+    struct ClientPlayerData {
+        ClientPlayerState state;
+        std::string name;
     };
     
     std::shared_ptr<GameController> m_gameController;
@@ -62,7 +68,7 @@ private:
     float m_gameOverTimer;
 
     std::map<uint32_t, EntitySnapshot> m_preRollbackState;
-    std::map<uint8_t, ClientPlayerState> m_clientStates;
+    std::map<uint8_t, ClientPlayerData> m_clientData;
     std::map<uint8_t, std::vector<SnapshotData>> m_clientSnapshots;
     std::vector<FrameHitData> m_frameHitData;
     std::map<uint8_t, std::shared_ptr<BaseAI>> m_botPlayers;
@@ -101,6 +107,8 @@ private:
     void onNodeDisconnected(const Net::NodeID nodeID);
     void onPlayerJoined(const uint8_t playerID);
 
+    void onClientInfoReceived(const std::shared_ptr<Net::Message>& message,
+                              const Net::NodeID nodeID);
     void onClientStateMessageReceived(const std::shared_ptr<Net::Message>& data,
                                       const Net::NodeID playerID);
     void onInputMessageReceived(const std::shared_ptr<Net::Message>& data,
@@ -118,6 +126,8 @@ private:
                             std::map<uint32_t, EntitySnapshot>& snapshot,
                             const std::vector<cocos2d::Rect>& staticRects);
     void sendUpdateMessages();
+    void sendInfoMessages();
+    void sendToAllConnectedClients(std::shared_ptr<Net::Message>& message);
 };
 
 #endif /* ServerController_h */

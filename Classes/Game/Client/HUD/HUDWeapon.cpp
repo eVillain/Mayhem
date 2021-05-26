@@ -1,6 +1,8 @@
 #include "HUDWeapon.h"
+
 #include "GameViewConstants.h"
 #include "HUDHelper.h"
+#include "HUDConstants.h"
 
 USING_NS_CC;
 
@@ -33,7 +35,7 @@ bool HUDWeapon::init()
     m_border->setColor(GameViewConstants::BUTTON_BORDER_COLOR);
     addChild(m_border);
     
-    m_sprite = cocos2d::Sprite::create(GameViewConstants::PIXEL_RECT);
+    m_sprite = cocos2d::Sprite::create(HUDConstants::PIXEL_RECT);
     m_sprite->setOpacity(0);
     m_sprite->setScale(2.f);
     addChild(m_sprite);

@@ -7,11 +7,13 @@
 #include "cocos2d.h"
 
 enum MessageTypes {
-    MESSAGE_TYPE_CLIENT_READY = 0,
+    MESSAGE_TYPE_CLIENT_INFO = 0,
+    MESSAGE_TYPE_CLIENT_READY,
     MESSAGE_TYPE_CLIENT_STATE_UPDATE,
     MESSAGE_TYPE_CLIENT_INPUT,
     MESSAGE_TYPE_CLIENT_CHAT_MESSAGE,
     MESSAGE_TYPE_SERVER_CHAT_MESSAGE,
+    MESSAGE_TYPE_SERVER_INFO,
     MESSAGE_TYPE_SERVER_LOAD_LEVEL,
     MESSAGE_TYPE_SERVER_STARTGAME,
     MESSAGE_TYPE_SERVER_SNAPSHOT,
@@ -32,9 +34,27 @@ enum ClientState {
     PLAYER_SPECTATE,
 };
 
-class ClientReadyMessage : public Net::Message {
+class ClientInfoMessage : public Net::Message {
 public:
     // TODO: This should eventually contain player customization data
+    std::string name;
+    
+    ClientInfoMessage()
+    : Message(MESSAGE_TYPE_CLIENT_INFO) {}
+
+    template <typename Stream> bool serializeInternal(Stream& stream)
+    {
+        stream.SerializeString(name);
+        return true;
+    }
+    
+    bool serialize(Net::WriteStream& stream) override { return serializeInternal(stream); }
+    bool serialize(Net::ReadStream& stream) override { return serializeInternal(stream); }
+    bool serialize(Net::MeasureStream& stream) override { return serializeInternal(stream); }
+};
+
+class ClientReadyMessage : public Net::Message {
+public:
     bool ready;
     
     ClientReadyMessage()
@@ -53,7 +73,6 @@ public:
 
 class ClientStateUpdateMessage : public Net::Message {
 public:
-    // TODO: This should eventually contain player customization data
     uint8_t state;
     
     ClientStateUpdateMessage()
@@ -62,6 +81,56 @@ public:
     template <typename Stream> bool serializeInternal(Stream& stream)
     {
         stream.SerializeByte(state);
+        return true;
+    }
+    
+    bool serialize(Net::WriteStream& stream) override { return serializeInternal(stream); }
+    bool serialize(Net::ReadStream& stream) override { return serializeInternal(stream); }
+    bool serialize(Net::MeasureStream& stream) override { return serializeInternal(stream); }
+};
+
+class ServerInfoMessage : public Net::Message {
+public:
+    uint8_t playerCount;
+    std::vector<uint8_t> playerIDs;
+    std::vector<std::string> names;
+    
+    ServerInfoMessage()
+    : Message(MESSAGE_TYPE_SERVER_INFO) {}
+
+    template <typename Stream> bool serializeInternal(Stream& stream)
+    {
+        if (stream.IsReading())
+        {
+            stream.SerializeByte(playerCount);
+            for (size_t i = 0; i < playerCount; i++)
+            {
+                uint8_t playerID = 0;
+                stream.SerializeByte(playerID);
+                playerIDs.push_back(playerID);
+            }
+            for (size_t i = 0; i < playerCount; i++)
+            {
+                std::string playerName;
+                stream.SerializeString(playerName);
+                names.push_back(playerName);
+            }
+        }
+        else
+        {
+            uint8_t count = (uint8_t)playerIDs.size();
+            stream.SerializeByte(count);
+            for (size_t i = 0; i < count; i++)
+            {
+                uint8_t playerID = playerIDs.at(i);
+                stream.SerializeByte(playerID);
+            }
+            for (size_t i = 0; i < count; i++)
+            {
+                std::string playerName = names.at(i);
+                stream.SerializeString(playerName);
+            }
+        }
         return true;
     }
     
@@ -275,6 +344,7 @@ struct InventoryItemState {
 
 struct PlayerState {
     uint32_t entityID;
+    uint8_t kills;
     uint8_t animationState;
     float aimPointX;
     float aimPointY;
@@ -338,6 +408,7 @@ public:
             {
                 uint8_t playerID = 0;
                 uint32_t entityID = 0;
+                uint8_t kills = 0;
                 uint8_t animationState = 0;
                 float aimPointX = 0.f;
                 float aimPointY = 0.f;
@@ -349,6 +420,7 @@ public:
 
                 stream.SerializeByte(playerID);
                 stream.SerializeBits(entityID, 16);
+                stream.SerializeByte(kills);
                 stream.SerializeByte(animationState);
                 stream.SerializeFloat(aimPointX);
                 stream.SerializeFloat(aimPointY);
@@ -368,7 +440,7 @@ public:
                 
                 if (!stream.IsMeasuring())
                 {
-                    data.playerData[playerID] = { entityID, animationState, aimPointX, aimPointY, health, flipX, weaponFired, activeWeaponSlot, weaponSlots };
+                    data.playerData[playerID] = { entityID, kills, animationState, aimPointX, aimPointY, health, flipX, weaponFired, activeWeaponSlot, weaponSlots };
                 }
             }
             
@@ -435,6 +507,7 @@ public:
                 uint8_t playerID = pair.first;
                 stream.SerializeByte(playerID);
                 stream.SerializeBits(pair.second.entityID, 16);
+                stream.SerializeByte(pair.second.kills);
                 stream.SerializeByte(pair.second.animationState);
                 stream.SerializeFloat(pair.second.aimPointX);
                 stream.SerializeFloat(pair.second.aimPointY);
@@ -474,15 +547,15 @@ public:
             stream.SerializeBits(hitCount, 32);
             for (const auto& hit : data.hitData)
             {
-                uint32_t hitPlayerID = hit.hitEntityID;
-                uint32_t hitterPlayerID = hit.hitterEntityID;
+                uint32_t hitEntityID = hit.hitEntityID;
+                uint32_t hitterEntityID = hit.hitterEntityID;
                 float damage = hit.damage;
                 float hitPosX = hit.hitPosX;
                 float hitPosY = hit.hitPosY;
                 bool isHeadshot = hit.isHeadshot;
                 bool isLethal = hit.isLethal;
-                stream.SerializeBits(hitterPlayerID, 16);
-                stream.SerializeBits(hitPlayerID, 16);
+                stream.SerializeBits(hitEntityID, 16);
+                stream.SerializeBits(hitterEntityID, 16);
                 stream.SerializeFloat(damage);
                 stream.SerializeFloat(hitPosX);
                 stream.SerializeFloat(hitPosY);
@@ -646,6 +719,7 @@ public:
             {
                 uint8_t playerID = 0;
                 uint32_t entityID = 0;
+                uint8_t kills = 0;
                 stream.SerializeByte(playerID);
                 stream.SerializeBits(entityID, 16);
                 
@@ -662,6 +736,7 @@ public:
                 if (previousPlayerIt != previousState.playerData.end())
                 {
                     streamByteDiff(stream, previousPlayerIt->second.animationState, animationState);
+                    streamByteDiff(stream, previousPlayerIt->second.kills, kills);
                     streamFloatDiff(stream, previousPlayerIt->second.aimPointX, aimPointX);
                     streamFloatDiff(stream, previousPlayerIt->second.aimPointY, aimPointY);
                     streamFloatDiff(stream, previousPlayerIt->second.health, health);
@@ -669,6 +744,7 @@ public:
                 else
                 {
                     streamByteDiff(stream, 0, animationState);
+                    streamByteDiff(stream, 0, kills);
                     streamFloatDiff(stream, 0.f, aimPointX);
                     streamFloatDiff(stream, 0.f, aimPointY);
                     streamFloatDiff(stream, 0.f, health);
@@ -708,7 +784,18 @@ public:
                 
                 if (!stream.IsMeasuring())
                 {
-                    data.playerData[playerID] = { entityID, animationState, aimPointX, aimPointY, health, flipX, weaponFired, activeWeaponSlot, weaponSlots };
+                    data.playerData[playerID] = {
+                        entityID,
+                        kills,
+                        animationState,
+                        aimPointX,
+                        aimPointY,
+                        health,
+                        flipX,
+                        weaponFired,
+                        activeWeaponSlot,
+                        weaponSlots
+                    };
                 }
             }
         }

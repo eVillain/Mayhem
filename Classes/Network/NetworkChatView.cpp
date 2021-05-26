@@ -3,6 +3,7 @@
 #include "GameViewConstants.h"
 #include "HUDHelper.h"
 #include "ButtonUtils.h"
+#include "HUDConstants.h"
 
 USING_NS_CC;
 
@@ -35,13 +36,13 @@ bool NetworkChatView::init()
     const cocos2d::Vec2 MESSAGE_BOX_HEADER_POSITION = MESSAGE_BOX_POSITION + cocos2d::Size(0.f,
                                                                                            MESSAGE_BOX_SIZE.height * 0.5f +  GameViewConstants::EDIT_BOX_HEADER_SIZE_MESSAGE.height * 0.5f);
     m_messageEditBox = cocos2d::ui::EditBox::create(GameViewConstants::EDIT_BOX_SIZE_MESSAGE,
-                                                    GameViewConstants::HUD_SCALE9_BUTTON);
+                                                    HUDConstants::HUD_SCALE9_BUTTON);
     m_messageEditBox->setInputMode(cocos2d::ui::EditBox::InputMode::SINGLE_LINE);
-    m_messageEditBox->setFont(GameViewConstants::FONT_5X7.c_str(),
+    m_messageEditBox->setFont(HUDConstants::FONT_5X7.c_str(),
                               GameViewConstants::FONT_SIZE_SMALL);
     m_messageEditBox->setFontColor(cocos2d::Color3B::BLACK);
     m_messageEditBox->setPlaceHolder("Enter message");
-    m_messageEditBox->setPlaceholderFont(GameViewConstants::FONT_5X7.c_str(), GameViewConstants::FONT_SIZE_SMALL);
+    m_messageEditBox->setPlaceholderFont(HUDConstants::FONT_5X7.c_str(), GameViewConstants::FONT_SIZE_SMALL);
     m_messageEditBox->setPosition(MESSAGE_EDIT_BOX_POSITION);
     addChild(m_messageEditBox);
     
@@ -88,9 +89,9 @@ bool NetworkChatView::init()
     return true;
 }
 
-void NetworkChatView::addMessage(const std::string& message, const int senderID)
+void NetworkChatView::addMessage(const std::string& message, const std::string& sender)
 {
-    const std::string formattedMsg = std::to_string(senderID) + ": " + message;
+    const std::string formattedMsg = sender + ": " + message;
     m_messages.push_back(formattedMsg);
     m_messagesTableView->reloadData();
 }

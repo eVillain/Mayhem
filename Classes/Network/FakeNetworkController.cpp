@@ -73,7 +73,7 @@ void FakeNetworkController::update(const float deltaTime)
     }
 }
 
-float FakeNetworkController::GetRoundTripTime(const Net::NodeID nodeID)
+float FakeNetworkController::getRoundTripTime(const Net::NodeID nodeID)
 {
     return m_fakeNet->getInputDelay() + m_fakeNet->getServerDelay();
 }

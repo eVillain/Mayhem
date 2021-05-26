@@ -16,7 +16,7 @@ public:
     
     virtual bool init() override;
     
-    void addMessage(const std::string& message, const int senderID);
+    void addMessage(const std::string& message, const std::string& sender);
         
     CREATE_FUNC(NetworkChatView);
     

@@ -38,7 +38,8 @@ public:
     void sendMessages() override {};
 
     const std::shared_ptr<Net::Transport> getTransport() override { return nullptr; }
-    float GetRoundTripTime(const Net::NodeID nodeID) override;
+    float getRoundTripTime(const Net::NodeID nodeID) override;
+    const Net::NodeID getLocalNodeID() const override { return 0; };
 
     bool isBroadcasting() const override { return true; }
     bool isListening() const override { return true; }

@@ -27,7 +27,6 @@ private:
     float m_tileUpdateAccumulator;
     int m_tileUpdateLayer;
     std::vector<cocos2d::Vec2> m_deadTiles;
-    std::map<uint8_t, bool> m_playerStates;
 
     void spawnThings();
     void fillDeadTiles();

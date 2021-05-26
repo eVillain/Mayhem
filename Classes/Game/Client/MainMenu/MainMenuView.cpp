@@ -1,8 +1,10 @@
 #include "MainMenuView.h"
+
 #include "ButtonUtils.h"
 #include "GameViewConstants.h"
 #include "HUDHelper.h"
 #include "ActionUtils.h"
+#include "HUDConstants.h"
 
 USING_NS_CC;
 
@@ -32,7 +34,7 @@ bool MainMenuView::init()
     addChild(m_playerName);
 
     cocos2d::SpriteFrameCache* cache = cocos2d::SpriteFrameCache::getInstance();
-    cache->addSpriteFramesWithFile(GameViewConstants::HUD_SPRITE_BATCH_FILE);
+    cache->addSpriteFramesWithFile(HUDConstants::HUD_SPRITE_BATCH_FILE);
     
     const float PADDING = 8.f;
     float buttonPosY = (GameViewConstants::BUTTON_SIZE_MENU.height + PADDING) * 2.f;

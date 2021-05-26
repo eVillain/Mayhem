@@ -48,6 +48,16 @@ void GameModeDM::onLevelLoaded(const bool isHost)
     }
 }
 
+void GameModeDM::onPlayerReady(const uint8_t playerID)
+{
+    m_playerStates[playerID] = true;
+}
+
+void GameModeDM::onPlayerDied(const uint8_t playerID)
+{
+    m_playerStates[playerID] = false;
+}
+
 void GameModeDM::onPlayerGotAKill(const uint8_t playerID)
 {
     if (m_playerKills.find(playerID) == m_playerKills.end())

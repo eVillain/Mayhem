@@ -3,7 +3,11 @@
 
 std::shared_ptr<Net::Message> NetworkMessageFactory::create(const Net::MessageType type)
 {
-    if (type == MESSAGE_TYPE_CLIENT_READY)
+    if (type == MESSAGE_TYPE_CLIENT_INFO)
+    {
+        return std::make_shared<ClientInfoMessage>();
+    }
+    else if (type == MESSAGE_TYPE_CLIENT_READY)
     {
         return std::make_shared<ClientReadyMessage>();
     }
@@ -22,6 +26,10 @@ std::shared_ptr<Net::Message> NetworkMessageFactory::create(const Net::MessageTy
     else if (type == MESSAGE_TYPE_SERVER_CHAT_MESSAGE)
     {
         return std::make_shared<ServerChatMessage>();
+    }
+    else if (type == MESSAGE_TYPE_SERVER_INFO)
+    {
+        return std::make_shared<ServerInfoMessage>();
     }
     else if (type == MESSAGE_TYPE_SERVER_LOAD_LEVEL)
     {

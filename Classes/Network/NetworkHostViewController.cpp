@@ -1,26 +1,32 @@
 #include "NetworkHostViewController.h"
-#include "NetworkHostView.h"
+
+#include "BackToMainMenuEvent.h"
+#include "ClientModel.h"
+#include "Core/Dispatcher.h"
+#include "GameViewConstants.h"
+#include "GameSettings.h"
+#include "InitClientCommand.h"
+#include "Network/NetworkMessages.h"
 #include "NetworkChatView.h"
 #include "NetworkController.h"
-#include "TransportLAN.h"
-#include "Core/Injector.h"
-#include "InitClientCommand.h"
-
+#include "NetworkHostClientCell.h"
+#include "NetworkHostGameLevelCell.h"
+#include "NetworkHostGameModeCell.h"
+#include "NetworkHostView.h"
 #include "NetworkModel.h"
 #include "NetworkView.h"
-#include "NetworkHostClientCell.h"
-#include "NetworkHostGameModeCell.h"
-#include "NetworkHostGameLevelCell.h"
-#include "Network/NetworkMessages.h"
-#include "GameViewConstants.h"
-#include "BackToMainMenuEvent.h"
-#include "Core/Dispatcher.h"
+#include "Transport.h"
 
-NetworkHostViewController::NetworkHostViewController()
-: m_model(nullptr)
-, m_networkController(nullptr)
+NetworkHostViewController::NetworkHostViewController(std::shared_ptr<NetworkModel> networkModel,
+                                                     std::shared_ptr<INetworkController> networkController,
+                                                     std::shared_ptr<GameSettings> gameSettings,
+                                                     std::shared_ptr<ClientModel> clientModel)
+: m_model(networkModel)
+, m_networkController(networkController)
+, m_gameSettings(gameSettings)
+, m_clientModel(clientModel)
 , m_view(nullptr)
-, m_refreshClientsTimer(0)
+, m_refreshClientsTimer(0.f)
 , m_startGame(false)
 {
     m_gameModeConfig.type = GameModeType::GAME_MODE_DEATHMATCH;
@@ -36,12 +42,8 @@ NetworkHostViewController::~NetworkHostViewController()
 
 void NetworkHostViewController::initialize()
 {
-    Injector& injector = Injector::globalInjector();
-    m_model = injector.getInstance<NetworkModel>();
-    m_networkController = injector.getInstance<NetworkController>();
-    
+    m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_CLIENT_INFO, std::bind(&NetworkHostViewController::onPlayerInfoReceived, this, std::placeholders::_1, std::placeholders::_2));
     m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_CLIENT_READY, std::bind(&NetworkHostViewController::onPlayerReadyReceived, this, std::placeholders::_1, std::placeholders::_2));
-    
     m_networkController->addMessageCallback(MessageTypes::MESSAGE_TYPE_CLIENT_CHAT_MESSAGE, std::bind(&NetworkHostViewController::onChatMessageReceived, this, std::placeholders::_1, std::placeholders::_2));
     
     m_networkController->setControllerMessageCallback([this](const std::string& message){
@@ -50,6 +52,9 @@ void NetworkHostViewController::initialize()
     
     auto glview = cocos2d::Director::getInstance()->getOpenGLView();
     glview->setViewName("Mayhem Royale - Host");
+    
+    const cocos2d::Value& playerNameSetting = m_gameSettings->getValue(GameSettings::SETTING_PLAYER_NAME, cocos2d::Value(""));
+    m_clientModel->setPlayerName(0, playerNameSetting.asString());
     
     cocos2d::Director::getInstance()->getScheduler()->scheduleUpdate(this, 0, false);
 }
@@ -321,6 +326,36 @@ void NetworkHostViewController::onBackToMainMenuButton(cocos2d::Ref *ref, cocos2
     Dispatcher::globalDispatcher().dispatch(BackToMainMenuEvent());
 }
 
+void NetworkHostViewController::onPlayerInfoReceived(const std::shared_ptr<Net::Message>& message,
+                                                     const Net::NodeID nodeID)
+{
+    if (auto infoMessage = std::dynamic_pointer_cast<ClientInfoMessage>(message))
+    {
+        m_clientModel->setPlayerName(nodeID, infoMessage->name);
+    }
+    
+    const auto& playerNames = m_clientModel->getPlayerNames();
+    
+    std::shared_ptr<ServerInfoMessage> serverInfoMessage = std::make_shared<ServerInfoMessage>();
+    serverInfoMessage->playerCount = playerNames.size();
+    for (const auto& pair : playerNames)
+    {
+        serverInfoMessage->playerIDs.push_back(pair.first);
+        serverInfoMessage->names.push_back(pair.second);
+    }
+    std::shared_ptr<Net::Message> outMessage = serverInfoMessage;
+
+    for (const auto& pair : m_clientData)
+    {
+        if (pair.second.state != ClientCellData::State::READY)
+        {
+            continue;
+        }
+        const uint8_t clientID = pair.first;
+        m_networkController->sendMessage(clientID, outMessage, true);
+    }
+}
+
 void NetworkHostViewController::onPlayerReadyReceived(const std::shared_ptr<Net::Message>& message,
                                                       const Net::NodeID nodeID)
 {
@@ -344,7 +379,7 @@ void NetworkHostViewController::onChatMessageReceived(const std::shared_ptr<Net:
     }
     if (auto chatMessage = std::dynamic_pointer_cast<ClientChatMessage>(message))
     {
-        m_view->getChatView()->addMessage(chatMessage->text, nodeID);
+        m_view->getChatView()->addMessage(chatMessage->text, std::to_string(nodeID));
         propagateChatMessage(chatMessage->text, nodeID);
     }
 }

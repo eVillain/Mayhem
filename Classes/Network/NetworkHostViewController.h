@@ -6,10 +6,12 @@
 #include "Network/DrudgeNet/include/DataTypes.h"
 #include "Game/Shared/GameMode.h"
 
+class ClientModel;
 class Event;
-class NetworkModel;
-class NetworkController;
+class GameSettings;
+class INetworkController;
 class NetworkHostView;
+class NetworkModel;
 
 namespace Net {
     class Stream;
@@ -23,7 +25,10 @@ class NetworkHostViewController
 , public cocos2d::ui::EditBoxDelegate
 {
 public:
-    NetworkHostViewController();
+    NetworkHostViewController(std::shared_ptr<NetworkModel> networkModel,
+                              std::shared_ptr<INetworkController> networkController,
+                              std::shared_ptr<GameSettings> gameSettings,
+                              std::shared_ptr<ClientModel> clientModel);
     ~NetworkHostViewController();
     
     void initialize();
@@ -59,14 +64,16 @@ private:
     };
     
     std::shared_ptr<NetworkModel> m_model;
-    std::shared_ptr<NetworkController> m_networkController;
+    std::shared_ptr<INetworkController> m_networkController;
+    std::shared_ptr<GameSettings> m_gameSettings;
+    std::shared_ptr<ClientModel> m_clientModel;
 
     NetworkHostView* m_view;
     
     float m_refreshClientsTimer;
     bool m_startGame;
     
-    std::map<ssize_t, ClientCellData> m_clientData;
+    std::map<uint8_t, ClientCellData> m_clientData;
     
     GameMode::Config m_gameModeConfig;
     
@@ -74,7 +81,8 @@ private:
     void onSendButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
     void onBackToMainMenuButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
     
-    
+    void onPlayerInfoReceived(const std::shared_ptr<Net::Message>& message,
+                              const Net::NodeID nodeID);
     void onPlayerReadyReceived(const std::shared_ptr<Net::Message>& message,
                                const Net::NodeID nodeID);
     void onChatMessageReceived(const std::shared_ptr<Net::Message>& message,

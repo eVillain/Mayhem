@@ -37,3 +37,14 @@ void ClientModel::reset()
     m_inputData.clear();
     m_playerNames.clear();
 }
+
+const std::string& ClientModel::getPlayerName(const uint8_t playerID) const
+{
+    if (m_playerNames.find(playerID) != m_playerNames.end())
+    {
+        return m_playerNames.at(playerID);
+    }
+    
+    static const std::string NO_PLAYER_NAME = "No Name";
+    return NO_PLAYER_NAME;
+}

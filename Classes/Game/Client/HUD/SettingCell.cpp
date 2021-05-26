@@ -1,7 +1,9 @@
 #include "SettingCell.h"
-#include "GameViewConstants.h"
-#include "HUDHelper.h"
+
 #include "ButtonUtils.h"
+#include "GameViewConstants.h"
+#include "HUDConstants.h"
+#include "HUDHelper.h"
 
 USING_NS_CC;
 
@@ -141,13 +143,13 @@ void SettingCell::addEditBox(cocos2d::ui::EditBox::InputMode mode)
     {
         m_editBox = cocos2d::ui::EditBox::create(cocos2d::Size(getContentSize().width * 0.5f,
                                                                GameViewConstants::EDIT_BOX_SIZE_SETTING.height),
-                                                 GameViewConstants::HUD_SCALE9_BUTTON);
+                                                 HUDConstants::HUD_SCALE9_BUTTON);
         m_editBox->setInputMode(mode);
-        m_editBox->setFont(GameViewConstants::FONT_5X7.c_str(),
+        m_editBox->setFont(HUDConstants::FONT_5X7.c_str(),
                            GameViewConstants::FONT_SIZE_SMALL);
         m_editBox->setFontColor(cocos2d::Color3B::BLACK);
         m_editBox->setPlaceHolder(m_value->getString().c_str());
-        m_editBox->setPlaceholderFont(GameViewConstants::FONT_5X7.c_str(),
+        m_editBox->setPlaceholderFont(HUDConstants::FONT_5X7.c_str(),
                                       GameViewConstants::FONT_SIZE_SMALL);
         addChild(m_editBox);
     }

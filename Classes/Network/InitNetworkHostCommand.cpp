@@ -6,7 +6,7 @@
 #include "GameSettings.h"
 #include "NetworkController.h"
 #include "NetworkHostViewController.h"
-#include "cocos2d.h"
+#include "ClientModel.h"
 
 InitNetworkHostCommand::InitNetworkHostCommand(NetworkHostView* view)
 : m_view(view)
@@ -31,9 +31,17 @@ bool InitNetworkHostCommand::run()
             NetworkModel, GameSettings>();
         injector.mapInterfaceToType<INetworkController, NetworkController>();
     }
+    if (!injector.hasMapping<ClientModel>())
+    {
+        injector.mapSingleton<ClientModel>();
+    }
     if (!injector.hasMapping<NetworkHostViewController>())
     {
-        injector.mapSingleton<NetworkHostViewController>();
+        injector.mapSingleton<NetworkHostViewController,
+            NetworkModel,
+            INetworkController,
+            GameSettings,
+            ClientModel>();
     }
     
     auto networkController = injector.getInstance<INetworkController>();
