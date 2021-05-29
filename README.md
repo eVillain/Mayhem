@@ -1,7 +1,8 @@
 # Mayhem
 2D Multiplayer Shooter
 
-Use Xcode project in proj.ios to compile for OSX/iOS.
+Use Xcode project in proj.ios_mac to compile for OSX/iOS.
+
 Use Visual Studio project in proj.win32 to compile for Windows.
 
 All other platforms are unsupported for now.
