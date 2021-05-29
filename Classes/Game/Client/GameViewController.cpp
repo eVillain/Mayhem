@@ -84,6 +84,8 @@ void GameViewController::update(const float deltaTime,
     updateCursor(snapshot);
     
     updateShotTrails(deltaTime);
+    
+    updatePseudo3D(deltaTime);
 
     updateView(deltaTime);
 
@@ -595,35 +597,6 @@ void GameViewController::updateCamera(const float deltaTime,
 
 void GameViewController::updateView(const float deltaTime)
 {
-    std::vector<std::shared_ptr<Pseudo3DItem>>& pseudo3DItems = m_gameView->getPseudo3DItems();
-    for (auto item : pseudo3DItems)
-    {
-        item->update(deltaTime);
-        if (auto particle = std::dynamic_pointer_cast<Pseudo3DParticle>(item))
-        {
-            m_gameView->getPixelDrawNode()->drawPoint(particle->getScreenPosition(), 1.f, particle->getColor());
-            if (particle->getPseudoZPosition() > 0.f) // Shadow
-            {
-                m_gameView->getPixelDrawNode()->drawPoint(particle->getPosition(), 1.f, cocos2d::Color4F(0.f,0.f,0.f,0.5f));
-            }
-        }
-        else if (auto sprite = std::dynamic_pointer_cast<Pseudo3DSprite>(item))
-        {
-            if (sprite->getTimeAlive() >= sprite->getLifeTime())
-            {
-                sprite->getSprite()->removeFromParent();
-            }
-        }
-    }
-    
-    pseudo3DItems.erase(std::remove_if(pseudo3DItems.begin(),
-                                       pseudo3DItems.end(),
-                                       [](const std::shared_ptr<Pseudo3DItem>& item)
-                                       {
-                                           return item->getTimeAlive() >= item->getLifeTime();
-                                       }),
-                        pseudo3DItems.end());
-    
     auto director = cocos2d::Director::getInstance();
     const cocos2d::Vec2 midWindow = director->getWinSize() * 0.5f;
     const float zoom = m_cameraModel->getZoom();
@@ -668,6 +641,39 @@ void GameViewController::updateView(const float deltaTime)
     }
     
     m_audioController->setListenerPosition(m_cameraModel->getPosition());
+}
+
+void GameViewController::updatePseudo3D(const float deltaTime)
+{
+    std::vector<std::shared_ptr<Pseudo3DItem>>& pseudo3DItems = m_gameView->getPseudo3DItems();
+    for (auto item : pseudo3DItems)
+    {
+        item->update(deltaTime);
+        if (auto particle = std::dynamic_pointer_cast<Pseudo3DParticle>(item))
+        {
+            m_gameView->getPixelDrawNode()->drawPoint(particle->getScreenPosition(), 1.f, particle->getColor());
+            if (particle->getPseudoZPosition() > 0.f) // Shadow
+            {
+                m_gameView->getPixelDrawNode()->drawPoint(particle->getPosition(), 1.f, cocos2d::Color4F(0.f,0.f,0.f,0.5f));
+            }
+        }
+        else if (auto sprite = std::dynamic_pointer_cast<Pseudo3DSprite>(item))
+        {
+            if (sprite->getTimeAlive() >= sprite->getLifeTime())
+            {
+                sprite->getSprite()->removeFromParent();
+            }
+        }
+    }
+    
+    pseudo3DItems.erase(std::remove_if(pseudo3DItems.begin(),
+                                       pseudo3DItems.end(),
+                                       [](const std::shared_ptr<Pseudo3DItem>& item)
+                                       {
+                                           return item->getTimeAlive() >= item->getLifeTime();
+                                       }),
+                        pseudo3DItems.end());
+
 }
 
 void GameViewController::updatePlayerAnimations(const uint8_t playerID,

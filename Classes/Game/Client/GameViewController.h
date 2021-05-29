@@ -74,6 +74,7 @@ private:
                       const SnapshotData& snapshot);
     
     void updateView(const float deltaTime);
+    void updatePseudo3D(const float deltaTime);
     
     void updatePlayerAnimations(const uint8_t playerID,
                                 std::shared_ptr<EntityView>& entityView,
