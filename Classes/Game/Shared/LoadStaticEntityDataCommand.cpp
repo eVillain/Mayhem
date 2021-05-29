@@ -47,14 +47,14 @@ bool LoadStaticEntityDataCommand::run()
     tinyxml2::XMLError eResult = xmlDoc.LoadFile(fullPath.c_str());
     if (eResult != tinyxml2::XMLError::XML_SUCCESS)
     {
-        cocos2d::log("EntitiesController::loadItemDefs - Failed to load xml file!");
+        cocos2d::log("LoadStaticEntityDataCommand::run - Failed to load xml file!");
         return false;
     }
     
     tinyxml2::XMLNode * pRoot = xmlDoc.FirstChild();
     if (pRoot == nullptr)
     {
-        cocos2d::log("EntitiesController::loadItemDefs - Malformed xml file!");
+        cocos2d::log("LoadStaticEntityDataCommand::run - Malformed xml file!");
         return false;
     }
     
@@ -68,7 +68,7 @@ bool LoadStaticEntityDataCommand::run()
         if (eResult != tinyxml2::XMLError::XML_SUCCESS)
         {
             entityElement = entityElement->NextSiblingElement("entity");
-            cocos2d::log("EntitiesController::loadItemDefs - no type for item in XML!");
+            cocos2d::log("LoadStaticEntityDataCommand::run - no type for item in XML!");
             continue;
         }
 
@@ -99,7 +99,7 @@ bool LoadStaticEntityDataCommand::run()
         
         entityElement = entityElement->NextSiblingElement("entity");
     }
-    cocos2d::log("entities loaded: %lu", itemDataMap.size());
+    cocos2d::log("LoadStaticEntityDataCommand:: entities loaded: %lu", itemDataMap.size());
     
     return true;
 }

@@ -56,12 +56,12 @@ ServerController::ServerController(std::shared_ptr<GameController> gameControlle
                                                                               std::placeholders::_1));
     m_frameCache->setMaxRollbackFrames((m_maxPingThreshold / m_gameModel->getFrameTime()) + DEFAULT_CLIENT_TICKS_BUFFERED);
 
-    printf("ServerController:: constructor: %p\n", this);
+    CCLOG("[Server]ServerController:: constructor: %p", this);
 }
 
 ServerController::~ServerController()
 {
-    printf("ServerController:: destructor: %p\n", this);
+    CCLOG("[Server]ServerController:: destructor: %p", this);
 }
 
 void ServerController::update(float deltaTime)
@@ -759,10 +759,10 @@ void ServerController::rollbackForPlayer(const uint8_t playerID, const uint32_t 
     const uint32_t rollbackLatencyTicks = (networkLatency / m_gameModel->getFrameTime()) + DEFAULT_CLIENT_TICKS_BUFFERED;
     if (m_frameCache->getFrameCount() < rollbackLatencyTicks)
     {
-        printf("ServerController::rollbackForPlayer %i failed because not enough frames in cache\n", playerID);
+        CCLOG("[Server]ServerController::rollbackForPlayer %i failed because not enough frames in cache", playerID);
         return;
     }
-//    printf("ServerController::rollbackForPlayer %i is %i frames (%fms+%iticks)\n",
+//    CCLOG("ServerController::rollbackForPlayer %i is %i frames (%fms+%iticks)",
 //           playerID, rollbackLatencyTicks, networkLatency, DEFAULT_CLIENT_TICKS_BUFFERED);
 
     const auto& player = m_gameController->getEntitiesModel()->getPlayer(playerID);
@@ -803,7 +803,7 @@ void ServerController::onNodeConnected(const Net::NodeID nodeID)
 
 void ServerController::onNodeDisconnected(const Net::NodeID nodeID)
 {
-    CCLOG("ServerController::onNodeDisconnected %i", nodeID);
+    CCLOG("[Server]ServerController::onNodeDisconnected %i", nodeID);
     m_clientData[nodeID].state = ClientPlayerState::DISCONNECTED;
     if (nodeID == 0)
     {
@@ -821,7 +821,7 @@ void ServerController::onPlayerJoined(const uint8_t playerID)
                                                                           entityID,
                                                                           position,
                                                                           rotation);
-//    CCLOG("ServerController::onPlayerJoined %i, entityID: %i", playerID, player->getEntityID());
+//    CCLOG("[Server]ServerController::onPlayerJoined %i, entityID: %i", playerID, player->getEntityID());
 
     const cocos2d::Size mapSize = m_levelModel->getTileMap()->getMapSize();
     const cocos2d::Size tileSize = m_levelModel->getTileMap()->getTileSize();
@@ -907,11 +907,11 @@ void ServerController::onInputMessageReceived(const std::shared_ptr<Net::Message
         if (m_inputCache->hasReceivedSequence(playerID) &&
             m_inputCache->getLastReceivedSequence(playerID) >= inputMessage->inputSequence)
         {
-            CCLOG("ServerController::onInputMessageReceived - discarding player %i input older than last (%u vs %u)",
+            CCLOG("[Server]ServerController::onInputMessageReceived - discarding player %i input older than last (%u vs %u)",
                   playerID, inputMessage->inputSequence, m_inputCache->getLastReceivedSequence(playerID));
             return;
         }
-//        CCLOG("ServerController::onInputMessageReceived - player %i input %u received, last %u",
+//        CCLOG("[Server]ServerController::onInputMessageReceived - player %i input %u received, last %u",
 //              playerID, inputMessage->inputSequence, m_inputCache->getLastReceivedSequence(playerID));
 
         const float networkLatency = m_networkController->getRoundTripTime(playerID) * 0.5f; // half because only one-way latency counts here
@@ -1065,7 +1065,7 @@ void ServerController::sendUpdateMessages()
         }
         
         snapshot.lastReceivedInput = m_inputCache->getLastAppliedSequence(playerID);
-//        CCLOG("ServerController::sendUpdateMessages - player %i last applied input %u on server tick: %i",
+//        CCLOG("[Server]ServerController::sendUpdateMessages - player %i last applied input %u on server tick: %i",
 //              playerID, snapshot.lastReceivedInput, snapshot.serverTick);
 
         const auto& sendingPlayer = players.find(playerID);
@@ -1116,7 +1116,7 @@ void ServerController::sendUpdateMessages()
             std::shared_ptr<Net::Message> message = std::dynamic_pointer_cast<Net::Message>(snapshotMessage);
             m_networkController->sendMessage(playerID, message);
             
-//            CCLOG("ServerController::sendUpdateMessages snapshot tick %u sent to player %i", snapshot.serverTick, playerID);
+//            CCLOG("[Server]ServerController::sendUpdateMessages snapshot tick %u sent to player %i", snapshot.serverTick, playerID);
         }
     }
             
