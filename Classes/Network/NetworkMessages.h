@@ -547,15 +547,15 @@ public:
             stream.SerializeBits(hitCount, 32);
             for (const auto& hit : data.hitData)
             {
-                uint32_t hitEntityID = hit.hitEntityID;
                 uint32_t hitterEntityID = hit.hitterEntityID;
+                uint32_t hitEntityID = hit.hitEntityID;
                 float damage = hit.damage;
                 float hitPosX = hit.hitPosX;
                 float hitPosY = hit.hitPosY;
                 bool isHeadshot = hit.isHeadshot;
                 bool isLethal = hit.isLethal;
-                stream.SerializeBits(hitEntityID, 16);
                 stream.SerializeBits(hitterEntityID, 16);
+                stream.SerializeBits(hitEntityID, 16);
                 stream.SerializeFloat(damage);
                 stream.SerializeFloat(hitPosX);
                 stream.SerializeFloat(hitPosY);
