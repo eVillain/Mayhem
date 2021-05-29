@@ -146,8 +146,13 @@ void GameController::applyInput(const uint8_t playerID, std::shared_ptr<ClientIn
     {
         const std::shared_ptr<Entity> entity = getEntityAtPoint(aimPosition, player->getEntityID());
         const InventoryItem& weapon = player->getWeaponSlots().at(player->getActiveSlot());
-        const StaticEntityData& weaponData = EntityDataModel::getStaticEntityData(weapon.type);
-        const uint16_t inventoryAmmo = player->getInventoryAmount((EntityType)weaponData.ammo.type);
+        const bool hasWeapon = weapon.type != EntityType::NoEntity;
+        uint16_t inventoryAmmo = 0;
+        if (hasWeapon)
+        {
+            const StaticEntityData& weaponData = EntityDataModel::getStaticEntityData(weapon.type);
+            inventoryAmmo = player->getInventoryAmount((EntityType)weaponData.ammo.type);
+        }
         if (input->reload &&
             weapon.amount == 0 &&
             inventoryAmmo > 0)
@@ -243,7 +248,7 @@ const bool GameController::checkForReload(uint8_t playerID, const std::shared_pt
     }
     
     InventoryItem& weapon = player->getWeaponSlots().at(player->getActiveSlot());
-    if (weapon.type == EntityType::PlayerEntity)
+    if (weapon.type == EntityType::NoEntity)
     {
         return false;
     }

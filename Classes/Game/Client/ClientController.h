@@ -12,7 +12,6 @@ class CameraController;
 class CameraModel;
 class ClientModel;
 class Entity;
-class EntityView;
 class Event;
 class LevelModel;
 class GameView;

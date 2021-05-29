@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 #include "ui/UIButton.h"
 
+class EntityView;
+
 class MainMenuView : public cocos2d::Layer
 {
 public:
@@ -20,6 +22,9 @@ public:
     cocos2d::ui::Button* getReplayEditorButton() const { return m_replayEditorButton; }
     cocos2d::ui::Button* getExitGameButton() const { return m_exitGameButton; }
 
+    cocos2d::Node* getPlayerNode() const { return m_playerNode; }
+    const std::shared_ptr<EntityView>& getPlayerView() const { return m_playerView; }
+
 private:
     cocos2d::Label* m_title;
     cocos2d::Label* m_playerName;
@@ -29,6 +34,10 @@ private:
     cocos2d::ui::Button* m_settingsGameButton;
     cocos2d::ui::Button* m_replayEditorButton;
     cocos2d::ui::Button* m_exitGameButton;
+    
+    cocos2d::Node* m_playerNode;
+    
+    std::shared_ptr<EntityView> m_playerView;
 };
 
 #endif // MAIN_MENU_VIEW_H

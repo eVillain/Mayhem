@@ -816,13 +816,22 @@ void GameViewController::updateHeldItem(std::shared_ptr<EntityView>& entityView,
                                         const PlayerState& state)
 {
     const EntityType heldItemType = (EntityType)state.weaponSlots.at(state.activeWeaponSlot).type;
-    const auto& itemData = EntityDataModel::getStaticEntityData(heldItemType);
-    const bool hasHeldItem = heldItemType != EntityType::PlayerEntity;
+    const bool hasHeldItem = heldItemType != EntityType::NoEntity;
     const bool hasSprite = entityView->getSecondarySprites().count(EntityView::WEAPON_INDEX) > 0;
-    const bool hasWrongType = !hasSprite ? false : entityView->getSecondarySprites()[EntityView::WEAPON_INDEX]->getTag() != heldItemType;
     
-    if (hasHeldItem &&
-        (!hasSprite || hasWrongType))
+    if (!hasHeldItem)
+    {
+        if (hasSprite)
+        {
+            entityView->getSecondarySprites()[EntityView::WEAPON_INDEX]->removeFromParent();
+            entityView->removeSecondarySprite(EntityView::WEAPON_INDEX);
+        }
+        return;
+    }
+        
+    const auto& itemData = EntityDataModel::getStaticEntityData(heldItemType);
+    const bool hasWrongType = !hasSprite ? false : entityView->getSecondarySprites()[EntityView::WEAPON_INDEX]->getTag() != heldItemType;
+    if (!hasSprite || hasWrongType)
     {
         std::string spriteFrame = itemData.sprite;
         if (heldItemType  == EntityType::Item_RPG)
@@ -842,16 +851,6 @@ void GameViewController::updateHeldItem(std::shared_ptr<EntityView>& entityView,
             entityView->getSprite()->addChild(entityView->getSecondarySprites()[EntityView::WEAPON_INDEX], 1);
         }
     }
-    else if (!hasHeldItem)
-    {
-        if (hasSprite)
-        {
-            entityView->getSecondarySprites()[EntityView::WEAPON_INDEX]->removeFromParent();
-            entityView->removeSecondarySprite(EntityView::WEAPON_INDEX);
-        }
-        return;
-    }
-    
     cocos2d::RefPtr<cocos2d::Sprite> heldItem = entityView->getSecondarySprites()[EntityView::WEAPON_INDEX];
     const cocos2d::Vec2 aimPosition = cocos2d::Vec2(state.aimPointX, state.aimPointY);
     const WeaponConstants::WeaponStateData data = WeaponConstants::getWeaponData(entityView->getSprite()->getPosition(),
@@ -953,7 +952,7 @@ void GameViewController::updateCursor(const SnapshotData& snapshot)
         else
         {
             const auto& weapon = playerState.weaponSlots.at(playerState.activeWeaponSlot);
-            if (weapon.type != EntityType::PlayerEntity &&
+            if (weapon.type != EntityType::NoEntity &&
                 playerState.health > 0.f)
             {
                 auto itemData = EntityDataModel::getStaticEntityData((EntityType)weapon.type);
@@ -1110,8 +1109,18 @@ void GameViewController::renderPostProcess(const SnapshotData& snapshot)
     }
     const PlayerState& playerState = playerIt->second;
     const EntityType heldItemType = (EntityType)playerState.weaponSlots.at(playerState.activeWeaponSlot).type;
-    const auto& itemData = EntityDataModel::getStaticEntityData(heldItemType);
-    const float zoomRadius = m_inputModel->getInputValue(InputConstants::ACTION_AIM) > 0.5f && itemData.weapon.type == WeaponType::Weapon_Type_Sniper ? 64.f : 0.f;
+    const bool hasItem = heldItemType != EntityType::NoEntity;
+    
+    float zoomRadius = 0.f;
+    if (hasItem)
+    {
+        const auto& itemData = EntityDataModel::getStaticEntityData(heldItemType);
+        if (m_inputModel->getInputValue(InputConstants::ACTION_AIM) > 0.5f &&
+            itemData.weapon.type == WeaponType::Weapon_Type_Sniper)
+        {
+            zoomRadius = 64.f;
+        }
+    }
     updatePostProcess(zoomRadius);
     
     const cocos2d::Value& losRenderSetting = m_gameSettings->getValue(GameViewConstants::SETTING_RENDER_LINE_OF_SIGHT, cocos2d::Value(true));

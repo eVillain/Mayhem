@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<entities>
-		<entity type="0" name ="Player" sprite="White1px.png">
+		<entity type="254" name ="Player" sprite="White1px.png">
 			<rect x="0" y="0" width="2" height="2"/>
 		</entity>
         <entity type="1" name ="Reserved" sprite="White1px.png">

@@ -176,9 +176,10 @@ void HUDView::update(const SnapshotData &snapshot, const uint8_t localPlayerID)
             bool isActiveSlot = i == activeSlot;
             const auto& slotWeapon = playerState.weaponSlots.at(i);
             std::string weaponSpriteFrame;
-            const StaticEntityData& slotWeaponData = EntityDataModel::getStaticEntityData((EntityType)slotWeapon.type);
-            if (slotWeapon.type != EntityType::PlayerEntity)
+            const bool hasWeapon = slotWeapon.type != EntityType::NoEntity;
+            if (hasWeapon)
             {
+                const StaticEntityData& slotWeaponData = EntityDataModel::getStaticEntityData((EntityType)slotWeapon.type);
                 if (isActiveSlot)
                 {
                     weaponAmmo = slotWeapon.amount;

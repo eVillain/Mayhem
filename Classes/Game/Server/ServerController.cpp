@@ -202,7 +202,7 @@ void ServerController::checkForShots(uint8_t playerID, const std::shared_ptr<Cli
     auto player = m_gameController->getEntitiesModel()->getPlayer(playerID);
     InventoryItem& weapon = player->getWeaponSlots().at(player->getActiveSlot());
     const EntityType heldItemType = weapon.type;
-    if (heldItemType == EntityType::PlayerEntity)
+    if (heldItemType == EntityType::NoEntity)
     {
         return;
     }
@@ -270,7 +270,7 @@ void ServerController::checkForShots(uint8_t playerID, const std::shared_ptr<Cli
             projectile->setSpawnTime(m_gameModel->getCurrentTime());
             if (weapon.amount == 0) // Ran out of throwables of this type
             {
-                weapon.type = EntityType::PlayerEntity;
+                weapon.type = EntityType::NoEntity;
             }
         }
     }
@@ -427,8 +427,8 @@ bool ServerController::onItemPickedUp(Player* player, Item* item)
             {
                 targetSlot = activeSlot;
             }
-            if (weaponSlots.at(WeaponSlot::MAIN_1).type != EntityType::PlayerEntity &&
-                weaponSlots.at(WeaponSlot::MAIN_2).type == EntityType::PlayerEntity)
+            if (weaponSlots.at(WeaponSlot::MAIN_1).type != EntityType::NoEntity &&
+                weaponSlots.at(WeaponSlot::MAIN_2).type == EntityType::NoEntity)
             {
                 targetSlot = WeaponSlot::MAIN_2;
             }
@@ -451,7 +451,7 @@ bool ServerController::onItemPickedUp(Player* player, Item* item)
             return false;
         }
 
-        if (weaponSlots.at(targetSlot).type != EntityType::PlayerEntity)
+        if (weaponSlots.at(targetSlot).type != EntityType::NoEntity)
         {
             if (isThrowable)
             {
@@ -533,7 +533,7 @@ bool ServerController::onProjectileHit(const std::shared_ptr<Entity>& entity,
     auto itemData = EntityDataModel::getStaticEntityData(projectile->getEntityType());
     if (itemData.weapon.damageType == DamageType::Damage_Type_Projectile)
     {
-        if (entity && entity->getEntityType() == EntityType::PlayerEntity)
+        if (entity && entity->getEntityType() != EntityType::NoEntity)
         {
             const auto& player = m_gameController->getEntitiesModel()->getPlayerByEntityID(entity->getEntityID());
             if (player && !player->getIsRemoved())
@@ -566,7 +566,7 @@ void ServerController::onProjectileDestroyed(const std::shared_ptr<Projectile>& 
     {
         for (auto explosionPair : entities)
         {
-            if (explosionPair.second->getEntityType() != EntityType::PlayerEntity)
+            if (explosionPair.second->getEntityType() != EntityType::NoEntity)
             {
                 continue;
             }
@@ -654,7 +654,7 @@ void ServerController::applyDamage(const std::shared_ptr<Player>& player,
         for (int i = 0; i < 5; i++)
         {
             const auto& weapon = player->getWeaponSlots().at(i);
-            if (weapon.type == EntityType::PlayerEntity)
+            if (weapon.type == EntityType::NoEntity)
             {
                 continue;
             }

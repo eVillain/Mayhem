@@ -94,11 +94,16 @@ void BaseAI::refreshState(const uint8_t playerID,
     const InventoryItem& weapon = botPlayer->getWeaponSlots().at(botPlayer->getActiveSlot());
     const auto nearbyPlayers = entitiesModel->getPlayersNearPosition(position, AI_AWARENESS_RADIUS);
     const bool areThreatsNearby = nearbyPlayers.size() > 1;
-    const bool seekWeapon = weapon.type == EntityType::PlayerEntity;
-    const bool needsReload = weapon.amount == 0;
+    const bool hasWeapon = weapon.type != EntityType::NoEntity;
+    const bool seekWeapon = !hasWeapon;
+    const bool needsReload = hasWeapon && weapon.amount == 0;
 
-    const auto& itemData = EntityDataModel::getStaticEntityData(weapon.type);
-    const uint16_t inventoryAmmo = botPlayer->getInventoryAmount((EntityType)itemData.ammo.type);
+    uint16_t inventoryAmmo = 0;
+    if (hasWeapon)
+    {
+        const auto& itemData = EntityDataModel::getStaticEntityData(weapon.type);
+        inventoryAmmo = botPlayer->getInventoryAmount((EntityType)itemData.ammo.type);
+    }
     
     m_targetType = TargetType::NONE;
     if (areThreatsNearby && (seekWeapon || needsReload))
@@ -153,10 +158,16 @@ void BaseAI::updateState(const uint8_t playerID,
     const auto& botPlayer = playerIt->second;
     const cocos2d::Vec2 position = botPlayer->getPosition();
     const InventoryItem& weapon = botPlayer->getWeaponSlots().at(botPlayer->getActiveSlot());
-    const auto& itemData = EntityDataModel::getStaticEntityData(weapon.type);
+    EntityType ammoType = EntityType::NoEntity;
+    
+    if (weapon.type != EntityType::NoEntity)
+    {
+        const auto& itemData = EntityDataModel::getStaticEntityData(weapon.type);
+        ammoType = (EntityType)itemData.ammo.type;
+    }
     const auto nearbyPlayers = entitiesModel->getPlayersNearPosition(position, AI_AWARENESS_RADIUS);
 //    const bool areThreatsNearby = nearbyPlayers.size() > 1;
-//    const bool seekWeapon = weapon.type == EntityType::PlayerEntity;
+//    const bool seekWeapon = weapon.type == EntityType::NoEntity;
 //    const bool needsReload = weapon.amount == 0;
 //    const uint16_t inventoryAmmo = botPlayer->getInventoryAmount((EntityType)itemData.ammo.type);
     
@@ -194,7 +205,7 @@ void BaseAI::updateState(const uint8_t playerID,
                                                    position,
                                                    botPlayer->getEntityID(),
                                                    nearEntities,
-                                                   (EntityType)itemData.ammo.type);
+                                                   ammoType);
 
         m_aimPointX = targetPos.x;
         m_aimPointY = targetPos.y;
@@ -233,7 +244,7 @@ void BaseAI::updateState(const uint8_t playerID,
                                                    position,
                                                    botPlayer->getEntityID(),
                                                    nearEntities,
-                                                   (EntityType)itemData.ammo.type);
+                                                   ammoType);
 
         m_aimPointX = targetPos.x;
         m_aimPointY = targetPos.y;
@@ -302,7 +313,8 @@ cocos2d::Vec2 BaseAI::getClosestOfType(const TargetType type,
         {
             isCorrectType = true;
         }
-        else if ((type == TargetType::ENEMY || type == TargetType::THREAT) && nearEntityType == EntityType::PlayerEntity)
+        else if ((type == TargetType::ENEMY || type == TargetType::THREAT) &&
+                 nearEntityType == EntityType::PlayerEntity)
         {
             isCorrectType = true;
         }

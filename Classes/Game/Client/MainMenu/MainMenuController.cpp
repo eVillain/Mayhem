@@ -14,6 +14,7 @@
 #include "SettingsView.h"
 #include "GameSettings.h"
 #include "Utils/PlayerNameUtil.h"
+#include "EntityView.h"
 
 MainMenuController::MainMenuController()
 : m_view(nullptr)
@@ -56,7 +57,7 @@ bool MainMenuController::init()
     glview->setCursorVisible(true);
     glview->setViewName("Mayhem Royale - Main Menu");
 
-//    scheduleUpdate();
+    scheduleUpdate();
 
     return true;
 }
@@ -71,6 +72,14 @@ void MainMenuController::shutdown()
 
 void MainMenuController::update(float deltaTime)
 {
+    Injector& injector = Injector::globalInjector();
+    auto inputModel = injector.getInstance<InputModel>();
+    
+    const cocos2d::Vec2 playerToMouse = inputModel->getMouseCoord() - m_view->getPlayerNode()->getPosition();
+    auto playerView = m_view->getPlayerView();
+    auto leftArm = playerView->getSecondarySprites().at(EntityView::ARM_LEFT_INDEX);
+    leftArm->setRotation(playerToMouse.getAngle() * (-180.f / M_PI) - 90.f);
+    
 //    m_audioController->update(deltaTime);
 }
 

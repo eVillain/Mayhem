@@ -18,7 +18,7 @@ static constexpr float PLAYER_DEFAULT_HEALTH = 100.f;
 
 typedef enum
 {
-    PlayerEntity = 0,
+    NoEntity = 0,
     
     Item_First_Placeholder, // 1
     Item_Deagle, // 2
@@ -60,6 +60,7 @@ typedef enum
     
     ExplosionEntity = 200,
     
+    PlayerEntity = 254,
     Death = 255
 } EntityType;
 

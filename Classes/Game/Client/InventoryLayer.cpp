@@ -195,7 +195,7 @@ void InventoryLayer::tableCellTouched(cocos2d::extension::TableView* table, coco
             {
                 auto& playerState = playerIt->second;
                 const auto throwableType = playerState.weaponSlots.at(WeaponSlot::THROWABLE).type;
-                if (throwableType != EntityType::PlayerEntity  &&
+                if (throwableType != EntityType::NoEntity  &&
                     playerState.weaponSlots.at(WeaponSlot::THROWABLE).amount > 0)
                 {
                     PlayerLogic::setInventoryAmount((EntityType)throwableType,

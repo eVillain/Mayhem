@@ -60,8 +60,13 @@ void PlayerLogic::applyInput(const uint8_t playerID,
         const cocos2d::Vec2 playerPosition = cocos2d::Vec2(entity.positionX, entity.positionY);
         const cocos2d::Vec2 aimPosition = cocos2d::Vec2(player.aimPointX, player.aimPointY);
         const InventoryItemState& weapon = player.weaponSlots.at(player.activeWeaponSlot);
-        const StaticEntityData& weaponData = EntityDataModel::getStaticEntityData((EntityType)weapon.type);
-        const uint16_t inventoryAmmo = getInventoryAmount((EntityType)weaponData.ammo.type, snapshot.inventory);
+        const bool hasWeapon = weapon.type != EntityType::NoEntity;
+        uint16_t inventoryAmmo = 0;
+        if (hasWeapon)
+        {
+            const StaticEntityData& weaponData = EntityDataModel::getStaticEntityData((EntityType)weapon.type);
+            inventoryAmmo = getInventoryAmount((EntityType)weaponData.ammo.type, snapshot.inventory);
+        }
         uint32_t entityUnderCursorID = 0;
         bool entityUnderCursor = getEntityAtPoint(entityUnderCursorID, snapshot, aimPosition, player.entityID);
         
@@ -113,7 +118,7 @@ bool PlayerLogic::checkForReload(SnapshotData& snapshot,
     }
     
     InventoryItemState& weapon = player.weaponSlots.at(player.activeWeaponSlot);
-    if (weapon.type == EntityType::PlayerEntity)
+    if (weapon.type == EntityType::NoEntity)
     {
         return false;
     }
@@ -163,7 +168,7 @@ bool PlayerLogic::canReload(const SnapshotData& snapshot,
     }
     
     const InventoryItemState& weapon = player.weaponSlots.at(player.activeWeaponSlot);
-    const bool hasWeaponEquipped = weapon.type != EntityType::PlayerEntity;
+    const bool hasWeaponEquipped = weapon.type != EntityType::NoEntity;
     if (!hasWeaponEquipped)
     {
         return false;

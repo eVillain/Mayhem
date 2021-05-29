@@ -708,7 +708,7 @@ void ClientController::checkShot(const SnapshotData& snapshot)
     }
 
     const InventoryItemState& weapon = player.weaponSlots.at(player.activeWeaponSlot);
-    if (weapon.type != EntityType::PlayerEntity &&
+    if (weapon.type != EntityType::NoEntity &&
         player.health > 0.f)
     {
         auto itemData = EntityDataModel::getStaticEntityData((EntityType)weapon.type);

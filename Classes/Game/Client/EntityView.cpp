@@ -9,9 +9,9 @@ const size_t EntityView::ARM_RIGHT_INDEX = 2;
 const size_t EntityView::WEAPON_INDEX = 3;
 const cocos2d::Vec2 EntityView::HEAD_POS = cocos2d::Vec2(8, 12);
 const cocos2d::Vec2 EntityView::ARM_L_POS = cocos2d::Vec2(11.f, 7.f);
-const cocos2d::Vec2 EntityView::ARM_L_POS_FLIPPED = cocos2d::Vec2(5.f, 7.f);
+const cocos2d::Vec2 EntityView::ARM_L_POS_FLIPPED = cocos2d::Vec2(4.f, 7.f);
 const cocos2d::Vec2 EntityView::ARM_L_ANCHOR = cocos2d::Vec2(11.f / 16.f, 7.f / 16.f);
-const cocos2d::Vec2 EntityView::ARM_L_ANCHOR_FLIPPED = cocos2d::Vec2(5.f / 16.f, 7.f / 16.f);
+const cocos2d::Vec2 EntityView::ARM_L_ANCHOR_FLIPPED = cocos2d::Vec2(4.f / 16.f, 7.f / 16.f);
 const cocos2d::Vec2 EntityView::ARM_R_POS = cocos2d::Vec2(5.f, 7.f);
 const cocos2d::Vec2 EntityView::ARM_R_ANCHOR = cocos2d::Vec2(5.f / 16.f, 7.f / 16.f);
 

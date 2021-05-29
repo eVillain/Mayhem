@@ -47,7 +47,7 @@ void Player::setInventoryAmount(const EntityType type, const uint16_t amount)
 const bool Player::hasWeaponEquipped() const
 {
     const InventoryItem& weapon = m_weaponSlots.at(m_activeSlot);
-    return weapon.type != EntityType::PlayerEntity;
+    return weapon.type != EntityType::NoEntity;
 }
 
 const bool Player::canReload(const float currentTime) const
@@ -58,7 +58,7 @@ const bool Player::canReload(const float currentTime) const
     }
     
     const InventoryItem& weapon = m_weaponSlots.at(m_activeSlot);
-    const bool hasWeaponEquipped = weapon.type != EntityType::PlayerEntity;
+    const bool hasWeaponEquipped = weapon.type != EntityType::NoEntity;
     if (!hasWeaponEquipped)
     {
         return false;
