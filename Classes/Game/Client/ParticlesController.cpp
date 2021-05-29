@@ -1,9 +1,11 @@
 #include "ParticlesController.h"
+
 #include "Core/Dispatcher.h"
 #include "SpawnParticlesEvent.h"
 #include "GameView.h"
 #include "Core/Injector.h"
 #include "FollowNode.h"
+#include "GameViewConstants.h"
 
 ParticlesController::ParticlesController()
 {
@@ -72,11 +74,11 @@ void ParticlesController::onSpawnParticles(const Event &event)
     auto gameView = Injector::globalInjector().getInstance<GameView>();
     if (spawnParticlesEvent.getSelfLit())
     {
-        gameView->getSelfLightingNode()->addChild(particles, GameView::Z_ORDER_GUN_MUZZLE);
+        gameView->getSelfLightingNode()->addChild(particles, GameViewConstants::Z_ORDER_GUN_MUZZLE);
     }
     else
     {
-        gameView->getGameRootNode()->addChild(particles, GameView::Z_ORDER_GUN_MUZZLE);
+        gameView->getGameRootNode()->addChild(particles, GameViewConstants::Z_ORDER_GUN_MUZZLE);
     }
 }
 
@@ -92,11 +94,11 @@ void ParticlesController::onSpawnAttachedParticles(const Event& event)
     auto gameView = Injector::globalInjector().getInstance<GameView>();
     if (spawnParticlesEvent.getSelfLit())
     {
-        gameView->getSelfLightingNode()->addChild(particles, GameView::Z_ORDER_GUN_MUZZLE);
+        gameView->getSelfLightingNode()->addChild(particles, GameViewConstants::Z_ORDER_GUN_MUZZLE);
     }
     else
     {
-        gameView->getGameRootNode()->addChild(particles, GameView::Z_ORDER_GUN_MUZZLE);
+        gameView->getGameRootNode()->addChild(particles, GameViewConstants::Z_ORDER_GUN_MUZZLE);
     }
     FollowNode* followNode = FollowNode::create(spawnParticlesEvent.getParent(), spawnParticlesEvent.getOffset());
     particles->runAction(followNode);

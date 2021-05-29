@@ -1,16 +1,12 @@
 #include "GameView.h"
+
 #include "Core/Dispatcher.h"
 #include "TogglePhysicsDebugEvent.h"
 #include "Pseudo3DParticle.h"
 #include "Pseudo3DSprite.h"
 #include "HUDHelper.h"
 #include "GameSettings.h"
-
-const std::string GameView::SETTING_RENDER_DEFERRED = "RenderDeferred";
-const std::string GameView::SETTING_RENDER_POSTPROCESS = "RenderPostProcess";
-const std::string GameView::SETTING_RENDER_LINE_OF_SIGHT = "RenderLineOfSight";
-const std::string GameView::SPRITE_BATCH_FILE = "res/MayhemSprites.plist";
-const std::string GameView::SPRITE_BATCH_TEXTURE_FILE = "res/MayhemSprites.png";
+#include "GameViewConstants.h"
 
 GameView::GameView(std::shared_ptr<GameSettings> gameSettings)
 : m_gameSettings(gameSettings)
@@ -59,9 +55,9 @@ void GameView::initialize()
     }
     
     cocos2d::SpriteFrameCache* cache = cocos2d::SpriteFrameCache::getInstance();
-    cache->addSpriteFramesWithFile(SPRITE_BATCH_FILE);
+    cache->addSpriteFramesWithFile(GameViewConstants::SPRITE_BATCH_FILE);
     
-    auto batch = cocos2d::SpriteBatchNode::create(SPRITE_BATCH_TEXTURE_FILE);
+    auto batch = cocos2d::SpriteBatchNode::create(GameViewConstants::SPRITE_BATCH_TEXTURE_FILE);
     batch->getTexture()->setAliasTexParameters();
     setSpriteBatch(batch);
     
@@ -69,7 +65,7 @@ void GameView::initialize()
     cocos2d::Size designSize = director->getWinSize() * director->getContentScaleFactor();
 //    cocos2d::Size renderSize = cocos2d::Director::getInstance()->getWinSizeInPixels();
 // TODO: Use actual render size here
-    const cocos2d::Value& deferredRenderSetting = m_gameSettings->getValue(SETTING_RENDER_DEFERRED, cocos2d::Value(true));
+    const cocos2d::Value& deferredRenderSetting = m_gameSettings->getValue(GameViewConstants::SETTING_RENDER_DEFERRED, cocos2d::Value(true));
     if (deferredRenderSetting.asBool())
     {
         m_renderTexture = cocos2d::RenderTexture::create(designSize.width, designSize.height,
@@ -184,7 +180,7 @@ void GameView::createPseudo3DSprite(const std::string& spriteName,
                                     const float elasticity)
 {
     cocos2d::Sprite* sprite = cocos2d::Sprite::createWithSpriteFrameName(spriteName);
-    m_gameRootNode->addChild(sprite, Z_ORDER_GAME_SPRITES);
+    m_gameRootNode->addChild(sprite, GameViewConstants::Z_ORDER_GAME_SPRITES);
     auto pseudoSprite = std::make_shared<Pseudo3DSprite>(sprite, position, positionZ, velocity, velocityZ, lifeTime, elasticity);
     m_pseudo3DItems.push_back(pseudoSprite);
 }
@@ -229,7 +225,7 @@ void GameView::drawExplosion(const cocos2d::Vec2& position)
     auto sprite = cocos2d::Sprite::createWithSpriteFrameName("Explosion1-01.png");
     sprite->setPosition(position);
     cocos2d::RefPtr<cocos2d::Animation> explosionAnim = createAnimation("Explosion1-", 10, 0.06f);
-    m_backgroundNode->addChild(sprite, Z_ORDER_GAME_SPRITES);
+    m_backgroundNode->addChild(sprite, GameViewConstants::Z_ORDER_GAME_SPRITES);
     cocos2d::CallFunc* removeFromParent = cocos2d::CallFunc::create([sprite](){
         sprite->removeFromParent();
     });
@@ -282,7 +278,7 @@ void GameView::updateLineOfSight(const cocos2d::Vec2 playerPosition,
 
 const cocos2d::Vec2 GameView::toViewPosition(const cocos2d::Vec2& point) const
 {
-    const cocos2d::Value& deferredRenderSetting = m_gameSettings->getValue(SETTING_RENDER_DEFERRED, cocos2d::Value(true));
+    const cocos2d::Value& deferredRenderSetting = m_gameSettings->getValue(GameViewConstants::SETTING_RENDER_DEFERRED, cocos2d::Value(true));
     const float viewScale = deferredRenderSetting.asBool() ? m_renderTexture->getSprite()->getScale() : m_view->getScale();
     auto director = cocos2d::Director::getInstance();
     const cocos2d::Vec2 midWindow = director->getWinSize() * 0.5f;

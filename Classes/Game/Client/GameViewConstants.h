@@ -44,6 +44,27 @@ namespace GameViewConstants
 
     static const cocos2d::Size HUD_WEAPON_SIZE = cocos2d::Size(60, 20);
 
+    static const std::string SETTING_RENDER_DEFERRED = "RenderDeferred";
+    static const std::string SETTING_RENDER_POSTPROCESS = "RenderPostProcess";
+    static const std::string SETTING_RENDER_LINE_OF_SIGHT = "RenderLineOfSight";
+    static const std::string SPRITE_BATCH_FILE = "res/MayhemSprites.plist";
+    static const std::string SPRITE_BATCH_TEXTURE_FILE = "res/MayhemSprites.png";
+
+
+    static constexpr int Z_ORDER_PHYSICS_DEBUG = 100;
+    static constexpr int Z_ORDER_GAME_SPRITES = 5;
+    static constexpr int Z_ORDER_GAME_TILEMAP = 3;
+
+    static constexpr int Z_ORDER_PLAYER_BEHIND = 4;
+    static constexpr int Z_ORDER_PLAYER = 5;
+    static constexpr int Z_ORDER_PLAYER_ITEM = 6;
+    static constexpr int Z_ORDER_PLAYER_FRONT = 7;
+    static constexpr int Z_ORDER_ITEM = 10;
+    static constexpr int Z_ORDER_PROJECTILE_TRAIL = 11;
+    static constexpr int Z_ORDER_PROJECTILE = 12;
+    static constexpr int Z_ORDER_GUN_MUZZLE = 20;
+    static constexpr int Z_ORDER_TEXT_BLIMP = 30;
+    static constexpr int Z_ORDER_BACKGROUND = -1;
 }
 
 #endif /* GameViewConstants_h */

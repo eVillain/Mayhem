@@ -18,6 +18,7 @@
 #include "GameScene.h"
 #include "GameSettings.h"
 #include "GameView.h"
+#include "GameViewConstants.h"
 #include "GameViewController.h"
 #include "HUDView.h"
 #include "InputController.h"
@@ -92,7 +93,7 @@ bool InitClientCommand::run()
     
     // Add game views to scene
     auto gameSettings = injector.getInstance<GameSettings>();
-    const cocos2d::Value& deferredRenderSetting = gameSettings->getValue(GameView::SETTING_RENDER_DEFERRED, cocos2d::Value(true));
+    const cocos2d::Value& deferredRenderSetting = gameSettings->getValue(GameViewConstants::SETTING_RENDER_DEFERRED, cocos2d::Value(true));
     if (deferredRenderSetting.asBool())
     {
         gameScene->addChild(gameView->getRenderTexture(), -1);
@@ -111,7 +112,7 @@ bool InitClientCommand::run()
 //        gameScene->addChild(lightController->getMinimumDistanceTexture(), 3);
 //        gameScene->addChild(lightController->getShadowTexture(), 2);
         // The actual lightmap, this needs to be added here for lighting to work
-        const cocos2d::Value& postProcessSetting = gameSettings->getValue(GameView::SETTING_RENDER_POSTPROCESS, cocos2d::Value(true));
+        const cocos2d::Value& postProcessSetting = gameSettings->getValue(GameViewConstants::SETTING_RENDER_POSTPROCESS, cocos2d::Value(true));
         if (!postProcessSetting.asBool())
         {
             // No post-processing, apply lighting directly on top of game scene

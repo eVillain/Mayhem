@@ -10,10 +10,6 @@ class Pseudo3DItem;
 class GameView
 {
 public:
-    static const std::string SETTING_RENDER_DEFERRED;
-    static const std::string SETTING_RENDER_POSTPROCESS;
-    static const std::string SETTING_RENDER_LINE_OF_SIGHT;
-
     GameView(std::shared_ptr<GameSettings> gameSettings);
     ~GameView();
     
@@ -71,17 +67,6 @@ public:
                            const std::vector<cocos2d::Rect>& staticRects);
         
     const cocos2d::Vec2 toViewPosition(const cocos2d::Vec2& point) const;
-    
-    static constexpr int Z_ORDER_PLAYER_BEHIND = 4;
-    static constexpr int Z_ORDER_PLAYER = 5;
-    static constexpr int Z_ORDER_PLAYER_ITEM = 6;
-    static constexpr int Z_ORDER_PLAYER_FRONT = 7;
-    static constexpr int Z_ORDER_ITEM = 10;
-    static constexpr int Z_ORDER_PROJECTILE_TRAIL = 11;
-    static constexpr int Z_ORDER_PROJECTILE = 12;
-    static constexpr int Z_ORDER_GUN_MUZZLE = 20;
-    static constexpr int Z_ORDER_TEXT_BLIMP = 30;
-    static constexpr int Z_ORDER_BACKGROUND = -1;
 
 private:
     std::shared_ptr<GameSettings> m_gameSettings;
@@ -109,13 +94,6 @@ private:
     std::map<std::string, cocos2d::Label*> m_labels;
 
     std::vector<std::shared_ptr<Pseudo3DItem>> m_pseudo3DItems;
-    
-    static constexpr int Z_ORDER_PHYSICS_DEBUG = 100;
-    static constexpr int Z_ORDER_GAME_SPRITES = 5;
-    static constexpr int Z_ORDER_GAME_TILEMAP = 3;
-
-    static const std::string SPRITE_BATCH_FILE;
-    static const std::string SPRITE_BATCH_TEXTURE_FILE;
 };
 
 #endif /* GameView_h */

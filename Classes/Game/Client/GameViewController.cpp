@@ -10,6 +10,7 @@
 #include "EntityDataModel.h"
 #include "EntityView.h"
 #include "GameView.h"
+#include "GameViewConstants.h"
 #include "HUDView.h"
 #include "Core/Injector.h"
 #include "Game/Client/InputModel.h"
@@ -88,7 +89,7 @@ void GameViewController::update(const float deltaTime,
 
     m_particlesController->update();
     
-    const cocos2d::Value& postProcessSetting = m_gameSettings->getValue(GameView::SETTING_RENDER_POSTPROCESS, cocos2d::Value(true));
+    const cocos2d::Value& postProcessSetting = m_gameSettings->getValue(GameViewConstants::SETTING_RENDER_POSTPROCESS, cocos2d::Value(true));
     if (postProcessSetting.asBool())
     {
         renderPostProcess(snapshot);
@@ -214,7 +215,7 @@ void GameViewController::onEntitySpawned(const uint32_t entityID,
     {
         entityView = std::make_shared<EntityView>(entityID, (EntityType)data.type);
         entityView->setupAnimations(CharacterType::Character_Base);
-        m_gameView->getSpriteBatch()->addChild(entityView->getSprite(), GameView::Z_ORDER_PLAYER);
+        m_gameView->getSpriteBatch()->addChild(entityView->getSprite(), GameViewConstants::Z_ORDER_PLAYER);
     }
     else if ((data.type > EntityType::Item_First_Placeholder &&
              data.type < EntityType::Item_Last_Placeholder) ||
@@ -224,14 +225,14 @@ void GameViewController::onEntitySpawned(const uint32_t entityID,
         const StaticEntityData& itemData = EntityDataModel::getStaticEntityData((EntityType)data.type);
         entityView->setupSprite(itemData.sprite);
         entityView->getSprite()->setAnchorPoint(itemData.anchor);
-        m_gameView->getSpriteBatch()->addChild(entityView->getSprite(), GameView::Z_ORDER_ITEM);
+        m_gameView->getSpriteBatch()->addChild(entityView->getSprite(), GameViewConstants::Z_ORDER_ITEM);
     }
     else if (data.type >= EntityType::Projectile_Bullet &&
              data.type <= EntityType::Projectile_Smoke)
     {
         entityView = std::make_shared<EntityView>(entityID, (EntityType)data.type);
         entityView->setupSprite(EntityDataModel::getStaticEntityData((EntityType)data.type).sprite);
-        m_gameView->getSpriteBatch()->addChild(entityView->getSprite(), GameView::Z_ORDER_PROJECTILE);
+        m_gameView->getSpriteBatch()->addChild(entityView->getSprite(), GameViewConstants::Z_ORDER_PROJECTILE);
 
         if (data.type == EntityType::Projectile_Rocket)
         {
@@ -626,7 +627,7 @@ void GameViewController::updateView(const float deltaTime)
     auto director = cocos2d::Director::getInstance();
     const cocos2d::Vec2 midWindow = director->getWinSize() * 0.5f;
     const float zoom = m_cameraModel->getZoom();
-    const cocos2d::Value& deferredRenderSetting = m_gameSettings->getValue(GameView::SETTING_RENDER_DEFERRED, cocos2d::Value(true));
+    const cocos2d::Value& deferredRenderSetting = m_gameSettings->getValue(GameViewConstants::SETTING_RENDER_DEFERRED, cocos2d::Value(true));
     if (deferredRenderSetting.asBool())
     {
         cocos2d::Vec2 viewPosition = (midWindow * director->getContentScaleFactor()) - m_cameraModel->getPosition();
@@ -1113,7 +1114,7 @@ void GameViewController::renderPostProcess(const SnapshotData& snapshot)
     const float zoomRadius = m_inputModel->getInputValue(InputConstants::ACTION_AIM) > 0.5f && itemData.weapon.type == WeaponType::Weapon_Type_Sniper ? 64.f : 0.f;
     updatePostProcess(zoomRadius);
     
-    const cocos2d::Value& losRenderSetting = m_gameSettings->getValue(GameView::SETTING_RENDER_LINE_OF_SIGHT, cocos2d::Value(true));
+    const cocos2d::Value& losRenderSetting = m_gameSettings->getValue(GameViewConstants::SETTING_RENDER_LINE_OF_SIGHT, cocos2d::Value(true));
     if (!losRenderSetting.asBool())
     {
         return;

@@ -10,6 +10,7 @@
 #include "GameSettings.h"
 #include "GameView.h"
 #include "GameViewController.h"
+#include "GameViewConstants.h"
 #include "HUDView.h"
 #include "InputController.h"
 #include "InputModel.h"
@@ -129,7 +130,7 @@ bool InitReplayEditorCommand::run()
         
     // Add game views to scene
     auto gameSettings = injector.getInstance<GameSettings>();
-    const cocos2d::Value& deferredRenderSetting = gameSettings->getValue(GameView::SETTING_RENDER_DEFERRED, cocos2d::Value(true));
+    const cocos2d::Value& deferredRenderSetting = gameSettings->getValue(GameViewConstants::SETTING_RENDER_DEFERRED, cocos2d::Value(true));
     if (deferredRenderSetting.asBool())
     {
         replayEditorScene->addChild(gameView->getRenderTexture(), -1);
