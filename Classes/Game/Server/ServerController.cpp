@@ -566,7 +566,7 @@ void ServerController::onProjectileDestroyed(const std::shared_ptr<Projectile>& 
     {
         for (auto explosionPair : entities)
         {
-            if (explosionPair.second->getEntityType() != EntityType::NoEntity)
+            if (explosionPair.second->getEntityType() != EntityType::PlayerEntity)
             {
                 continue;
             }
