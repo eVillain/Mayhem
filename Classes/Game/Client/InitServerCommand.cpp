@@ -13,7 +13,6 @@
 #include "GameSettings.h"
 #include "GameView.h"
 #include "InputCache.h"
-#include "InputController.h"
 #include "LevelModel.h"
 #include "LoadStaticEntityDataCommand.h"
 #include "NetworkController.h"

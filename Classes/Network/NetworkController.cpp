@@ -42,10 +42,12 @@ NetworkController::NetworkController(std::shared_ptr<NetworkModel> model,
     m_messageFactory = std::make_shared<NetworkMessageFactory>();
     auto messageFactory = std::static_pointer_cast<Net::MessageFactory>(m_messageFactory);
     m_drudgeNet = std::make_shared<Net::DrudgeNet>(messageFactory);
+    printf("NetworkController:: constructor %p\n", this);
 }
 
 NetworkController::~NetworkController()
 {
+    printf("NetworkController:: destructor %p\n", this);
 }
 
 void NetworkController::initialize(const NetworkMode mode)

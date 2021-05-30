@@ -11,6 +11,7 @@ class GameSettings;
 class INetworkController;
 class NetworkHostView;
 class NetworkModel;
+class InputActionEvent;
 
 namespace Net {
     class Stream;
@@ -79,7 +80,8 @@ private:
     void onReadyButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
     void onSendButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
     void onBackToMainMenuButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
-    
+    void onInputAction(const InputActionEvent& event);
+
     void onPlayerInfoReceived(const std::shared_ptr<Net::Message>& message,
                               const Net::NodeID nodeID);
     void onPlayerReadyReceived(const std::shared_ptr<Net::Message>& message,

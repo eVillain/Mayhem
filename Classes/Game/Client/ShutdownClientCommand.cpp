@@ -61,8 +61,8 @@ bool ShutdownClientCommand::run()
     injector.removeMapping<LightModel>();
     injector.removeMapping<LightController>();
     injector.removeMapping<ClientController>();
-    injector.removeMapping<InputModel>();
-    injector.removeMapping<InputController>();
+//    injector.removeMapping<InputModel>();
+//    injector.removeMapping<InputController>();
     injector.removeMapping<INetworkController>();
     injector.removeMapping<FakeNet>();
 

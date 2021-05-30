@@ -15,6 +15,7 @@
 #include "NetworkClientView.h"
 #include "NetworkConstants.h"
 #include "NetworkView.h"
+#include "ShutdownNetworkClientCommand.h"
 #include "Transport.h"
 
 NetworkClientViewController::NetworkClientViewController(std::shared_ptr<INetworkController> networkController,
@@ -25,10 +26,12 @@ NetworkClientViewController::NetworkClientViewController(std::shared_ptr<INetwor
 , m_clientModel(clientModel)
 , m_refreshHostsTimer(0.f)
 {
+    printf("NetworkClientViewController:: constructor %p\n", this);
 }
 
 NetworkClientViewController::~NetworkClientViewController()
 {
+    printf("NetworkClientViewController:: destructor %p\n", this);
 }
 
 void NetworkClientViewController::initialize()
@@ -102,8 +105,8 @@ void NetworkClientViewController::setView(NetworkClientView* view)
     m_view->getExitButton()->addTouchEventListener(CC_CALLBACK_2(NetworkClientViewController::onBackToMainMenuButton, this));
     
     Dispatcher::globalDispatcher().addListener<InputActionEvent>(std::bind(&NetworkClientViewController::onInputAction,
-                                                                                 this, std::placeholders::_1),
-                                                                       this);
+                                                                           this, std::placeholders::_1),
+                                                                 this);
 }
 
 cocos2d::extension::TableViewCell* NetworkClientViewController::tableCellAtIndex(cocos2d::extension::TableView *table,
@@ -263,6 +266,12 @@ void NetworkClientViewController::onBackToMainMenuButton(cocos2d::Ref *ref, coco
     {
         return;
     }
+
+    terminate();
+    
+    ShutdownNetworkClientCommand shutdownClient;
+    shutdownClient.run();
+    
     BackToMainMenuEvent back;
     Dispatcher::globalDispatcher().dispatch(back);
 }
@@ -275,8 +284,7 @@ void NetworkClientViewController::onInputAction(const InputActionEvent& event)
     }
     if (event.action == InputConstants::ACTION_BACK)
     {
-        BackToMainMenuEvent back;
-        Dispatcher::globalDispatcher().dispatch(back);
+        onBackToMainMenuButton(nullptr, cocos2d::ui::Widget::TouchEventType::ENDED);
     }
 }
 

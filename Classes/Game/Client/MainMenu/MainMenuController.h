@@ -7,7 +7,6 @@
 #include "NetworkClientView.h"
 
 class AudioController;
-class InputController;
 class NetworkController;
 class BackToMainMenuEvent;
 class InputActionEvent;

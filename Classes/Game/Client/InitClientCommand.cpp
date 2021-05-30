@@ -173,12 +173,13 @@ void InitClientCommand::mapDependencies()
             LightModel, GameSettings>();
     }
 
+    if (!injector.hasMapping<InputModel>())
+    {
+        injector.mapSingleton<InputModel>();
+    }
+    
     if (!injector.hasMapping<InputController>())
     {
-        if (!injector.hasMapping<InputModel>())
-        {
-            injector.mapSingleton<InputModel>();
-        }
         injector.mapSingleton<InputController,
             InputModel>();
     }

@@ -7,7 +7,6 @@
 #include "InitNetworkHostCommand.h"
 #include "InitReplayEditorCommand.h"
 #include "Core/Injector.h"
-#include "InputController.h"
 #include "Game/Client/InputModel.h"
 #include "BackToMainMenuEvent.h"
 #include "InputActionEvent.h"
@@ -71,6 +70,8 @@ void MainMenuController::shutdown()
 {
     removeChild(m_view);
     
+    unscheduleUpdate();
+
     Dispatcher::globalDispatcher().removeListener<BackToMainMenuEvent>(this);
     Dispatcher::globalDispatcher().removeListener<InputActionEvent>(this);
 }

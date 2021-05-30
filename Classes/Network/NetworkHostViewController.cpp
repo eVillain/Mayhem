@@ -3,9 +3,11 @@
 #include "BackToMainMenuEvent.h"
 #include "ClientModel.h"
 #include "Core/Dispatcher.h"
-#include "GameViewConstants.h"
 #include "GameSettings.h"
+#include "GameViewConstants.h"
 #include "InitClientCommand.h"
+#include "InputActionEvent.h"
+#include "InputConstants.h"
 #include "Network/NetworkMessages.h"
 #include "NetworkChatView.h"
 #include "NetworkController.h"
@@ -15,6 +17,7 @@
 #include "NetworkHostView.h"
 #include "NetworkModel.h"
 #include "NetworkView.h"
+#include "ShutdownNetworkHostCommand.h"
 #include "Transport.h"
 
 NetworkHostViewController::NetworkHostViewController(std::shared_ptr<NetworkModel> networkModel,
@@ -34,10 +37,12 @@ NetworkHostViewController::NetworkHostViewController(std::shared_ptr<NetworkMode
     m_gameModeConfig.tickRate = 20;
     m_gameModeConfig.playersPerTeam = 1;
     m_gameModeConfig.level = "BitTileMap.tmx";
+    printf("NetworkHostViewController:: constructor %p\n", this);
 }
 
 NetworkHostViewController::~NetworkHostViewController()
 {
+    printf("NetworkHostViewController:: destructor %p\n", this);
 }
 
 void NetworkHostViewController::initialize()
@@ -159,6 +164,10 @@ void NetworkHostViewController::setView(NetworkHostView* view)
     m_view->getReadyButton()->addTouchEventListener(CC_CALLBACK_2(NetworkHostViewController::onReadyButton, this));
     m_view->getExitButton()->addTouchEventListener(CC_CALLBACK_2(NetworkHostViewController::onBackToMainMenuButton, this));
     
+    Dispatcher::globalDispatcher().addListener<InputActionEvent>(std::bind(&NetworkHostViewController::onInputAction,
+                                                                           this, std::placeholders::_1),
+                                                                 this);
+
     m_view->getClientTableView()->getTable()->reloadData();
     m_view->getGameTypeTableView()->getTable()->reloadData();
 }
@@ -323,8 +332,23 @@ void NetworkHostViewController::onBackToMainMenuButton(cocos2d::Ref *ref, cocos2
     
     terminate();
     
+    ShutdownNetworkHostCommand shutdownHost;
+    shutdownHost.run();
+    
     BackToMainMenuEvent back;
     Dispatcher::globalDispatcher().dispatch(back);
+}
+
+void NetworkHostViewController::onInputAction(const InputActionEvent& event)
+{
+    if (event.previousValue == 1.f || event.value < 1.f)
+    {
+        return;
+    }
+    if (event.action == InputConstants::ACTION_BACK)
+    {
+        onBackToMainMenuButton(nullptr, cocos2d::ui::Widget::TouchEventType::ENDED);
+    }
 }
 
 void NetworkHostViewController::onPlayerInfoReceived(const std::shared_ptr<Net::Message>& message,

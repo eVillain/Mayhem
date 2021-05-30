@@ -301,6 +301,10 @@
 		D9BF092F253B215A0053998C /* ReadStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FEF24C48EA400EAFA5B /* ReadStream.cpp */; };
 		D9BF0930253B215F0053998C /* WriteStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FE924C48EA400EAFA5B /* WriteStream.cpp */; };
 		D9BF0931253B23310053998C /* BitPacker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9B24FF524C48EA400EAFA5B /* BitPacker.cpp */; };
+		D9D429092663C8ED008364FD /* ShutdownNetworkHostCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9D429072663C8EC008364FD /* ShutdownNetworkHostCommand.cpp */; };
+		D9D4290A2663C8ED008364FD /* ShutdownNetworkHostCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9D429072663C8EC008364FD /* ShutdownNetworkHostCommand.cpp */; };
+		D9D4290D2663CA38008364FD /* ShutdownNetworkClientCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9D4290B2663CA38008364FD /* ShutdownNetworkClientCommand.cpp */; };
+		D9D4290E2663CA38008364FD /* ShutdownNetworkClientCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9D4290B2663CA38008364FD /* ShutdownNetworkClientCommand.cpp */; };
 		D9D593F62651EE81005B7DFD /* ShutdownLocalServerCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9D593F32651EE80005B7DFD /* ShutdownLocalServerCommand.cpp */; };
 		D9D593F72651EE81005B7DFD /* ShutdownLocalServerCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9D593F32651EE80005B7DFD /* ShutdownLocalServerCommand.cpp */; };
 		D9E046F7254AF0780055E1E6 /* ClientModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9E046F5254AF0770055E1E6 /* ClientModel.cpp */; };
@@ -685,6 +689,10 @@
 		D9BF0925253B1C5F0053998C /* MasterServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MasterServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9BF0927253B1C600053998C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		D9D4290626592FDA008364FD /* InputConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputConstants.h; sourceTree = "<group>"; };
+		D9D429072663C8EC008364FD /* ShutdownNetworkHostCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShutdownNetworkHostCommand.cpp; sourceTree = "<group>"; };
+		D9D429082663C8ED008364FD /* ShutdownNetworkHostCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShutdownNetworkHostCommand.h; sourceTree = "<group>"; };
+		D9D4290B2663CA38008364FD /* ShutdownNetworkClientCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShutdownNetworkClientCommand.cpp; sourceTree = "<group>"; };
+		D9D4290C2663CA38008364FD /* ShutdownNetworkClientCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShutdownNetworkClientCommand.h; sourceTree = "<group>"; };
 		D9D593F32651EE80005B7DFD /* ShutdownLocalServerCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShutdownLocalServerCommand.cpp; sourceTree = "<group>"; };
 		D9D593F52651EE81005B7DFD /* ShutdownLocalServerCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShutdownLocalServerCommand.h; sourceTree = "<group>"; };
 		D9E046F5254AF0770055E1E6 /* ClientModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientModel.cpp; sourceTree = "<group>"; };
@@ -954,8 +962,12 @@
 				D9B24FA424C48EA400EAFA5B /* INetworkController.h */,
 				D9B24FA324C48EA400EAFA5B /* InitNetworkClientCommand.cpp */,
 				D9B24F9D24C48EA400EAFA5B /* InitNetworkClientCommand.h */,
+				D9D4290B2663CA38008364FD /* ShutdownNetworkClientCommand.cpp */,
+				D9D4290C2663CA38008364FD /* ShutdownNetworkClientCommand.h */,
 				D9B24FA824C48EA400EAFA5B /* InitNetworkHostCommand.cpp */,
 				D9B24FB624C48EA400EAFA5B /* InitNetworkHostCommand.h */,
+				D9D429072663C8EC008364FD /* ShutdownNetworkHostCommand.cpp */,
+				D9D429082663C8ED008364FD /* ShutdownNetworkHostCommand.h */,
 				D9B24FBE24C48EA400EAFA5B /* NetworkChatView.cpp */,
 				D9B24FB024C48EA400EAFA5B /* NetworkChatView.h */,
 				D9B24FB924C48EA400EAFA5B /* NetworkClientHostCell.cpp */,
@@ -1530,6 +1542,7 @@
 				D9B2510C24C48EA500EAFA5B /* AudioModel.cpp in Sources */,
 				D96CBD5B2531C3BB006DF3A4 /* SnapshotModel.cpp in Sources */,
 				D9B250F224C48EA500EAFA5B /* Listener.cpp in Sources */,
+				D9D429092663C8ED008364FD /* ShutdownNetworkHostCommand.cpp in Sources */,
 				D9B250E224C48EA500EAFA5B /* WriteStream.cpp in Sources */,
 				D9B250FE24C48EA500EAFA5B /* AudioController.cpp in Sources */,
 				D96CBD6F2531C3BB006DF3A4 /* InputModel.cpp in Sources */,
@@ -1554,6 +1567,7 @@
 				D9B250D624C48EA500EAFA5B /* Mesh.cpp in Sources */,
 				D9B250B624C48EA500EAFA5B /* NetworkController.cpp in Sources */,
 				D96CBC962531C342006DF3A4 /* LoadLevelCommand.cpp in Sources */,
+				D9D4290D2663CA38008364FD /* ShutdownNetworkClientCommand.cpp in Sources */,
 				D9B250EC24C48EA500EAFA5B /* ReliableConnection.cpp in Sources */,
 				D96CBD672531C3BB006DF3A4 /* GameScene.cpp in Sources */,
 				D96CBCD62531C356006DF3A4 /* Entity.cpp in Sources */,
@@ -1600,6 +1614,7 @@
 				D98BEDD12641F77800125847 /* ReplayModel.cpp in Sources */,
 				D98BEDDB2649904000125847 /* GameModel.cpp in Sources */,
 				D96CBD402531C3BB006DF3A4 /* CrosshairView.cpp in Sources */,
+				D9D4290E2663CA38008364FD /* ShutdownNetworkClientCommand.cpp in Sources */,
 				D96CBCA12531C342006DF3A4 /* LoadStaticEntityDataCommand.cpp in Sources */,
 				D9B250B524C48EA500EAFA5B /* NetworkHostClientCell.cpp in Sources */,
 				D96CBD482531C3BB006DF3A4 /* Pseudo3DSprite.cpp in Sources */,
@@ -1610,6 +1625,7 @@
 				D9B250F124C48EA500EAFA5B /* Stream.cpp in Sources */,
 				D96CBCE12531C356006DF3A4 /* FrameCache.cpp in Sources */,
 				D9B250AF24C48EA500EAFA5B /* ActionUtils.cpp in Sources */,
+				D9D4290A2663C8ED008364FD /* ShutdownNetworkHostCommand.cpp in Sources */,
 				D96CBD6A2531C3BB006DF3A4 /* Pseudo3DItem.cpp in Sources */,
 				D9B250B924C48EA500EAFA5B /* InitNetworkClientCommand.cpp in Sources */,
 				D96CBCD92531C356006DF3A4 /* LootBox.cpp in Sources */,

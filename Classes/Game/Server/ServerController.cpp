@@ -10,7 +10,6 @@
 #include "GameController.h"
 #include "GameModel.h"
 #include "InputCache.h"
-#include "InputController.h"
 #include "Item.h"
 #include "LevelModel.h"
 #include "LootBox.h"

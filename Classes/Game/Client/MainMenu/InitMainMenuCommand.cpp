@@ -19,12 +19,12 @@ bool InitMainMenuCommand::run()
         gameSettings->load(GameSettings::DEFAULT_SETTINGS_FILE);
     }
     
+    if (!injector.hasMapping<InputModel>())
+    {
+        injector.mapSingleton<InputModel>();
+    }
     if (!injector.hasMapping<InputController>())
     {
-        if (!injector.hasMapping<InputModel>())
-        {
-            injector.mapSingleton<InputModel>();
-        }
         injector.mapSingleton<InputController,
             InputModel>();
     }
