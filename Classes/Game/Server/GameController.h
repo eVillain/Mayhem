@@ -1,7 +1,6 @@
 #ifndef GameController_h
 #define GameController_h
 
-#include "Core/Event.h"
 #include "Network/NetworkMessages.h"
 #include "Game/Shared/GameMode.h"
 

@@ -1,6 +1,5 @@
 #include "NetworkClientViewController.h"
 
-#include "BackButtonPressedEvent.h"
 #include "BackToMainMenuEvent.h"
 #include "ClientModel.h"
 #include "Core/Dispatcher.h"
@@ -8,6 +7,8 @@
 #include "GameViewConstants.h"
 #include "INetworkController.h"
 #include "InitClientCommand.h"
+#include "InputActionEvent.h"
+#include "InputConstants.h"
 #include "Network/NetworkMessages.h"
 #include "NetworkChatView.h"
 #include "NetworkClientHostCell.h"
@@ -100,7 +101,9 @@ void NetworkClientViewController::setView(NetworkClientView* view)
     m_view->getReadyButton()->addTouchEventListener(CC_CALLBACK_2(NetworkClientViewController::onReadyButton, this));
     m_view->getExitButton()->addTouchEventListener(CC_CALLBACK_2(NetworkClientViewController::onBackToMainMenuButton, this));
     
-    Dispatcher::globalDispatcher().addListener(BackButtonPressedEvent::descriptor, std::bind(&NetworkClientViewController::onBackButtonPressed, this, std::placeholders::_1));
+    Dispatcher::globalDispatcher().addListener<InputActionEvent>(std::bind(&NetworkClientViewController::onInputAction,
+                                                                                 this, std::placeholders::_1),
+                                                                       this);
 }
 
 cocos2d::extension::TableViewCell* NetworkClientViewController::tableCellAtIndex(cocos2d::extension::TableView *table,
@@ -260,12 +263,21 @@ void NetworkClientViewController::onBackToMainMenuButton(cocos2d::Ref *ref, coco
     {
         return;
     }
-    Dispatcher::globalDispatcher().dispatch(BackToMainMenuEvent());
+    BackToMainMenuEvent back;
+    Dispatcher::globalDispatcher().dispatch(back);
 }
 
-void NetworkClientViewController::onBackButtonPressed(const Event& event)
+void NetworkClientViewController::onInputAction(const InputActionEvent& event)
 {
-    Dispatcher::globalDispatcher().dispatch(BackToMainMenuEvent());
+    if (event.previousValue == 1.f || event.value < 1.f)
+    {
+        return;
+    }
+    if (event.action == InputConstants::ACTION_BACK)
+    {
+        BackToMainMenuEvent back;
+        Dispatcher::globalDispatcher().dispatch(back);
+    }
 }
 
 void NetworkClientViewController::onLoadLevelReceived(const std::shared_ptr<Net::Message>& message,

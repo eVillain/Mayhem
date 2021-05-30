@@ -10,7 +10,8 @@
 #include "InputController.h"
 #include "Game/Client/InputModel.h"
 #include "BackToMainMenuEvent.h"
-#include "BackButtonPressedEvent.h"
+#include "InputActionEvent.h"
+#include "InputConstants.h"
 #include "SettingsView.h"
 #include "GameSettings.h"
 #include "Utils/PlayerNameUtil.h"
@@ -48,8 +49,12 @@ bool MainMenuController::init()
 //    Injector& injector = Injector::globalInjector();
 //    m_audioController = injector.getInstance<AudioController>();
 //    Dispatcher::globalDispatcher().dispatch(PlayBGMEvent(SongType::Song1));
-    Dispatcher::globalDispatcher().addListener(BackToMainMenuEvent::descriptor, std::bind(&MainMenuController::onBackToMainMenu, this, std::placeholders::_1));
-    Dispatcher::globalDispatcher().addListener(BackButtonPressedEvent::descriptor, std::bind(&MainMenuController::onBackButtonPressed, this, std::placeholders::_1));
+    Dispatcher::globalDispatcher().addListener<BackToMainMenuEvent>(std::bind(&MainMenuController::onBackToMainMenu,
+                                                                              this, std::placeholders::_1),
+                                                                    this);
+    Dispatcher::globalDispatcher().addListener<InputActionEvent>(std::bind(&MainMenuController::onInputAction,
+                                                                                 this, std::placeholders::_1),
+                                                                       this);
 
     addChild(m_view);
 
@@ -66,8 +71,8 @@ void MainMenuController::shutdown()
 {
     removeChild(m_view);
     
-    Dispatcher::globalDispatcher().removeListeners(BackToMainMenuEvent::descriptor);
-    Dispatcher::globalDispatcher().removeListeners(BackButtonPressedEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListener<BackToMainMenuEvent>(this);
+    Dispatcher::globalDispatcher().removeListener<InputActionEvent>(this);
 }
 
 void MainMenuController::update(float deltaTime)
@@ -121,7 +126,7 @@ void MainMenuController::hostGameCallback(cocos2d::Ref* ref,
         return;
     }
 
-    shutdown();
+    removeChild(m_view);
 
     m_networkHostView = new NetworkHostView();
     m_networkHostView->init();
@@ -139,7 +144,7 @@ void MainMenuController::joinGameCallback(cocos2d::Ref* ref,
         return;
     }
 
-    shutdown();
+    removeChild(m_view);
 
     m_networkClientView = new NetworkClientView();
     m_networkClientView->init();
@@ -157,7 +162,7 @@ void MainMenuController::settingsCallback(cocos2d::Ref* ref,
         return;
     }
     
-    shutdown();
+    removeChild(m_view);
 
     auto settingsView = new SettingsView(Injector::globalInjector().getInstance<GameSettings>());
     settingsView->initialize();
@@ -194,7 +199,7 @@ void MainMenuController::exitGameCallback(cocos2d::Ref* ref,
     exitGame();
 }
 
-void MainMenuController::onBackToMainMenu(const Event& event)
+void MainMenuController::onBackToMainMenu(const BackToMainMenuEvent& event)
 {
     removeAllChildren();
     
@@ -211,9 +216,16 @@ void MainMenuController::onBackToMainMenu(const Event& event)
     }
 }
 
-void MainMenuController::onBackButtonPressed(const Event& event)
+void MainMenuController::onInputAction(const InputActionEvent& event)
 {
-    exitGameCallback(nullptr, cocos2d::ui::Widget::TouchEventType::ENDED);
+    if (event.previousValue == 1.f || event.value < 1.f)
+    {
+        return;
+    }
+    if (event.action == InputConstants::ACTION_BACK)
+    {
+        exitGameCallback(nullptr, cocos2d::ui::Widget::TouchEventType::ENDED);
+    }
 }
 
 void MainMenuController::exitGame()

@@ -37,8 +37,12 @@ LightController::~LightController()
 
 void LightController::initialize()
 {
-    Dispatcher::globalDispatcher().addListener(AddLightEvent::descriptor, std::bind(&LightController::onAddLight, this, std::placeholders::_1));
-    Dispatcher::globalDispatcher().addListener(RemoveLightEvent::descriptor, std::bind(&LightController::onRemoveLight, this, std::placeholders::_1));
+    Dispatcher::globalDispatcher().addListener<AddLightEvent>(std::bind(&LightController::onAddLight,
+                                                                        this, std::placeholders::_1),
+                                                              this);
+    Dispatcher::globalDispatcher().addListener<RemoveLightEvent>(std::bind(&LightController::onRemoveLight,
+                                                                           this, std::placeholders::_1),
+                                                                 this);
 
     const cocos2d::Value& renderLightingSetting = m_gameSettings->getValue(SETTING_RENDER_LIGHTING, cocos2d::Value(true));
     if (renderLightingSetting.asBool())
@@ -49,8 +53,8 @@ void LightController::initialize()
 
 void LightController::shutdown()
 {
-    Dispatcher::globalDispatcher().removeListeners(AddLightEvent::descriptor);
-    Dispatcher::globalDispatcher().removeListeners(RemoveLightEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListener<AddLightEvent>(this);
+    Dispatcher::globalDispatcher().removeListener<RemoveLightEvent>(this);
     
     m_occluderTexture = nullptr;
     m_occluderSliceTexture = nullptr;
@@ -432,14 +436,12 @@ void LightController::renderToTexture(cocos2d::Sprite* sprite,
     cocos2d::Director::getInstance()->getRenderer()->render();
 }
 
-void LightController::onAddLight(const Event& event)
+void LightController::onAddLight(const AddLightEvent& event)
 {
-    const AddLightEvent& addLightEvent = static_cast<const AddLightEvent&>(event);
-    m_model->addLight(addLightEvent.getLight());
+    m_model->addLight(event.getLight());
 }
 
-void LightController::onRemoveLight(const Event& event)
+void LightController::onRemoveLight(const RemoveLightEvent& event)
 {
-    const RemoveLightEvent& removeLightEvent = static_cast<const RemoveLightEvent&>(event);
-    m_model->removeLight(removeLightEvent.getLightID());
+    m_model->removeLight(event.getLightID());
 }

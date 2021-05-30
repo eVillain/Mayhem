@@ -5,7 +5,6 @@
 #include "NetworkMessages.h"
 #include "Network/DrudgeNet/include/DrudgeNet.h"
 
-class Event;
 class NetworkModel;
 class NetworkMessageFactory;
 class GameSettings;

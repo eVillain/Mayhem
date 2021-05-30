@@ -9,7 +9,7 @@ namespace Net {
     class Message;
 };
 
-class Event;
+class InputActionEvent;
 class INetworkController;
 class NetworkClientView;
 class GameSettings;
@@ -72,7 +72,7 @@ private:
     void onReadyButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
     void onSendButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
     void onBackToMainMenuButton(cocos2d::Ref *ref, cocos2d::ui::Widget::TouchEventType type);
-    void onBackButtonPressed(const Event& event);
+    void onInputAction(const InputActionEvent& event);
 
     void onLoadLevelReceived(const std::shared_ptr<Net::Message>& message,
                              const Net::NodeID nodeID);

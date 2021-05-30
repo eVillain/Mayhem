@@ -22,7 +22,7 @@ public:
     cocos2d::ui::Button* getReplayEditorButton() const { return m_replayEditorButton; }
     cocos2d::ui::Button* getExitGameButton() const { return m_exitGameButton; }
 
-    cocos2d::Node* getPlayerNode() const { return m_playerNode; }
+    cocos2d::Node* getPlayerNode() const { return m_playerNode; }
     const std::shared_ptr<EntityView>& getPlayerView() const { return m_playerView; }
 
 private:

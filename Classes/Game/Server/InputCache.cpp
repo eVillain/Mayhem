@@ -37,7 +37,7 @@ std::map<uint8_t, ServerInput> InputCache::popCombinedInputs()
         auto& playerInputs = input.second;
         if (playerInputs.empty())
         {
-            printf("[Server]InputCache:: no input sequence for player %i", playerID);
+            printf("[Server]InputCache:: no input sequence for player %i\n", playerID);
             continue;
         }
         output[playerID] = playerInputs.front();

@@ -124,7 +124,8 @@ void GameViewController::onEntityDestroyed(const uint32_t entityID,
         const float PSEUDO_3D_BLAST_STRENGTH = 64.f;
         m_gameView->drawExplosion(position);
 
-        Dispatcher::globalDispatcher().dispatch(AddLightEvent({position, EXPLOSION_RADIUS, cocos2d::Color4F::WHITE, 0.06f}));
+        AddLightEvent light({position, EXPLOSION_RADIUS, cocos2d::Color4F::WHITE, 0.06f});
+        Dispatcher::globalDispatcher().dispatch(light);
         const StaticEntityData& itemData = EntityDataModel::getStaticEntityData((EntityType)type);
         m_audioController->playPositionalAudio(itemData.weapon.sound, position);
 
@@ -184,10 +185,11 @@ void GameViewController::onEntityDestroyed(const uint32_t entityID,
     }
     else if (type == EntityType::Projectile_Smoke)
     {
-        Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::SMOKE_GRENADE,
-                                                                    position,
-                                                                    0.f,
-                                                                    position));
+        SpawnParticlesEvent particles(ParticleConstants::SMOKE_GRENADE,
+                                      position,
+                                      0.f,
+                                      position);
+        Dispatcher::globalDispatcher().dispatch(particles);
     }
     
     entityView->getSprite()->stopAllActions();
@@ -241,18 +243,19 @@ void GameViewController::onEntitySpawned(const uint32_t entityID,
             // Add fire and smoke trails to rocket
             const cocos2d::Vec2 smokeOffset = cocos2d::Vec2::forAngle(data.rotation) * 20.f;
             const cocos2d::Vec2 flameOffset = cocos2d::Vec2::forAngle(data.rotation) * 8.f;
-            Dispatcher::globalDispatcher().dispatch(SpawnParticlesAttachedEvent(ParticleConstants::SMOKE_TRAIL,
-                                                                                entityView->getSprite(),
-                                                                                180.f + data.rotation * (180.f / M_PI),
-                                                                                cocos2d::Vec2(-smokeOffset.x, smokeOffset.y),
-                                                                                cocos2d::ParticleSystem::PositionType::FREE));
-            Dispatcher::globalDispatcher().dispatch(SpawnParticlesAttachedEvent(ParticleConstants::FIRE,
-                                                                                entityView->getSprite(),
-                                                                                180.f + data.rotation * (180.f / M_PI),
-                                                                                cocos2d::Vec2(-flameOffset.x, flameOffset.y),
-                                                                                cocos2d::ParticleSystem::PositionType::GROUPED,
-                                                                                true));
-
+            SpawnParticlesAttachedEvent smoke(ParticleConstants::SMOKE_TRAIL,
+                                              entityView->getSprite(),
+                                              180.f + data.rotation * (180.f / M_PI),
+                                              cocos2d::Vec2(-smokeOffset.x, smokeOffset.y),
+                                              cocos2d::ParticleSystem::PositionType::FREE);
+            SpawnParticlesAttachedEvent fire(ParticleConstants::FIRE,
+                                             entityView->getSprite(),
+                                             180.f + data.rotation * (180.f / M_PI),
+                                             cocos2d::Vec2(-flameOffset.x, flameOffset.y),
+                                             cocos2d::ParticleSystem::PositionType::GROUPED,
+                                             true);
+            Dispatcher::globalDispatcher().dispatch(smoke);
+            Dispatcher::globalDispatcher().dispatch(fire);
         }
     }
     
@@ -287,35 +290,35 @@ void GameViewController::renderShot(const uint32_t shooterEntityID,
     }
 
     const auto& itemData = EntityDataModel::getStaticEntityData(weaponType);
-    const WeaponConstants::WeaponStateData data = WeaponConstants::getWeaponData(shooterPosition,
-                                                                                 aimPoint,
-                                                                                 itemData.weapon.holdOffset,
-                                                                                 itemData.weapon.projectileOffset,
-                                                                                 shooterFlipX);
+    const WeaponConstants::WeaponStateData weaponData = WeaponConstants::getWeaponData(shooterPosition,
+                                                                                       aimPoint,
+                                                                                       itemData.weapon.holdOffset,
+                                                                                       itemData.weapon.projectileOffset,
+                                                                                       shooterFlipX);
 
-    const float particleDegrees = data.weaponAngle + (shooterFlipX ? 180.f : 0.f);
+    const float particleDegrees = weaponData.weaponAngle + (shooterFlipX ? 180.f : 0.f);
     // Show effects and play sound
     if (itemData.weapon.damageType == Damage_Type_Hitscan ||
         itemData.weapon.damageType == Damage_Type_Projectile)
     {
         const float RAY_LENGTH = itemData.weapon.type == WeaponType::Weapon_Type_Shotgun ? 100.f : 500.f;
-        const cocos2d::Vec2 ray = (aimPoint - data.projectilePosition).getNormalized();
-        const cocos2d::Vec2 shotEnd = data.projectilePosition + ray * RAY_LENGTH;
+        const cocos2d::Vec2 ray = (aimPoint - weaponData.projectilePosition).getNormalized();
+        const cocos2d::Vec2 shotEnd = weaponData.projectilePosition + ray * RAY_LENGTH;
         
         if (itemData.weapon.type == WeaponType::Weapon_Type_Shotgun)
         {
-            const cocos2d::Vec2 shotEnd = data.projectilePosition + (aimPoint - data.projectilePosition).getNormalized() * RAY_LENGTH;
-            const cocos2d::Vec2 offset = (data.projectilePosition - shotEnd).getNormalized().getPerp();
+            const cocos2d::Vec2 shotEnd = weaponData.projectilePosition + (aimPoint - weaponData.projectilePosition).getNormalized() * RAY_LENGTH;
+            const cocos2d::Vec2 offset = (weaponData.projectilePosition - shotEnd).getNormalized().getPerp();
 
             for (int shot = -4; shot < 4; shot++)
             {
                 const cocos2d::Vec2 shotOffset = offset * shot;
-                renderHitEffects(data.projectilePosition, shotEnd + shotOffset, weaponType, data, shooterEntityID, snapshot.entityData);
+                renderHitEffects(weaponData.projectilePosition, shotEnd + shotOffset, weaponType, weaponData, shooterEntityID, snapshot.entityData);
             }
         }
         else if (itemData.weapon.damageType == Damage_Type_Hitscan)
         {
-            renderHitEffects(data.projectilePosition, shotEnd, weaponType, data, shooterEntityID, snapshot.entityData);
+            renderHitEffects(weaponData.projectilePosition, shotEnd, weaponType, weaponData, shooterEntityID, snapshot.entityData);
         }
         
         auto weaponSprite = m_entityViews.at(shooterEntityID)->getSecondarySprites()[EntityView::WEAPON_INDEX];
@@ -323,13 +326,15 @@ void GameViewController::renderShot(const uint32_t shooterEntityID,
         {
             assert(false); // Why is there no weapon sprite? This needs to be caught and fixed (seems to occur in replays)
         }
-        Dispatcher::globalDispatcher().dispatch(AddLightEvent({data.projectilePosition, 64.f, cocos2d::Color4F::WHITE, 0.06f}));
-        Dispatcher::globalDispatcher().dispatch(SpawnParticlesAttachedEvent(ParticleConstants::MUZZLE_FLASH,
-                                                                            weaponSprite,
-                                                                            particleDegrees,
-                                                                            data.projectilePosition - weaponSprite->getPosition(),
-                                                                            cocos2d::ParticleSystem::PositionType::GROUPED,
-                                                                            true));
+        AddLightEvent light({weaponData.projectilePosition, 64.f, cocos2d::Color4F::WHITE, 0.06f});
+        SpawnParticlesAttachedEvent muzzleFlash(ParticleConstants::MUZZLE_FLASH,
+                                                weaponSprite,
+                                                particleDegrees,
+                                                weaponData.projectilePosition - weaponSprite->getPosition(),
+                                                cocos2d::ParticleSystem::PositionType::GROUPED,
+                                                true);
+        Dispatcher::globalDispatcher().dispatch(light);
+        Dispatcher::globalDispatcher().dispatch(muzzleFlash);
         // Bullet shell
         m_gameView->createPseudo3DParticle(cocos2d::Color4F::YELLOW,
                                            shooterPosition - cocos2d::Vec2(0, 8),
@@ -338,14 +343,14 @@ void GameViewController::renderShot(const uint32_t shooterEntityID,
                                            32.f,
                                            3.f,
                                            0.3f);
-        m_audioController->playPositionalAudio(itemData.weapon.sound, data.projectilePosition);
+        m_audioController->playPositionalAudio(itemData.weapon.sound, weaponData.projectilePosition);
     }
     
     if (shooterPlayerID == m_cameraModel->getCameraFollowPlayerID())
     {
         // Apply recoil
         const float recoilAmount = cocos2d::random(3.f, 6.f);
-        const cocos2d::Vec2 ray = (aimPoint - data.projectilePosition).getNormalized();
+        const cocos2d::Vec2 ray = (aimPoint - weaponData.projectilePosition).getNormalized();
         const cocos2d::Vec2 recoil = ray.getPerp() * (shooterFlipX ? -recoilAmount : recoilAmount);
         auto glview = cocos2d::Director::getInstance()->getOpenGLView();
         const cocos2d::Vec2 cursorPos = glview->getCursorPosition();
@@ -403,11 +408,12 @@ void GameViewController::renderHitEffects(const cocos2d::Vec2& shotStart,
         }
         else
         {
-            Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::SPARKS,
-                                                                        raycastResult.shotEndPoint,
-                                                                        0.f,
-                                                                        cocos2d::Vec2::ZERO,
-                                                                        true));
+            SpawnParticlesEvent sparks(ParticleConstants::SPARKS,
+                                       raycastResult.shotEndPoint,
+                                       0.f,
+                                       cocos2d::Vec2::ZERO,
+                                       true);
+            Dispatcher::globalDispatcher().dispatch(sparks);
             const float debrisRandom = cocos2d::random(-1.f, 1.f);
             cocos2d::Vec2 debrisDirection = (raycastResult.shotEndPoint - raycastResult.shotStartPoint);
             debrisDirection.x *= debrisRandom;
@@ -417,9 +423,10 @@ void GameViewController::renderHitEffects(const cocos2d::Vec2& shotStart,
     }
     else if (shotEnd != raycastResult.shotEndPoint)
     {
-        Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::DUST_SMALL,
-                                                                    raycastResult.shotEndPoint,
-                                                                    0.f));
+        SpawnParticlesEvent dust(ParticleConstants::DUST_SMALL,
+                                 raycastResult.shotEndPoint,
+                                 0.f);
+        Dispatcher::globalDispatcher().dispatch(dust);
         const float debrisRandom = cocos2d::random(-1.f, 1.f);
         cocos2d::Vec2 debrisDirection = (raycastResult.shotEndPoint - raycastResult.shotStartPoint);
         debrisDirection.x *= debrisRandom;
@@ -440,17 +447,19 @@ void GameViewController::renderHitEffects(const cocos2d::Vec2& shotStart,
 
         if (weaponType == EntityType::Item_Railgun)
         {
-            Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::RAILGUN_RAIL,
-                                                                        start,
-                                                                        -ray.getAngle() * (180.f / M_PI),
-                                                                        end));
+            SpawnParticlesEvent rail(ParticleConstants::RAILGUN_RAIL,
+                                     start,
+                                     -ray.getAngle() * (180.f / M_PI),
+                                     end);
+            Dispatcher::globalDispatcher().dispatch(rail);
         }
         else
         {
-            Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::BULLET_SMOKE_TRAIL,
-                                                                        start,
-                                                                        -ray.getAngle() * (180.f / M_PI),
-                                                                        end));
+            SpawnParticlesEvent smoke(ParticleConstants::BULLET_SMOKE_TRAIL,
+                                      start,
+                                      -ray.getAngle() * (180.f / M_PI),
+                                      end);
+            Dispatcher::globalDispatcher().dispatch(smoke);
         }
     }
 }
@@ -475,16 +484,15 @@ void GameViewController::renderHitData(const SnapshotData& snapshot,
         {
             m_hudView->showHealthBlimp(-hit.damage, m_gameView->toViewPosition(hitPos + cocos2d::Vec2(0.f, 20.f)));
             const float hitAngle = hitRay.getAngle();
-            // Damage taken by some entity - Show blood particles
-            Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::BLOOD_WOUND,
-                                                                        hitPos,
-                                                                        hitAngle));
+            SpawnParticlesEvent blood(ParticleConstants::BLOOD_WOUND,
+                                      hitPos,
+                                      hitAngle);
+            Dispatcher::globalDispatcher().dispatch(blood);
             if (hit.isLethal)
             {
                 auto entityViewIt = m_entityViews.find(hit.hitEntityID);
                 if (entityViewIt != m_entityViews.end())
                 {
-                    // Player died from this hit, show appropriate gore effects
                     renderPlayerDeath(entityViewIt->second->getSprite()->getPosition(), hitRay, hit.isHeadshot);
                 }
             }
@@ -499,9 +507,10 @@ void GameViewController::renderHitData(const SnapshotData& snapshot,
                     hitPlayerIt->second.health > 0.f)
                 {
                     // Player took a hit but didn't die, just show some extra blood at hit position
-                    Dispatcher::globalDispatcher().dispatch(SpawnParticlesEvent(ParticleConstants::BLOOD_SPLASH,
-                                                                                cocos2d::Vec2(hit.hitPosX, hit.hitPosY),
-                                                                                0.f));
+                    SpawnParticlesEvent bloodSplash(ParticleConstants::BLOOD_SPLASH,
+                                                    cocos2d::Vec2(hit.hitPosX, hit.hitPosY),
+                                                    0.f);
+                    Dispatcher::globalDispatcher().dispatch(bloodSplash);
                 }
             }
         }

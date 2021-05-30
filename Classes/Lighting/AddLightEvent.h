@@ -1,18 +1,15 @@
 #ifndef AddLightEvent_h
 #define AddLightEvent_h
 
-#include "Core/Event.h"
 #include "LightConstants.h"
 
-class AddLightEvent : public Event
+class AddLightEvent
 {
 public:
-    AddLightEvent(const LightData& light);
-    
-    virtual DescriptorType type() const { return descriptor; }
+    AddLightEvent(const LightData& light)
+    : m_light(light)
+    {}
 
-    static constexpr DescriptorType descriptor = "AddLight";
-    
     const LightData getLight() const { return m_light; }
 
 private:

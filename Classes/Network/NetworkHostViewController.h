@@ -7,7 +7,6 @@
 #include "Game/Shared/GameMode.h"
 
 class ClientModel;
-class Event;
 class GameSettings;
 class INetworkController;
 class NetworkHostView;

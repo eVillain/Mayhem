@@ -35,10 +35,7 @@
 #include "ExitGameLayer.h"
 #include "GameOverLayer.h"
 
-#include "ToggleInventoryEvent.h"
-#include "BackButtonPressedEvent.h"
-#include "SpawnParticlesEvent.h"
-#include "ToggleClientPredictionEvent.h"
+#include "InputActionEvent.h"
 
 ClientController::ClientController(std::shared_ptr<ClientModel> clientModel,
                                    std::shared_ptr<GameSettings> gameSettings,
@@ -66,11 +63,7 @@ ClientController::ClientController(std::shared_ptr<ClientModel> clientModel,
 , m_hudView(hudView)
 , m_stopping(false)
 {
-    Dispatcher::globalDispatcher().addListener(ToggleClientPredictionEvent::descriptor,
-                                               std::bind(&ClientController::onToggleClientPredictionEvent, this, std::placeholders::_1));
-    Dispatcher::globalDispatcher().addListener(ToggleInventoryEvent::descriptor,
-                                               std::bind(&ClientController::onToggleInventoryEvent, this, std::placeholders::_1));
-    Dispatcher::globalDispatcher().addListener(BackButtonPressedEvent::descriptor, std::bind(&ClientController::onBackButtonPressed, this, std::placeholders::_1));
+    Dispatcher::globalDispatcher().addListener<InputActionEvent>(std::bind(&ClientController::onInputAction, this, std::placeholders::_1), this);
     printf("ClientController:: constructor: %p\n", this);
 }
 
@@ -166,9 +159,7 @@ void ClientController::stop()
     ShutdownLocalServerCommand shutdownServer;
     shutdownServer.run();
     
-    Dispatcher::globalDispatcher().removeListeners(BackButtonPressedEvent::descriptor);
-    Dispatcher::globalDispatcher().removeListeners(ToggleClientPredictionEvent::descriptor);
-    Dispatcher::globalDispatcher().removeListeners(ToggleInventoryEvent::descriptor);
+    Dispatcher::globalDispatcher().removeListener<InputActionEvent>(this);
     
     ShutdownClientCommand shutdownClient;
     shutdownClient.run();
@@ -450,7 +441,7 @@ void ClientController::onSnapshotDiffReceived(const std::shared_ptr<Net::Message
     CCLOG("ClientController::onSnapshotDiffReceived not implemented!");
 }
 
-void ClientController::onToggleClientPredictionEvent(const Event& event)
+void ClientController::onToggleClientPrediction()
 {
     m_clientModel->setPredictBullets(!m_clientModel->getPredictBullets());
     m_clientModel->setPredictMovement(!m_clientModel->getPredictMovement());
@@ -464,7 +455,7 @@ void ClientController::onToggleClientPredictionEvent(const Event& event)
     }
 }
 
-void ClientController::onToggleInventoryEvent(const Event& event)
+void ClientController::onToggleInventory()
 {
     if (!m_clientModel->getLocalPlayerAlive())
     {
@@ -496,24 +487,43 @@ void ClientController::onToggleInventoryEvent(const Event& event)
     inventoryLayer->setData(m_clientModel->getLocalPlayerID());
 }
 
-void ClientController::onBackButtonPressed(const Event& event)
+void ClientController::onInputAction(const InputActionEvent& event)
 {
-    if (m_hudView->getViewLayer())
+    if (event.previousValue != 1.f || event.value != 0.f)
     {
-        if (m_hudView->getViewLayer()->getDescriptor() == InventoryLayer::DESCRIPTOR)
-        {
-            m_hudView->removeViewLayer();
-        }
         return;
     }
-    
-    auto exitGameLayer = std::make_shared<ExitGameLayer>();
-    exitGameLayer->setup("Are you sure you want to leave?",
-                         "EXIT GAME");
-    exitGameLayer->getCancelButton()->addTouchEventListener(CC_CALLBACK_2(ClientController::onCancelExitButton, this));
-    exitGameLayer->getConfirmButton()->addTouchEventListener(CC_CALLBACK_2(ClientController::onConfirmExitButton, this));
+    if (event.action == InputConstants::ACTION_INVENTORY)
+    {
+        onToggleInventory();
+    }
+    else if (event.action == InputConstants::ACTION_CLIENT_PREDICTION)
+    {
+        onToggleClientPrediction();
+    }
+    else if (event.action == InputConstants::ACTION_RENDER_DEBUG)
+    {
+        m_gameView->toggleDebugDraw();
+    }
+    else if (event.action == InputConstants::ACTION_BACK)
+    {
+        if (m_hudView->getViewLayer())
+        {
+            if (m_hudView->getViewLayer()->getDescriptor() == InventoryLayer::DESCRIPTOR)
+            {
+                m_hudView->removeViewLayer();
+            }
+            return;
+        }
+        
+        auto exitGameLayer = std::make_shared<ExitGameLayer>();
+        exitGameLayer->setup("Are you sure you want to leave?",
+                             "EXIT GAME");
+        exitGameLayer->getCancelButton()->addTouchEventListener(CC_CALLBACK_2(ClientController::onCancelExitButton, this));
+        exitGameLayer->getConfirmButton()->addTouchEventListener(CC_CALLBACK_2(ClientController::onConfirmExitButton, this));
 
-    m_hudView->setViewLayer(exitGameLayer);
+        m_hudView->setViewLayer(exitGameLayer);
+    }
 }
 
 void ClientController::onPlayerDeathReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID)

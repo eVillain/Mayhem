@@ -17,6 +17,10 @@ namespace InputConstants
     static const std::string ACTION_BACK = "Back";
     static const std::string ACTION_ZOOM_IN = "ZoomIn";
     static const std::string ACTION_ZOOM_OUT = "ZoomOut";
+
+    static const std::string ACTION_INVENTORY = "Inventory";
+    static const std::string ACTION_RENDER_DEBUG = "RenderDebug";
+    static const std::string ACTION_CLIENT_PREDICTION = "ClientPrediction";
 };
 
 #endif /* InputConstants_h */

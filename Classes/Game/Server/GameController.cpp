@@ -11,7 +11,6 @@
 #include "Item.h"
 #include "GameModeBR.h"
 #include "GameModeDM.h"
-#include "AddLightEvent.h"
 #include "LevelModel.h"
 #include "PlayerLogic.h"
 

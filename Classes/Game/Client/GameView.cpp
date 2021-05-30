@@ -1,7 +1,5 @@
 #include "GameView.h"
 
-#include "Core/Dispatcher.h"
-#include "TogglePhysicsDebugEvent.h"
 #include "Pseudo3DParticle.h"
 #include "Pseudo3DSprite.h"
 #include "HUDHelper.h"
@@ -37,17 +35,6 @@ GameView::~GameView()
 
 void GameView::initialize()
 {
-    Dispatcher::globalDispatcher().addListener(TogglePhysicsDebugEvent::descriptor, [this](const Event& event)
-    {
-        if (m_debugDrawNode)
-        {
-            m_debugDrawNode->setVisible(!m_debugDrawNode->isVisible());
-            for (const auto& pair : m_labels)
-            {
-                pair.second->setVisible(!pair.second->isVisible());
-            }
-        }
-    });
     m_debugDrawNode->setVisible(false);
     for (const auto& pair : m_labels)
     {
@@ -83,7 +70,6 @@ void GameView::initialize()
 
 void GameView::shutdown()
 {
-    Dispatcher::globalDispatcher().removeListeners(TogglePhysicsDebugEvent::descriptor);
     m_renderTexture = nullptr;
     m_tileMap = nullptr;
     m_bgTilesNode = nullptr;
@@ -284,4 +270,16 @@ const cocos2d::Vec2 GameView::toViewPosition(const cocos2d::Vec2& point) const
     const cocos2d::Vec2 midWindow = director->getWinSize() * 0.5f;
     const cocos2d::Vec2 pos = (point + m_view->getPosition()) - midWindow;
     return (pos * viewScale) + (midWindow);
+}
+
+void GameView::toggleDebugDraw()
+{
+    if (m_debugDrawNode)
+    {
+        m_debugDrawNode->setVisible(!m_debugDrawNode->isVisible());
+        for (const auto& pair : m_labels)
+        {
+            pair.second->setVisible(m_debugDrawNode->isVisible());
+        }
+    }
 }

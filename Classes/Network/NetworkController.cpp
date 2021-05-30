@@ -132,6 +132,7 @@ void NetworkController::terminate()
     m_readBuffer = nullptr;
     delete [] m_writeBuffer;
     m_writeBuffer = nullptr;
+    m_drudgeNet->stop();
 }
 
 void NetworkController::update(float deltaTime)

@@ -5,7 +5,6 @@
 #include <string>
 
 class AudioModel;
-class Event;
 class GameSettings;
 
 class AudioController

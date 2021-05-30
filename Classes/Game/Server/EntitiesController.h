@@ -3,10 +3,8 @@
 
 #include "Game/Shared/EntityConstants.h"
 
-
 class Entity;
 class EntitiesModel;
-class Event;
 class Player;
 class Item;
 class Projectile;

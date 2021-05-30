@@ -3,7 +3,6 @@
 
 #include "cocos2d.h"
 #include "cocos-ext.h"
-#include "Core/Event.h"
 #include "Network/NetworkMessages.h"
 #include "Network/DrudgeNet/include/DataTypes.h"
 #include "ClientModel.h"
@@ -12,7 +11,6 @@ class CameraController;
 class CameraModel;
 class ClientModel;
 class Entity;
-class Event;
 class LevelModel;
 class GameView;
 class GameViewController;
@@ -25,6 +23,7 @@ class SnapshotModel;
 class ReplayModel;
 class GameSettings;
 class GameModel;
+class InputActionEvent;
 
 namespace Net {
     class Message;
@@ -72,9 +71,9 @@ private:
     void onSpectateReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
     void onGameOverReceived(const std::shared_ptr<Net::Message>& data, const Net::NodeID nodeID);
 
-    void onToggleClientPredictionEvent(const Event& event);
-    void onToggleInventoryEvent(const Event& event);
-    void onBackButtonPressed(const Event& event);
+    void onToggleClientPrediction();
+    void onToggleInventory();
+    void onInputAction(const InputActionEvent& event);
 
     void debugSnapshots(const size_t targetIndex, const float newAlpha);
     void checkShot(const SnapshotData& snapshot);

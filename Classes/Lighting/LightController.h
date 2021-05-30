@@ -5,7 +5,8 @@
 
 class GameSettings;
 class LightModel;
-class Event;
+class AddLightEvent;
+class RemoveLightEvent;
 
 class LightController
 {
@@ -72,8 +73,8 @@ private:
     void renderToTexture(cocos2d::Sprite* lightSprite,
                          cocos2d::RenderTexture* texture);
 
-    void onAddLight(const Event& event);
-    void onRemoveLight(const Event& event);
+    void onAddLight(const AddLightEvent& event);
+    void onRemoveLight(const RemoveLightEvent& event);
 };
 
 #endif /* LightController_h */

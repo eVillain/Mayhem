@@ -1,6 +1,8 @@
 #include "Game/Client/InputModel.h"
 
-#include "InputConstants.h"
+#include "Core/Dispatcher.h"
+#include "Game/Client/InputActionEvent.h"
+#include "Game/Client/InputConstants.h"
 
 InputModel::InputModel()
 : m_mouseCoord(cocos2d::Vec2::ZERO)
@@ -26,6 +28,11 @@ InputModel::InputModel()
     mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE, InputConstants::ACTION_BACK, 1.f);
     mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_COMMA, InputConstants::ACTION_ZOOM_IN, 1.f);
     mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_PERIOD, InputConstants::ACTION_ZOOM_OUT, 1.f);
+    mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_I, InputConstants::ACTION_INVENTORY, 1.f);
+    mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_TAB, InputConstants::ACTION_INVENTORY, 1.f);
+
+    mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_B, InputConstants::ACTION_RENDER_DEBUG, 1.f);
+    mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_N, InputConstants::ACTION_CLIENT_PREDICTION, 1.f);
     
     mapMouseButton(cocos2d::EventMouse::MouseButton::BUTTON_LEFT, InputConstants::ACTION_SHOOT, 1.f);
     mapMouseButton(cocos2d::EventMouse::MouseButton::BUTTON_RIGHT, InputConstants::ACTION_AIM, 1.f);
@@ -38,7 +45,16 @@ InputModel::~InputModel()
 
 void InputModel::setInputValue(const std::string& input, const float value)
 {
+    if (m_inputs.find(input) == m_inputs.end())
+    {
+        m_inputs[input] = 0.f;
+    }
+
+    const float previousValue = m_inputs[input];
     m_inputs[input] = value;
+
+    InputActionEvent inputAction(input, value, previousValue);
+    Dispatcher::globalDispatcher().dispatch(inputAction);
 }
 
 float InputModel::getInputValue(const std::string& input)
@@ -49,7 +65,6 @@ float InputModel::getInputValue(const std::string& input)
     }
     return m_inputs[input];
 }
-
 
 void InputModel::mapKeyboard(const cocos2d::EventKeyboard::KeyCode key,
                              const std::string& action,

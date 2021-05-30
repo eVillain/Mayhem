@@ -2,12 +2,6 @@
 
 #include "base/CCController.h"
 #include "Game/Client/InputModel.h"
-#include "Core/Injector.h"
-#include "Core/Dispatcher.h"
-#include "TogglePhysicsDebugEvent.h"
-#include "ToggleInventoryEvent.h"
-#include "ToggleClientPredictionEvent.h"
-#include "BackButtonPressedEvent.h"
 
 InputController::InputController(std::shared_ptr<InputModel> model)
 : m_model(model)
@@ -116,28 +110,12 @@ void InputController::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, coc
         case cocos2d::EventKeyboard::KeyCode::KEY_3:
         case cocos2d::EventKeyboard::KeyCode::KEY_4:
         case cocos2d::EventKeyboard::KeyCode::KEY_5:
-        case cocos2d::EventKeyboard::KeyCode::KEY_6:
-        case cocos2d::EventKeyboard::KeyCode::KEY_7:
-        case cocos2d::EventKeyboard::KeyCode::KEY_8:
-        case cocos2d::EventKeyboard::KeyCode::KEY_9:
+//        case cocos2d::EventKeyboard::KeyCode::KEY_6:
+//        case cocos2d::EventKeyboard::KeyCode::KEY_7:
+//        case cocos2d::EventKeyboard::KeyCode::KEY_8:
+//        case cocos2d::EventKeyboard::KeyCode::KEY_9:
             m_model->setSlot((int)keyCode - (int)cocos2d::EventKeyboard::KeyCode::KEY_0);
             m_model->setChangeWeapon(true);
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_B:
-            Dispatcher::globalDispatcher().dispatch(TogglePhysicsDebugEvent());
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_I:
-        case cocos2d::EventKeyboard::KeyCode::KEY_TAB:
-            Dispatcher::globalDispatcher().dispatch(ToggleInventoryEvent());
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_N:
-            Dispatcher::globalDispatcher().dispatch(ToggleClientPredictionEvent());
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_M:
-//            Dispatcher::globalDispatcher().dispatch(ToggleMuteBGMEvent());
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE:
-            Dispatcher::globalDispatcher().dispatch(BackButtonPressedEvent());
             break;
         default:
             break;

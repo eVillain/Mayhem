@@ -118,11 +118,12 @@ bool InitClientCommand::run()
             // No post-processing, apply lighting directly on top of game scene
             gameScene->addChild(lightController->getLightMapTexture(), 2);
         }
-        gameView->getSelfLightingNode()->removeFromParent();
-        gameScene->addChild(gameView->getSelfLightingNode(), 3);
     }
     
-    gameScene->addChild(hudView->getRoot(), 3);
+    gameView->getSelfLightingNode()->removeFromParent();
+    gameScene->addChild(gameView->getSelfLightingNode(), 3);
+    
+    gameScene->addChild(hudView->getRoot(), 9);
     gameScene->addChild(gameView->getDebugDrawNode(), 10);
     gameScene->addChild(gameView->getDebugLabelNode(), 11);
 

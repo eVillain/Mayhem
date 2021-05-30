@@ -3,9 +3,9 @@
 
 #include "cocos2d.h"
 
-class Event;
-
 class ParticlesModel;
+class SpawnParticlesEvent;
+class SpawnParticlesAttachedEvent;
 
 class ParticlesController
 {
@@ -19,8 +19,8 @@ public:
     void update();
     
 private:
-    void onSpawnParticles(const Event& event);
-    void onSpawnAttachedParticles(const Event& event);
+    void onSpawnParticles(const SpawnParticlesEvent& event);
+    void onSpawnAttachedParticles(const SpawnParticlesAttachedEvent& event);
     
     std::map<cocos2d::RefPtr<cocos2d::Node>, std::vector<cocos2d::RefPtr<cocos2d::ParticleSystemQuad>>> m_attachedParticles;
 };

@@ -323,7 +323,8 @@ void NetworkHostViewController::onBackToMainMenuButton(cocos2d::Ref *ref, cocos2
     
     terminate();
     
-    Dispatcher::globalDispatcher().dispatch(BackToMainMenuEvent());
+    BackToMainMenuEvent back;
+    Dispatcher::globalDispatcher().dispatch(back);
 }
 
 void NetworkHostViewController::onPlayerInfoReceived(const std::shared_ptr<Net::Message>& message,

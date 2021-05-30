@@ -1,4 +1,5 @@
 #include "LevelModel.h"
+
 #include "Core/Dispatcher.h"
 #include "CollisionUtils.h"
 #include "SharedConstants.h"
@@ -219,7 +220,8 @@ void LevelModel::loadLights()
             }
         }
         
-        Dispatcher::globalDispatcher().dispatch(AddLightEvent({lightPosition + cocos2d::Vec2(lightRadius,lightRadius), lightRadius, lightColor, -1.f}));
+        AddLightEvent light({lightPosition + cocos2d::Vec2(lightRadius,lightRadius), lightRadius, lightColor, -1.f});
+        Dispatcher::globalDispatcher().dispatch(light);
     }
 }
 

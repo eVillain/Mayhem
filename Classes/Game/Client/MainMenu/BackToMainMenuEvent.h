@@ -1,19 +1,13 @@
 #ifndef BackToMainMenuEvent_h
 #define BackToMainMenuEvent_h
 
-#include "Core/Event.h"
-
 class Player;
 class Entity;
 
-class BackToMainMenuEvent : public Event
+class BackToMainMenuEvent
 {
 public:
-    BackToMainMenuEvent();
-    
-    virtual DescriptorType type() const { return descriptor; }
-
-    static constexpr DescriptorType descriptor = "BackToMainMenu";
+    BackToMainMenuEvent() {};    
 };
 
 #endif /* BackToMainMenuEvent_h */

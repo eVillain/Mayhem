@@ -2,7 +2,6 @@
 #define GameViewController_h
 
 #include "cocos2d.h"
-#include "Core/Event.h"
 #include "Network/DrudgeNet/include/DataTypes.h"
 #include "Network/NetworkMessages.h"
 #include "Game/Shared/WeaponConstants.h"

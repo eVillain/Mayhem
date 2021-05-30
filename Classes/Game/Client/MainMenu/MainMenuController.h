@@ -2,7 +2,6 @@
 #define MAIN_MENU_CONTROLLER_H
 
 #include "cocos2d.h"
-#include "Core/Event.h"
 #include "MainMenuView.h"
 #include "NetworkHostView.h"
 #include "NetworkClientView.h"
@@ -10,7 +9,8 @@
 class AudioController;
 class InputController;
 class NetworkController;
-class Event;
+class BackToMainMenuEvent;
+class InputActionEvent;
 
 class MainMenuController : public cocos2d::Scene
 {
@@ -42,8 +42,8 @@ private:
     void replayEditorCallback(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
     void exitGameCallback(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
 
-    void onBackToMainMenu(const Event& event);
-    void onBackButtonPressed(const Event& event);
+    void onBackToMainMenu(const BackToMainMenuEvent& event);
+    void onInputAction(const InputActionEvent& event);
     void exitGame();
 };
 
