@@ -30,4 +30,16 @@ void fadeInElements(const std::vector<cocos2d::Node*>& nodes,
     }
 }
 
+void fadeOutAndRemove(cocos2d::Node* node,
+                      const float delayTime,
+                      const float fadeTime)
+{
+    cocos2d::DelayTime* delay = cocos2d::DelayTime::create(delayTime);
+    cocos2d::FadeOut* fadeOut = cocos2d::FadeOut::create(fadeTime);
+    cocos2d::CallFunc* removeCB = cocos2d::CallFunc::create([node](){
+        node->removeFromParent();
+    });
+    cocos2d::Sequence* sequence = cocos2d::Sequence::create(delay, fadeOut, removeCB, NULL);
+    node->runAction(sequence);
+}
 };
