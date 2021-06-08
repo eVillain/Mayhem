@@ -6,6 +6,7 @@
 #include "ActionUtils.h"
 #include "HUDConstants.h"
 #include "EntityView.h"
+#include "InputView.h"
 
 USING_NS_CC;
 
@@ -120,6 +121,8 @@ bool MainMenuView::init()
     
     ActionUtils::fadeInElements(nodes, 0.1f, 0.05f);
     
+    m_inputView = std::make_shared<InputView>();
+    addChild(m_inputView->getRoot(), 100);
     
     return true;
 }

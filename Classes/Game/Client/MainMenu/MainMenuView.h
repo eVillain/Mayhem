@@ -5,6 +5,7 @@
 #include "ui/UIButton.h"
 
 class EntityView;
+class InputView;
 
 class MainMenuView : public cocos2d::Layer
 {
@@ -41,6 +42,7 @@ private:
     cocos2d::Node* m_playerNode;
     
     std::shared_ptr<EntityView> m_playerView;
+    std::shared_ptr<InputView> m_inputView;
 };
 
 #endif // MAIN_MENU_VIEW_H

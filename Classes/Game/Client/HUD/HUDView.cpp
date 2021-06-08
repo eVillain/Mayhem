@@ -11,6 +11,7 @@
 #include "KillFeed.h"
 #include "EntityDataModel.h"
 #include "NumberFormatter.h"
+#include "InputView.h"
 
 static const cocos2d::Size HEALTH_BAR_SIZE = cocos2d::Size(200.f, 26.f);
 
@@ -33,6 +34,7 @@ HUDView::HUDView()
 , m_spectatorsIcon(nullptr)
 , m_crosshair(nullptr)
 , m_killFeed(nullptr)
+, m_inputView(nullptr)
 , m_blockInput(false)
 {
     printf("HUDView:: constructor: %p\n", this);
@@ -129,6 +131,9 @@ void HUDView::initialize()
     
     m_root->addChild(m_killFeed);
     
+    m_inputView = std::make_shared<InputView>();
+    m_root->addChild(m_inputView->getRoot(), 199);
+    
     setHealth(100.f);
     updatePositions();    
 }
@@ -153,6 +158,7 @@ void HUDView::shutdown()
     m_crosshair = nullptr;
     m_killFeed = nullptr;
     m_blockInput = nullptr;
+    m_inputView = nullptr;
 }
 
 void HUDView::update(const SnapshotData &snapshot, const uint8_t localPlayerID)

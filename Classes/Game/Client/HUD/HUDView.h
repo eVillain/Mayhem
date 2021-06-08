@@ -10,6 +10,7 @@
 class CrosshairView;
 class InventoryLayer;
 class ViewLayer;
+class InputView;
 
 class HUDView
 {
@@ -78,7 +79,8 @@ private:
 
     cocos2d::RefPtr<cocos2d::Label> m_highlightLabel;
     std::shared_ptr<CrosshairView> m_crosshair;
-    
+    std::shared_ptr<InputView> m_inputView;
+
     std::vector<cocos2d::RefPtr<HUDWeapon>> m_weaponSlots;
     
     cocos2d::RefPtr<KillFeed> m_killFeed;
