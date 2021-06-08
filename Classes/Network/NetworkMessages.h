@@ -241,7 +241,7 @@ public:
     float directionY;
     float aimPointX;
     float aimPointY;
-    bool jump;
+    bool aim;
     bool shoot;
     bool interact;
     bool run;
@@ -264,7 +264,7 @@ public:
     , directionY(other.directionY)
     , aimPointX(other.aimPointX)
     , aimPointY(other.aimPointY)
-    , jump(other.jump)
+    , aim(other.aim)
     , shoot(other.shoot)
     , interact(other.interact)
     , run(other.run)
@@ -284,7 +284,7 @@ public:
         stream.SerializeFloat(directionY);
         stream.SerializeFloat(aimPointX);
         stream.SerializeFloat(aimPointY);
-        stream.SerializeBoolean(jump);
+        stream.SerializeBoolean(aim);
         stream.SerializeBoolean(shoot);
         stream.SerializeBoolean(interact);
         stream.SerializeBoolean(run);

@@ -103,7 +103,7 @@ void ReplayEditorController::onMouseMoved(cocos2d::EventMouse *event)
         return;
     }
 
-    const cocos2d::Vec2 aimPosition = m_gameViewController->getAimPosition(event->getLocationInView());
+    const cocos2d::Vec2 aimPosition = m_gameViewController->getWorldPosition(event->getLocationInView());
     const float time = m_view->getTimeLineView()->getCurrentTime();
     size_t currentFrame = m_replayModel->getSnapshotIndexForTime(time);
 
@@ -147,7 +147,7 @@ void ReplayEditorController::onMouseDown(cocos2d::EventMouse* event)
     }
     else if (event->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_RIGHT)
     {
-        const cocos2d::Vec2 aimPosition = m_gameViewController->getAimPosition(event->getLocationInView());
+        const cocos2d::Vec2 aimPosition = m_gameViewController->getWorldPosition(event->getLocationInView());
         const float time = m_view->getTimeLineView()->getCurrentTime();
         size_t currentFrame = m_replayModel->getSnapshotIndexForTime(time);
         const auto& snapshots = m_replayModel->getSnapshots();

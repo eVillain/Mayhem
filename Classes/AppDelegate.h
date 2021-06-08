@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 
+class GLFWwindow;
 /**
 @brief    The cocos2d Application.
 
@@ -34,6 +35,9 @@ public:
     @param  the pointer of the application
     */
     virtual void applicationWillEnterForeground();
+    
+private:
+    static void applicationWillExit(GLFWwindow*);
 };
 
 #endif // _APP_DELEGATE_H_

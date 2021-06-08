@@ -8,5 +8,6 @@ static const float ITEM_GRAB_RADIUS = 40.f;
 static const float EXPLOSION_RADIUS = 64.f;
 static const float DEFAULT_RELOAD_TIME = 1.f;
 static const float DEFAULT_HEADSHOT_DAMAGE_MULTIPLIER = 1.5f;
+static const float AIM_RADIUS = 64.f;
 
 #endif /* SharedConstants_h */

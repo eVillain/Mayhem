@@ -78,6 +78,8 @@
 		D934AA0F2653E77F0007495E /* GameMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D934AA0D2653E77E0007495E /* GameMode.cpp */; };
 		D934AA102653E77F0007495E /* GameMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D934AA0D2653E77E0007495E /* GameMode.cpp */; };
 		D945AE03266C292200CD8C3A /* GLFWJoystickHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D945AE02266C292100CD8C3A /* GLFWJoystickHandler.cpp */; };
+		D945AE08266D1A2F00CD8C3A /* InputView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D945AE05266D1A2E00CD8C3A /* InputView.cpp */; };
+		D945AE09266D1A2F00CD8C3A /* InputView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D945AE05266D1A2E00CD8C3A /* InputView.cpp */; };
 		D945AE0E266FD6A200CD8C3A /* ShutdownMainMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D945AE0D266FD6A200CD8C3A /* ShutdownMainMenuCommand.cpp */; };
 		D945AE0F266FD6A200CD8C3A /* ShutdownMainMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D945AE0D266FD6A200CD8C3A /* ShutdownMainMenuCommand.cpp */; };
 		D94AFA85262C223F00278953 /* FollowNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D94AFA84262C223F00278953 /* FollowNode.cpp */; };
@@ -442,6 +444,8 @@
 		D934AA112654702B0007495E /* AddressResolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddressResolver.h; sourceTree = "<group>"; };
 		D945AE00266C292100CD8C3A /* GLFWJoystickHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLFWJoystickHandler.h; sourceTree = "<group>"; };
 		D945AE02266C292100CD8C3A /* GLFWJoystickHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLFWJoystickHandler.cpp; sourceTree = "<group>"; };
+		D945AE05266D1A2E00CD8C3A /* InputView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputView.cpp; sourceTree = "<group>"; };
+		D945AE07266D1A2F00CD8C3A /* InputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputView.h; sourceTree = "<group>"; };
 		D945AE0A266D1B5600CD8C3A /* InputActivityEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputActivityEvent.h; sourceTree = "<group>"; };
 		D945AE0B266D3ED600CD8C3A /* InputConnectedEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputConnectedEvent.h; sourceTree = "<group>"; };
 		D945AE0C266FD6A200CD8C3A /* ShutdownMainMenuCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShutdownMainMenuCommand.h; sourceTree = "<group>"; };
@@ -1222,6 +1226,8 @@
 				D9D4290626592FDA008364FD /* InputConstants.h */,
 				D96CBD352531C3BA006DF3A4 /* InputModel.cpp */,
 				D96CBD092531C3AD006DF3A4 /* InputModel.h */,
+				D945AE05266D1A2E00CD8C3A /* InputView.cpp */,
+				D945AE07266D1A2F00CD8C3A /* InputView.h */,
 				D96CBD0E2531C3AF006DF3A4 /* InventoryLayer.cpp */,
 				D96CBD162531C3B2006DF3A4 /* InventoryLayer.h */,
 				D92C7DF7264DDFA700AA7096 /* KillFeed.cpp */,
@@ -1569,6 +1575,7 @@
 				D9B2518A24C48EA500EAFA5B /* HUDHelper.cpp in Sources */,
 				D9B250F824C48EA500EAFA5B /* Connection.cpp in Sources */,
 				D96CBD552531C3BB006DF3A4 /* CameraController.cpp in Sources */,
+				D945AE08266D1A2F00CD8C3A /* InputView.cpp in Sources */,
 				D96CBD612531C3BB006DF3A4 /* InitServerCommand.cpp in Sources */,
 				D9B250D424C48EA500EAFA5B /* FragmentBuffer.cpp in Sources */,
 				D9B2517024C48EA500EAFA5B /* MainMenuView.cpp in Sources */,
@@ -1650,6 +1657,7 @@
 				D96CBCD92531C356006DF3A4 /* LootBox.cpp in Sources */,
 				D96CBC972531C342006DF3A4 /* LoadLevelCommand.cpp in Sources */,
 				D9B2518D24C48EA500EAFA5B /* HUDView.cpp in Sources */,
+				D945AE09266D1A2F00CD8C3A /* InputView.cpp in Sources */,
 				D9B2510D24C48EA500EAFA5B /* AudioModel.cpp in Sources */,
 				D9B250CD24C48EA500EAFA5B /* NetworkHostGameLevelCell.cpp in Sources */,
 				D9B2519924C4B13100EAFA5B /* InitReplayEditorCommand.cpp in Sources */,

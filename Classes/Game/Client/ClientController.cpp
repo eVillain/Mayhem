@@ -737,11 +737,13 @@ void ClientController::checkShot(const SnapshotData& snapshot)
         if (canFire && ammo > 0)
         {
             m_clientModel->setLastPlayerActionTime(m_gameModel->getCurrentTime());
+            const cocos2d::Vec2 playerPosition = cocos2d::Vec2(entity.positionX, entity.positionY);
+            const cocos2d::Vec2 aimPosition = playerPosition + cocos2d::Vec2(currentInput->aimPointX, currentInput->aimPointY) * AIM_RADIUS;
             m_gameViewController->renderShot(player.entityID,
                                              playerIt->first,
-                                             cocos2d::Vec2(entity.positionX, entity.positionY),
+                                             playerPosition,
                                              player.flipX,
-                                             cocos2d::Vec2(currentInput->aimPointX, currentInput->aimPointY),
+                                             aimPosition,
                                              (EntityType)weapon.type,
                                              snapshot);
         }
@@ -758,12 +760,27 @@ std::shared_ptr<ClientInputMessage> ClientController::getInputData() const
     data->lastReceivedSnapshot = snapshots.empty() ? 0 : snapshots.back().serverTick;
     data->directionX = m_inputModel->getInputValue(InputConstants::ACTION_MOVE_RIGHT);
     data->directionY = -m_inputModel->getInputValue(InputConstants::ACTION_MOVE_UP);
-    const cocos2d::Vec2 aimPoint = m_gameViewController->getAimPosition(m_inputModel->getMouseCoord());
-    data->aimPointX = aimPoint.x;
-    data->aimPointY = aimPoint.y;
+    
+    const cocos2d::Vec2 playerPos = m_gameViewController->getCameraModel()->getTargetPosition();
+    if (m_inputModel->getActiveGamepad() == -1) // Mouse and keyboard
+    {
+        const cocos2d::Vec2 aimPoint = m_gameViewController->getWorldPosition(m_inputModel->getMouseCoord()) - playerPos;
+        data->aimPointX = aimPoint.x;
+        data->aimPointY = aimPoint.y;
+    }
+    else
+    {
+        const float aimDirectionX = m_inputModel->getInputValue(InputConstants::ACTION_AIM_RIGHT);
+        const float aimDirectionY = -m_inputModel->getInputValue(InputConstants::ACTION_AIM_UP);
+        data->aimPointX = aimDirectionX;
+        data->aimPointY = aimDirectionY;
+        const cocos2d::Vec2 aimPoint = playerPos + (cocos2d::Vec2(aimDirectionX, aimDirectionY) * AIM_RADIUS);
+        m_inputModel->setMouseCoord(m_gameViewController->getScreenPosition(aimPoint)); // Hack on top of a hack :D
+    }
     
     bool blockInput = !m_clientModel->getLocalPlayerAlive() || m_hudView->getViewLayer();
-    data->shoot = blockInput ? false : m_inputModel->getInputValue(InputConstants::ACTION_SHOOT);
+    data->shoot = blockInput ? false : m_inputModel->getInputValue(InputConstants::ACTION_SHOOT) > 0.9f;
+    data->aim = blockInput ? false : m_inputModel->getInputValue(InputConstants::ACTION_AIM) > 0.9f;
     data->interact = blockInput ? false : m_inputModel->getInputValue(InputConstants::ACTION_INTERACT);
     data->run = m_inputModel->getInputValue(InputConstants::ACTION_RUN);
     data->reload = m_inputModel->getInputValue(InputConstants::ACTION_RELOAD);

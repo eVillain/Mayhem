@@ -189,13 +189,6 @@ void BaseAI::updateState(const uint8_t playerID,
                 m_aimPointX = position.x + m_directionX * 10.f;
                 m_aimPointY = position.y + m_directionY * 10.f;
             }
-            else
-            {
-                cocos2d::Vec2 direction = cocos2d::Vec2(m_aimPointX, m_aimPointY) - position;
-                direction.normalize();
-                m_aimPointX = direction.x;
-                m_aimPointY = direction.y;
-            }
             return;
         }
         // Seek target
@@ -207,8 +200,8 @@ void BaseAI::updateState(const uint8_t playerID,
                                                    nearEntities,
                                                    ammoType);
 
-        m_aimPointX = targetPos.x;
-        m_aimPointY = targetPos.y;
+        m_aimPointX = targetPos.x - position.x;
+        m_aimPointY = targetPos.y - position.y;
 
         if (m_targetType == TargetType::THREAT)
         {
@@ -246,8 +239,8 @@ void BaseAI::updateState(const uint8_t playerID,
                                                    nearEntities,
                                                    ammoType);
 
-        m_aimPointX = targetPos.x;
-        m_aimPointY = targetPos.y;
+        m_aimPointX = targetPos.x - position.x;
+        m_aimPointY = targetPos.y - position.y;
         
         if (m_targetType == TargetType::AMMO ||
             m_targetType == TargetType::WEAPON)
@@ -262,7 +255,7 @@ void BaseAI::updateState(const uint8_t playerID,
             if (distToTarget < 50.f)
             {
                 // Miss by a little bit
-                const float AI_AIM_MISS_RANGE = 20.f;
+                const float AI_AIM_MISS_RANGE = 0.3f;
                 float randomX = cocos2d::random(-AI_AIM_MISS_RANGE, AI_AIM_MISS_RANGE);
                 float randomY = cocos2d::random(-AI_AIM_MISS_RANGE, AI_AIM_MISS_RANGE);
                 m_aimPointX += randomX;

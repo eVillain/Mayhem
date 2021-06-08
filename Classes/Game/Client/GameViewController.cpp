@@ -867,8 +867,9 @@ void GameViewController::updateHeldItem(std::shared_ptr<EntityView>& entityView,
         }
     }
     cocos2d::RefPtr<cocos2d::Sprite> heldItem = entityView->getSecondarySprites()[EntityView::WEAPON_INDEX];
-    const cocos2d::Vec2 aimPosition = cocos2d::Vec2(state.aimPointX, state.aimPointY);
-    const WeaponConstants::WeaponStateData data = WeaponConstants::getWeaponData(entityView->getSprite()->getPosition(),
+    const cocos2d::Vec2 playerPosition = entityView->getSprite()->getPosition();
+    const cocos2d::Vec2 aimPosition = playerPosition + (cocos2d::Vec2(state.aimPointX, state.aimPointY) * AIM_RADIUS);
+    const WeaponConstants::WeaponStateData data = WeaponConstants::getWeaponData(playerPosition,
                                                                                  aimPosition,
                                                                                  itemData.weapon.holdOffset,
                                                                                  itemData.weapon.projectileOffset,
@@ -1002,33 +1003,40 @@ void GameViewController::updateCursor(const SnapshotData& snapshot)
         
         auto& entityView = m_entityViews[playerState.entityID];
         const cocos2d::Vec2 playerPosition = entityView ? entityView->getSprite()->getPosition() : cocos2d::Vec2(entitySnapshot.positionX, entitySnapshot.positionY);
-        const cocos2d::Vec2 aimPosition = getAimPosition(m_inputModel->getMouseCoord());
+        const cocos2d::Vec2 aimPosition = getWorldPosition(m_inputModel->getMouseCoord());
 
         uint32_t entityUnderCursorID = 0;
         bool itemsInRange = false;
+        RayElement raycastResult = RaycastUtil::rayCast2(playerPosition,
+                                                         aimPosition,
+                                                         playerState.entityID,
+                                                         snapshot.entityData,
+                                                         m_levelModel->getStaticRects());
+
+        if (raycastResult.hitEntityID != 0)
+        {
+            const auto& hitEntity = snapshot.entityData.at(raycastResult.hitEntityID);
+            if (EntityDataModel::isItemType((EntityType)hitEntity.type))
+            {
+                entityUnderCursorID = raycastResult.hitEntityID;
+            }
+        }
+        
         for (const auto& entityPair : snapshot.entityData)
         {
-            if (entityPair.second.type == EntityType::PlayerEntity)
+            if (!EntityDataModel::isItemType((EntityType)entityPair.second.type))
             {
                 continue;
             }
             
             const cocos2d::Vec2 position = cocos2d::Vec2(entityPair.second.positionX, entityPair.second.positionY);
-            if (position.distance(playerPosition) <= ITEM_GRAB_RADIUS)
+            if (position.distance(playerPosition) > ITEM_GRAB_RADIUS)
             {
-                itemsInRange = true;
-
-                const auto& collisionRects = EntityDataModel::getCollisionRects((EntityType)entityPair.second.type);
-                for (auto baseRect : collisionRects)
-                {
-                    const cocos2d::Rect rect = cocos2d::Rect(baseRect.origin + position, baseRect.size);
-                    if (rect.containsPoint(aimPosition))
-                    {
-                        entityUnderCursorID = entityPair.first;
-                        break;
-                    }
-                }
+                continue;
             }
+            
+            itemsInRange = true;
+            break;
         }
 
         if (itemsInRange)
@@ -1299,8 +1307,14 @@ void GameViewController::renderPlayerDeath(const cocos2d::Vec2& position,
     }
 }
 
-cocos2d::Vec2 GameViewController::getAimPosition(const cocos2d::Vec2& mouseCoord) const
+cocos2d::Vec2 GameViewController::getWorldPosition(const cocos2d::Vec2& screenCoord) const
 {
     const cocos2d::Vec2 viewPosition = m_cameraController->getViewPosition();
-    return (mouseCoord - viewPosition) / m_cameraModel->getZoom();
+    return (screenCoord - viewPosition) / m_cameraModel->getZoom();
+}
+
+cocos2d::Vec2 GameViewController::getScreenPosition(const cocos2d::Vec2& worldCoord) const
+{
+    const cocos2d::Vec2 viewPosition = m_cameraController->getViewPosition();
+    return viewPosition + (worldCoord * m_cameraModel->getZoom());
 }

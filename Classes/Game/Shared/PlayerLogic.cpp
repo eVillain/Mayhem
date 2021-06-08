@@ -262,11 +262,13 @@ void PlayerLogic::setInventoryAmount(const EntityType type,
 cocos2d::Vec2 PlayerLogic::getMovementVelocityForInput(const cocos2d::Vec2& input,
                                                        const bool run)
 {
-    const bool hasInputMovement = input.lengthSquared() > 0.f;
+    const float inputLength = input.length();
+    const bool hasInputMovement = inputLength > 0.1f;
     if (hasInputMovement)
     {
+        const bool needsNormalisation = inputLength > 1.f;
         const float moveSpeed = run ? PLAYER_RUN_VEL : PLAYER_WALK_VEL;
-        return cocos2d::Vec2(input.x, -input.y).getNormalized() * moveSpeed;
+        return (needsNormalisation ? cocos2d::Vec2(input.x, input.y).getNormalized() : input) * moveSpeed;
     }
     return cocos2d::Vec2::ZERO;
 }

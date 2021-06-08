@@ -217,7 +217,7 @@ void ServerController::checkForShots(uint8_t playerID, const std::shared_ptr<Cli
         weapon.amount = weapon.amount - 1;
         player->setLastActionTime(m_gameModel->getCurrentTime());
 
-        const cocos2d::Vec2 aimPoint = cocos2d::Vec2(input->aimPointX, input->aimPointY);
+        const cocos2d::Vec2 aimPoint = player->getPosition() + cocos2d::Vec2(input->aimPointX, input->aimPointY) * AIM_RADIUS;
         const WeaponConstants::WeaponStateData data = WeaponConstants::getWeaponData(player->getPosition(),
                                                                                      aimPoint,
                                                                                      itemData.weapon.holdOffset,
@@ -321,19 +321,18 @@ void ServerController::checkForInteraction(uint8_t playerID, const std::shared_p
     }
     else
     {
-        const cocos2d::Vec2 aimPosition = cocos2d::Vec2(input->aimPointX, input->aimPointY);
-        if (aimPosition.distance(playerPosition) > ITEM_GRAB_RADIUS)
+        const cocos2d::Vec2 aimPosition = playerPosition + (cocos2d::Vec2(input->aimPointX, input->aimPointY) * AIM_RADIUS);
+        RayElement raycastResult = RaycastUtil::rayCast(playerPosition,
+                                                        aimPosition,
+                                                        player->getEntityID(),
+                                                        m_gameController->getEntitiesModel()->getEntities(),
+                                                        m_gameController->getLevelModel()->getStaticRects());
+        if (raycastResult.hitEntityID == 0)
         {
             return;
         }
-        
-        std::shared_ptr<Entity> entity = m_gameController->getEntityAtPoint(aimPosition, player->getEntityID());
-        if (!entity)
-        {
-            return;
-        }
-        
-        if (std::shared_ptr<Item> item = std::dynamic_pointer_cast<Item>(entity))
+        auto hitEntity = m_gameController->getEntitiesModel()->getEntities().at(raycastResult.hitEntityID);
+        if (std::shared_ptr<Item> item = std::dynamic_pointer_cast<Item>(hitEntity))
         {
             if (!item->getIsRemoved()) // If item was already destroyed/picked up this player is simply denied
             {
@@ -342,7 +341,6 @@ void ServerController::checkForInteraction(uint8_t playerID, const std::shared_p
             return;
         }
     }
-    
     // TODO: Other forms of interaction might follow here, ie. doors etc
 }
 

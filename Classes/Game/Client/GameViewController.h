@@ -62,7 +62,8 @@ public:
     
     void renderHitData(const SnapshotData& snapshot, const bool skipLocalPlayerShots);
     
-    cocos2d::Vec2 getAimPosition(const cocos2d::Vec2& mouseCoord) const;
+    cocos2d::Vec2 getWorldPosition(const cocos2d::Vec2& screenCoord) const;
+    cocos2d::Vec2 getScreenPosition(const cocos2d::Vec2& worldCoord) const;
     const std::shared_ptr<CameraController>& getCameraController() const { return m_cameraController; }
     const std::shared_ptr<CameraModel>& getCameraModel() const { return m_cameraModel; }
     
