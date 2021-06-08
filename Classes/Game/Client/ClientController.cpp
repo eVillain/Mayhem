@@ -36,6 +36,7 @@
 #include "GameOverLayer.h"
 
 #include "InputActionEvent.h"
+#include "AppWillTerminateEvent.h"
 
 ClientController::ClientController(std::shared_ptr<ClientModel> clientModel,
                                    std::shared_ptr<GameSettings> gameSettings,
@@ -63,7 +64,12 @@ ClientController::ClientController(std::shared_ptr<ClientModel> clientModel,
 , m_hudView(hudView)
 , m_stopping(false)
 {
-    Dispatcher::globalDispatcher().addListener<InputActionEvent>(std::bind(&ClientController::onInputAction, this, std::placeholders::_1), this);
+    Dispatcher::globalDispatcher().addListener<InputActionEvent>(std::bind(&ClientController::onInputAction,
+                                                                           this, std::placeholders::_1),
+                                                                 this);
+    Dispatcher::globalDispatcher().addListener<AppWillTerminateEvent>(std::bind(&ClientController::onAppWillTerminate,
+                                                                                this, std::placeholders::_1),
+                                                                      this);
     printf("ClientController:: constructor: %p\n", this);
 }
 
@@ -917,4 +923,9 @@ void ClientController::onRespawnButton(cocos2d::Ref* ref, cocos2d::ui::Widget::T
     respawnMessage->state = ClientState::PLAYER_RESPAWN;
     std::shared_ptr<Net::Message> message = respawnMessage;
     m_networkController->sendMessage(0, message, true);
+}
+
+void ClientController::onAppWillTerminate(const AppWillTerminateEvent&)
+{
+    stop();
 }

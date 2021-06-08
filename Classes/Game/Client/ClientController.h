@@ -24,6 +24,7 @@ class ReplayModel;
 class GameSettings;
 class GameModel;
 class InputActionEvent;
+class AppWillTerminateEvent;
 
 namespace Net {
     class Message;
@@ -85,6 +86,8 @@ private:
     void onSpectateButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
     void onRespawnButton(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType type);
 
+    void onAppWillTerminate(const AppWillTerminateEvent&);
+
     std::shared_ptr<ClientInputMessage> getInputData() const;
     
     std::shared_ptr<ClientModel> m_clientModel;
@@ -100,7 +103,7 @@ private:
     std::shared_ptr<LightController> m_lightController;
     std::shared_ptr<HUDView> m_hudView;
 
-    bool m_stopping;
+    bool m_stopping;    
 };
 
 #endif /* ClientController_h */

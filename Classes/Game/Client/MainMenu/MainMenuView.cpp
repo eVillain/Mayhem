@@ -9,6 +9,16 @@
 
 USING_NS_CC;
 
+MainMenuView::MainMenuView()
+{
+    printf("MainMenuView:: constructor: %p\n", this);
+}
+
+MainMenuView::~MainMenuView()
+{
+    printf("MainMenuView:: destructor: %p\n", this);
+}
+
 // on "init" you need to initialize your instance
 bool MainMenuView::init()
 {

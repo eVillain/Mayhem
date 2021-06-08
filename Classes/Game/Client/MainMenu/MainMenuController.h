@@ -6,7 +6,6 @@
 #include "NetworkHostView.h"
 #include "NetworkClientView.h"
 
-class AudioController;
 class NetworkController;
 class BackToMainMenuEvent;
 class InputActionEvent;
@@ -29,8 +28,6 @@ private:
     cocos2d::RefPtr<MainMenuView> m_view;
     cocos2d::RefPtr<NetworkHostView> m_networkHostView;
     cocos2d::RefPtr<NetworkClientView> m_networkClientView;
-
-//    std::shared_ptr<AudioController> m_audioController;
     
     const std::string getPlayerName() const;
     

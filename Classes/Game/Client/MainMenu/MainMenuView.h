@@ -9,10 +9,13 @@ class EntityView;
 class MainMenuView : public cocos2d::Layer
 {
 public:
-    virtual bool init();
-    
     CREATE_FUNC(MainMenuView);
     
+    MainMenuView();
+    virtual ~MainMenuView();
+
+    virtual bool init();
+
     cocos2d::Label* getTitle() const { return m_title; }
     cocos2d::Label* getPlayerName() const { return m_playerName; }
     cocos2d::ui::Button* getStartGameButton() const { return m_startGameButton; }

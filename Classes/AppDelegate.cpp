@@ -1,4 +1,7 @@
 #include "AppDelegate.h"
+
+#include "AppWillTerminateEvent.h"
+#include "Core/Dispatcher.h"
 #include "Game/Client/MainMenu/InitMainMenuCommand.h"
 
 #define USE_AUDIO_ENGINE 1
@@ -59,7 +62,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("MayhemRoyale", cocos2d::Rect(0, 0, smallResolutionSize.width, smallResolutionSize.height), 1.f, true);
+        glview = GLViewImpl::createWithRect("MayhemRoyale", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height), 1.f, true);
+        auto window = ((GLViewImpl*)glview)->getWindow();
+        glfwSetWindowCloseCallback(window, AppDelegate::applicationWillExit);
 #else
         glview = GLViewImpl::create("MayhemRoyale");
 #endif
@@ -123,4 +128,10 @@ void AppDelegate::applicationWillEnterForeground() {
     SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
     SimpleAudioEngine::getInstance()->resumeAllEffects();
 #endif
+}
+
+void AppDelegate::applicationWillExit(GLFWwindow*)
+{
+    AppWillTerminateEvent event;
+    Dispatcher::globalDispatcher().dispatch(event);
 }

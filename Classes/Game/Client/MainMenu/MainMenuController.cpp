@@ -1,6 +1,5 @@
 #include "MainMenuController.h"
 
-//#include "AudioController.h"
 #include "Core/Dispatcher.h"
 #include "InitClientCommand.h"
 #include "InitNetworkClientCommand.h"
@@ -15,17 +14,19 @@
 #include "GameSettings.h"
 #include "Utils/PlayerNameUtil.h"
 #include "EntityView.h"
+#include "ShutdownMainMenuCommand.h"
 
 MainMenuController::MainMenuController()
 : m_view(nullptr)
 , m_networkHostView(nullptr)
 , m_networkClientView(nullptr)
-//, m_audioController(nullptr)
 {
+    printf("MainMenuController:: constructor: %p\n", this);
 }
 
 MainMenuController::~MainMenuController()
 {
+    printf("MainMenuController:: destructor: %p\n", this);
 }
 
 bool MainMenuController::init()
@@ -35,8 +36,7 @@ bool MainMenuController::init()
         return false;
     }
 
-    m_view = new MainMenuView();
-    m_view->init();
+    m_view = MainMenuView::create();
     m_view->getPlayerName()->setString(getPlayerName());
     m_view->getStartGameButton()->addTouchEventListener(CC_CALLBACK_2(MainMenuController::startGameCallback, this));
     m_view->getHostGameButton()->addTouchEventListener(CC_CALLBACK_2(MainMenuController::hostGameCallback, this));
@@ -45,9 +45,6 @@ bool MainMenuController::init()
     m_view->getReplayEditorButton()->addTouchEventListener(CC_CALLBACK_2(MainMenuController::replayEditorCallback, this));
     m_view->getExitGameButton()->addTouchEventListener(CC_CALLBACK_2(MainMenuController::exitGameCallback, this));
 
-//    Injector& injector = Injector::globalInjector();
-//    m_audioController = injector.getInstance<AudioController>();
-//    Dispatcher::globalDispatcher().dispatch(PlayBGMEvent(SongType::Song1));
     Dispatcher::globalDispatcher().addListener<BackToMainMenuEvent>(std::bind(&MainMenuController::onBackToMainMenu,
                                                                               this, std::placeholders::_1),
                                                                     this);
@@ -69,11 +66,15 @@ bool MainMenuController::init()
 void MainMenuController::shutdown()
 {
     removeChild(m_view);
+    m_view = nullptr;
     
     unscheduleUpdate();
 
     Dispatcher::globalDispatcher().removeListener<BackToMainMenuEvent>(this);
     Dispatcher::globalDispatcher().removeListener<InputActionEvent>(this);
+    
+    ShutdownMainMenuCommand shutdownMainMenu;
+    shutdownMainMenu.run();
 }
 
 void MainMenuController::update(float deltaTime)
