@@ -77,6 +77,9 @@
 		D934AA0C2653DFA20007495E /* GameOverLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D934AA092653DFA10007495E /* GameOverLayer.cpp */; };
 		D934AA0F2653E77F0007495E /* GameMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D934AA0D2653E77E0007495E /* GameMode.cpp */; };
 		D934AA102653E77F0007495E /* GameMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D934AA0D2653E77E0007495E /* GameMode.cpp */; };
+		D945AE03266C292200CD8C3A /* GLFWJoystickHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D945AE02266C292100CD8C3A /* GLFWJoystickHandler.cpp */; };
+		D945AE0E266FD6A200CD8C3A /* ShutdownMainMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D945AE0D266FD6A200CD8C3A /* ShutdownMainMenuCommand.cpp */; };
+		D945AE0F266FD6A200CD8C3A /* ShutdownMainMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D945AE0D266FD6A200CD8C3A /* ShutdownMainMenuCommand.cpp */; };
 		D94AFA85262C223F00278953 /* FollowNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D94AFA84262C223F00278953 /* FollowNode.cpp */; };
 		D94AFA86262C223F00278953 /* FollowNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D94AFA84262C223F00278953 /* FollowNode.cpp */; };
 		D96CBC942531C342006DF3A4 /* PlayerLogic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96CBC842531C33F006DF3A4 /* PlayerLogic.cpp */; };
@@ -437,6 +440,13 @@
 		D934AA0D2653E77E0007495E /* GameMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameMode.cpp; sourceTree = "<group>"; };
 		D934AA0E2653E77E0007495E /* GameMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameMode.h; sourceTree = "<group>"; };
 		D934AA112654702B0007495E /* AddressResolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddressResolver.h; sourceTree = "<group>"; };
+		D945AE00266C292100CD8C3A /* GLFWJoystickHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLFWJoystickHandler.h; sourceTree = "<group>"; };
+		D945AE02266C292100CD8C3A /* GLFWJoystickHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLFWJoystickHandler.cpp; sourceTree = "<group>"; };
+		D945AE0A266D1B5600CD8C3A /* InputActivityEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputActivityEvent.h; sourceTree = "<group>"; };
+		D945AE0B266D3ED600CD8C3A /* InputConnectedEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputConnectedEvent.h; sourceTree = "<group>"; };
+		D945AE0C266FD6A200CD8C3A /* ShutdownMainMenuCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShutdownMainMenuCommand.h; sourceTree = "<group>"; };
+		D945AE0D266FD6A200CD8C3A /* ShutdownMainMenuCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShutdownMainMenuCommand.cpp; sourceTree = "<group>"; };
+		D945AE10266FDDE000CD8C3A /* AppWillTerminateEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppWillTerminateEvent.h; sourceTree = "<group>"; };
 		D94AFA83262C223F00278953 /* FollowNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowNode.h; sourceTree = "<group>"; };
 		D94AFA84262C223F00278953 /* FollowNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FollowNode.cpp; sourceTree = "<group>"; };
 		D96CBC832531C33F006DF3A4 /* LoadStaticEntityDataCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadStaticEntityDataCommand.h; sourceTree = "<group>"; };
@@ -844,6 +854,7 @@
 			children = (
 				46880B8419C43A87006E1F66 /* AppDelegate.cpp */,
 				46880B8519C43A87006E1F66 /* AppDelegate.h */,
+				D945AE10266FDDE000CD8C3A /* AppWillTerminateEvent.h */,
 				D9B24FF724C48EA400EAFA5B /* Audio */,
 				D9B24F8724C48EA400EAFA5B /* Core */,
 				D9B2500C24C48EA400EAFA5B /* Game */,
@@ -1193,6 +1204,8 @@
 				D96CBD082531C3AD006DF3A4 /* GameViewConstants.h */,
 				D96CBD002531C3AB006DF3A4 /* GameViewController.cpp */,
 				D96CBD052531C3AC006DF3A4 /* GameViewController.h */,
+				D945AE02266C292100CD8C3A /* GLFWJoystickHandler.cpp */,
+				D945AE00266C292100CD8C3A /* GLFWJoystickHandler.h */,
 				D96CBD1A2531C3B4006DF3A4 /* InitClientCommand.cpp */,
 				D96CBD2D2531C3B8006DF3A4 /* InitClientCommand.h */,
 				D96CBD292531C3B7006DF3A4 /* InitGameCommand.cpp */,
@@ -1202,6 +1215,8 @@
 				D96CBD262531C3B7006DF3A4 /* InitServerCommand.cpp */,
 				D96CBD152531C3B2006DF3A4 /* InitServerCommand.h */,
 				D96CBCFF2531C3AB006DF3A4 /* InputActionEvent.h */,
+				D945AE0A266D1B5600CD8C3A /* InputActivityEvent.h */,
+				D945AE0B266D3ED600CD8C3A /* InputConnectedEvent.h */,
 				D96CBD042531C3AC006DF3A4 /* InputController.cpp */,
 				D96CBD102531C3B0006DF3A4 /* InputController.h */,
 				D9D4290626592FDA008364FD /* InputConstants.h */,
@@ -1271,6 +1286,8 @@
 				D9B2507C24C48EA400EAFA5B /* MainMenuController.h */,
 				D9B2507D24C48EA400EAFA5B /* MainMenuView.cpp */,
 				D9B2507824C48EA400EAFA5B /* MainMenuView.h */,
+				D945AE0D266FD6A200CD8C3A /* ShutdownMainMenuCommand.cpp */,
+				D945AE0C266FD6A200CD8C3A /* ShutdownMainMenuCommand.h */,
 			);
 			path = MainMenu;
 			sourceTree = "<group>";
@@ -1478,6 +1495,7 @@
 				D9B2518E24C48EA500EAFA5B /* SettingCell.cpp in Sources */,
 				D9B250B424C48EA500EAFA5B /* NetworkHostClientCell.cpp in Sources */,
 				D9B250CC24C48EA500EAFA5B /* NetworkHostGameLevelCell.cpp in Sources */,
+				D945AE0E266FD6A200CD8C3A /* ShutdownMainMenuCommand.cpp in Sources */,
 				D92ACF5E254444F4006351A7 /* TransportIP.cpp in Sources */,
 				D96CBCE22531C356006DF3A4 /* Projectile.cpp in Sources */,
 				D94AFA85262C223F00278953 /* FollowNode.cpp in Sources */,
@@ -1619,6 +1637,7 @@
 				D9B250B524C48EA500EAFA5B /* NetworkHostClientCell.cpp in Sources */,
 				D96CBD482531C3BB006DF3A4 /* Pseudo3DSprite.cpp in Sources */,
 				D9B250CB24C48EA500EAFA5B /* NetworkClientViewController.cpp in Sources */,
+				D945AE0F266FD6A200CD8C3A /* ShutdownMainMenuCommand.cpp in Sources */,
 				D96CBCE92531C356006DF3A4 /* GameController.cpp in Sources */,
 				D96CBCF92531C356006DF3A4 /* GameModeDM.cpp in Sources */,
 				46880B8919C43A87006E1F66 /* AppDelegate.cpp in Sources */,
@@ -1678,6 +1697,7 @@
 				D934AA0C2653DFA20007495E /* GameOverLayer.cpp in Sources */,
 				D9B250F724C48EA500EAFA5B /* Beacon.cpp in Sources */,
 				D934AA102653E77F0007495E /* GameMode.cpp in Sources */,
+				D945AE03266C292200CD8C3A /* GLFWJoystickHandler.cpp in Sources */,
 				D9B250B724C48EA500EAFA5B /* NetworkController.cpp in Sources */,
 				D96CBCD72531C356006DF3A4 /* Entity.cpp in Sources */,
 				D96CBD662531C3BB006DF3A4 /* InitGameCommand.cpp in Sources */,

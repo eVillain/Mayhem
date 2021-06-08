@@ -1,11 +1,16 @@
 #include "InputController.h"
 
 #include "base/CCController.h"
+#include "Core/Dispatcher.h"
+#include "Game/Client/InputActivityEvent.h"
+#include "Game/Client/InputConnectedEvent.h"
 #include "Game/Client/InputModel.h"
+#include "Game/Client/GLFWJoystickHandler.h"
 
 InputController::InputController(std::shared_ptr<InputModel> model)
 : m_model(model)
 , m_parent(nullptr)
+, m_joystickHandler(nullptr)
 {
     printf("InputController:: constructor: %p\n", this);
 }
@@ -20,7 +25,8 @@ void InputController::initialize(cocos2d::Node* parent)
     m_parent = parent;
     setupKeyboardListener(parent->getEventDispatcher());
     setupMouseListener(parent->getEventDispatcher());
-    setupControllerListener(parent->getEventDispatcher());
+    setupControllerListener();
+    m_parent->schedule(std::bind(&InputController::update, this, std::placeholders::_1), "InputController");
 }
 
 void InputController::shutdown()
@@ -29,12 +35,11 @@ void InputController::shutdown()
     {
         m_parent->getEventDispatcher()->removeEventListener(m_keyListener);
         m_parent->getEventDispatcher()->removeEventListener(m_mouseListener);
-        m_parent->getEventDispatcher()->removeEventListener(m_controllerListener);
+        m_parent->unschedule("InputController");
     }
     m_parent = nullptr;
     m_keyListener = nullptr;
     m_mouseListener = nullptr;
-    m_controllerListener = nullptr;
 }
 
 void InputController::setupKeyboardListener(cocos2d::EventDispatcher* dispatcher)
@@ -58,21 +63,33 @@ void InputController::setupMouseListener(cocos2d::EventDispatcher* dispatcher)
     dispatcher->addEventListenerWithFixedPriority(m_mouseListener, 1);
 }
 
-void InputController::setupControllerListener(cocos2d::EventDispatcher *dispatcher)
+void InputController::setupControllerListener()
 {
-    m_controllerListener = cocos2d::EventListenerController::create();
-    m_controllerListener->onConnected = std::bind(&InputController::onControllerConnected, this,
-                                                  std::placeholders::_1, std::placeholders::_2);
-    m_controllerListener->onDisconnected = std::bind(&InputController::onControllerDisconnected, this,
-                                                     std::placeholders::_1, std::placeholders::_2);
-    m_controllerListener->onKeyDown = std::bind(&InputController::onControllerKeyDown, this,
-                                                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-    m_controllerListener->onKeyUp = std::bind(&InputController::onControllerKeyUp, this,
-                                                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-    m_controllerListener->onKeyRepeat = std::bind(&InputController::onControllerKeyRepeat, this,
-                                                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-    m_controllerListener->onAxisEvent = std::bind(&InputController::onControllerAxis, this,
-                                                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    m_joystickHandler = std::make_shared<GLFWJoystickHandler>();
+    m_joystickHandler->setConnectedCallback(std::bind(&InputController::onControllerConnected,
+                                                      this, std::placeholders::_1, std::placeholders::_2));
+    m_joystickHandler->setDisconnectedCallback(std::bind(&InputController::onControllerDisconnected,
+                                                      this, std::placeholders::_1));
+}
+
+void InputController::update(float deltaTime)
+{
+    m_joystickHandler->update();
+    const auto& gamepads = m_joystickHandler->getGamepads();
+    
+    for (const auto& pair : gamepads)
+    {
+        const GLFWJoystickHandler::Gamepad& gamepad = pair.second;
+        // We have to check all gamepads for new inputs to determine if one is active
+        for (int axis = 0; axis < 6; axis++)
+        {
+            onControllerAxis(pair.first, axis, gamepad.axes.at(axis));
+        }
+        for (int button = 0; button < 15; button++)
+        {
+            onControllerButton(pair.first, button, gamepad.buttons.at(button));
+        }
+    }
 }
 
 void InputController::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode,
@@ -87,6 +104,7 @@ void InputController::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode,
     const InputAction& action = it->second;
     const float value = m_model->getInputValue(action.action);
     m_model->setInputValue(action.action, value + action.value);
+    setActiveInput(-1);
 }
 
 void InputController::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event)
@@ -98,7 +116,7 @@ void InputController::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, coc
         const InputAction& action = it->second;
         const float value = m_model->getInputValue(action.action);
         m_model->setInputValue(action.action, value - action.value);
-
+        setActiveInput(-1);
         return;
     }
     
@@ -110,12 +128,9 @@ void InputController::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, coc
         case cocos2d::EventKeyboard::KeyCode::KEY_3:
         case cocos2d::EventKeyboard::KeyCode::KEY_4:
         case cocos2d::EventKeyboard::KeyCode::KEY_5:
-//        case cocos2d::EventKeyboard::KeyCode::KEY_6:
-//        case cocos2d::EventKeyboard::KeyCode::KEY_7:
-//        case cocos2d::EventKeyboard::KeyCode::KEY_8:
-//        case cocos2d::EventKeyboard::KeyCode::KEY_9:
             m_model->setSlot((int)keyCode - (int)cocos2d::EventKeyboard::KeyCode::KEY_0);
             m_model->setChangeWeapon(true);
+            setActiveInput(-1);
             break;
         default:
             break;
@@ -124,6 +139,8 @@ void InputController::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, coc
 
 void InputController::onMouseMoved(cocos2d::EventMouse* event)
 {
+    // TODO: Considering adding ability to map mouse motion
+    // in two ways: delta values or absolute screen coordinates
 //    const auto& map = m_model->getMouseAxisMap();
 //    const auto& it = map.find(0);
 //    if (it != map.end())
@@ -132,6 +149,10 @@ void InputController::onMouseMoved(cocos2d::EventMouse* event)
 //        m_model->setInputValue(action.action, 1.f * action.value);
 //        return;
 //    }
+    if (m_model->getActiveGamepad() != -1)
+    {
+        return;
+    }
     const cocos2d::Size winSize = cocos2d::Director::getInstance()->getWinSize();
     const cocos2d::Vec2 delta = event->getLocationInView() - m_prevMouseCoord;
     m_prevMouseCoord = event->getLocationInView();
@@ -151,6 +172,7 @@ void InputController::onMouseDown(cocos2d::EventMouse* event)
     }
     const InputAction& action = it->second;
     m_model->setInputValue(action.action, 1.f * action.value);
+    setActiveInput(-1);
 }
 
 void InputController::onMouseUp(cocos2d::EventMouse* event)
@@ -163,63 +185,79 @@ void InputController::onMouseUp(cocos2d::EventMouse* event)
     }
     const InputAction& action = it->second;
     m_model->setInputValue(action.action, 0.f);
+    setActiveInput(-1);
 }
 
-void InputController::onControllerConnected(cocos2d::Controller* controller, cocos2d::Event* event)
+void InputController::onControllerConnected(const int joystickID, const std::string& name)
 {
-    
+    GamepadType type = InputConstants::determineTypeByName(name);
+    InputConnectedEvent event(joystickID, name, type, true);
+    Dispatcher::globalDispatcher().dispatch(event);
 }
 
-void InputController::onControllerDisconnected(cocos2d::Controller* controller, cocos2d::Event* event)
+void InputController::onControllerDisconnected(const int joystickID)
 {
-    
+    if (m_model->getActiveGamepad() == joystickID)
+    {
+        setActiveInput(-1);
+    }
+    InputConnectedEvent event(joystickID, "", m_model->getActiveGamepadType(), false);
+    Dispatcher::globalDispatcher().dispatch(event);
 }
 
-void InputController::onControllerKeyDown(cocos2d::Controller* controller, int key, cocos2d::Event* event)
+void InputController::onControllerButton(const int joystickID, int button, const float value)
 {
     const auto& map = m_model->getControllerButtonMap();
-    const auto& it = map.find(key);
-    if (it != map.end())
+    const auto& it = map.find(button);
+    if (it == map.end())
     {
-        const InputAction& action = it->second;
-        m_model->setInputValue(action.action, 1.f * action.value);
         return;
+    }
+    const InputAction& action = it->second;
+    const float newValue = value * action.value;
+    m_model->setInputValue(action.action, newValue);
+    if (newValue > 0.9f)
+    {
+        setActiveInput(joystickID);
     }
 }
 
-void InputController::onControllerKeyUp(cocos2d::Controller* controller, int key, cocos2d::Event* event)
-{
-    const auto& map = m_model->getControllerButtonMap();
-    const auto& it = map.find(key);
-    if (it != map.end())
-    {
-        const InputAction& action = it->second;
-        m_model->setInputValue(action.action, 0.f);
-        return;
-    }
-}
-
-void InputController::onControllerKeyRepeat(cocos2d::Controller* controller, int key, cocos2d::Event* event)
-{
-    const auto& map = m_model->getControllerButtonMap();
-    const auto& it = map.find(key);
-    if (it != map.end())
-    {
-        const InputAction& action = it->second;
-        m_model->setInputValue(action.action, 1.f * action.value);
-        return;
-    }
-}
-
-void InputController::onControllerAxis(cocos2d::Controller* controller, int axis, cocos2d::Event* event)
+void InputController::onControllerAxis(const int joystickID, int axis, const float value)
 {
     const auto& map = m_model->getControllerAxisMap();
     const auto& it = map.find(axis);
-    if (it != map.end())
+    if (it == map.end())
     {
-        const InputAction& action = it->second;
-        m_model->setInputValue(action.action, controller->getKeyStatus(axis).value * action.value);
         return;
+    }
+    const InputAction& action = it->second;
+    const float newValue = value * action.value;
+    m_model->setInputValue(action.action, newValue);
+    if (newValue > 0.9f)
+    {
+        setActiveInput(joystickID);
     }
 }
 
+void InputController::setActiveInput(const int inputID)
+{
+    if (inputID != m_model->getActiveGamepad())
+    {
+        m_model->setActiveGamepad(inputID);
+        
+        std::string name;
+        GamepadType type = GamepadType::XBOX_ONE;
+        if (inputID != -1)
+        {
+            const auto& gamepad = m_joystickHandler->getGamepads().at(inputID);
+            name = gamepad.name;
+            type = InputConstants::determineTypeByName(name);
+        }
+        else
+        {
+            name = "Keyboard+Mouse";
+        }
+        InputActivityEvent event(inputID, name, type);
+        Dispatcher::globalDispatcher().dispatch(event);
+    }
+}
