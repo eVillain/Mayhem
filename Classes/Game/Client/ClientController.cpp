@@ -166,6 +166,7 @@ void ClientController::stop()
     shutdownServer.run();
     
     Dispatcher::globalDispatcher().removeListener<InputActionEvent>(this);
+    Dispatcher::globalDispatcher().removeListener<AppWillTerminateEvent>(this);
     
     ShutdownClientCommand shutdownClient;
     shutdownClient.run();
