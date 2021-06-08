@@ -11,17 +11,18 @@ InputModel::InputModel()
 , m_pickupType(0)
 , m_pickupAmount(0)
 , m_pickupID(0)
-, m_activeController(-1)
+, m_activeGamepad(-1)
+, m_activeGamepadType(GamepadType::XBOX_ONE)
 {
     printf("InputModel:: constructor: %p\n", this);
     mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_A, InputConstants::ACTION_MOVE_RIGHT, -1.f);
     mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_D, InputConstants::ACTION_MOVE_RIGHT, 1.f);
-    mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_W, InputConstants::ACTION_MOVE_UP, 1.f);
-    mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_S, InputConstants::ACTION_MOVE_UP, -1.f);
+    mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_W, InputConstants::ACTION_MOVE_UP, -1.f);
+    mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_S, InputConstants::ACTION_MOVE_UP, 1.f);
     mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW, InputConstants::ACTION_MOVE_RIGHT, -1.f);
     mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW, InputConstants::ACTION_MOVE_RIGHT, 1.f);
-    mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_UP_ARROW, InputConstants::ACTION_MOVE_UP, 1.f);
-    mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW, InputConstants::ACTION_MOVE_UP, -1.f);
+    mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_UP_ARROW, InputConstants::ACTION_MOVE_UP, -1.f);
+    mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW, InputConstants::ACTION_MOVE_UP, 1.f);
     mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_SHIFT, InputConstants::ACTION_RUN, 1.f);
     mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_F, InputConstants::ACTION_INTERACT, 1.f);
     mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_R, InputConstants::ACTION_RELOAD, 1.f);
@@ -34,6 +35,19 @@ InputModel::InputModel()
     mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_B, InputConstants::ACTION_RENDER_DEBUG, 1.f);
     mapKeyboard(cocos2d::EventKeyboard::KeyCode::KEY_N, InputConstants::ACTION_CLIENT_PREDICTION, 1.f);
     
+    mapControllerAxis(GamepadAxes::LEFT_X, InputConstants::ACTION_MOVE_RIGHT, 1.f);
+    mapControllerAxis(GamepadAxes::LEFT_Y, InputConstants::ACTION_MOVE_UP, 1.f);
+    mapControllerAxis(GamepadAxes::RIGHT_X, InputConstants::ACTION_AIM_RIGHT, 1.f);
+    mapControllerAxis(GamepadAxes::RIGHT_Y, InputConstants::ACTION_AIM_UP, 1.f);
+
+    mapControllerAxis(GamepadAxes::LEFT_TRIGGER, InputConstants::ACTION_AIM, 1.f);
+    mapControllerAxis(GamepadAxes::RIGHT_TRIGGER, InputConstants::ACTION_SHOOT, 1.f);
+
+    mapControllerButton(GamepadButtons::FACE_RIGHT, InputConstants::ACTION_RUN, 1.f);
+    mapControllerButton(GamepadButtons::FACE_LEFT, InputConstants::ACTION_RELOAD, 1.f);
+    mapControllerButton(GamepadButtons::FACE_BOTTOM, InputConstants::ACTION_INTERACT, 1.f);
+    mapControllerButton(GamepadButtons::FACE_TOP, InputConstants::ACTION_INVENTORY, 1.f);
+
     mapMouseButton(cocos2d::EventMouse::MouseButton::BUTTON_LEFT, InputConstants::ACTION_SHOOT, 1.f);
     mapMouseButton(cocos2d::EventMouse::MouseButton::BUTTON_RIGHT, InputConstants::ACTION_AIM, 1.f);
 }

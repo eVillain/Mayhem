@@ -81,12 +81,21 @@ void MainMenuController::update(float deltaTime)
     Injector& injector = Injector::globalInjector();
     auto inputModel = injector.getInstance<InputModel>();
     
-    const cocos2d::Vec2 playerToMouse = inputModel->getMouseCoord() - m_view->getPlayerNode()->getPosition();
+    cocos2d::Vec2 playerToMouse;
+    if (inputModel->getActiveGamepad() == -1)
+    {
+        const cocos2d::Vec2 aimPoint = inputModel->getMouseCoord();
+        playerToMouse = (aimPoint - m_view->getPlayerNode()->getPosition()).getNormalized();
+    }
+    else
+    {
+            const cocos2d::Vec2 aimDirection = cocos2d::Vec2(inputModel->getInputValue(InputConstants::ACTION_AIM_RIGHT),
+                                                             -inputModel->getInputValue(InputConstants::ACTION_AIM_UP));
+            playerToMouse = aimDirection.getNormalized();
+    }
     auto playerView = m_view->getPlayerView();
     auto leftArm = playerView->getSecondarySprites().at(EntityView::ARM_LEFT_INDEX);
     leftArm->setRotation(playerToMouse.getAngle() * (-180.f / M_PI) - 90.f);
-    
-//    m_audioController->update(deltaTime);
 }
 
 const std::string MainMenuController::getPlayerName() const
