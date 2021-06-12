@@ -568,12 +568,6 @@ void GameViewController::updateCamera(const float deltaTime,
             return;
         }
         const uint16_t localPlayerEntityID = playerIt->second.entityID;
-        // Alternative method to pan camera ahead to the predicted position
-    //    if (snapshot.entityData.count(localPlayerEntityID))
-    //    {
-    //        const auto& player = snapshot.entityData.at(localPlayerEntityID);
-    //        m_cameraModel->setTargetPosition(cocos2d::Vec2(player.positionX, player.positionY));
-    //    }
         if (m_entityViews.count(localPlayerEntityID))
         {
             auto playerView = m_entityViews.at(localPlayerEntityID);
@@ -583,8 +577,9 @@ void GameViewController::updateCamera(const float deltaTime,
     else
     {
         const cocos2d::Vec2 inputDir = cocos2d::Vec2(m_inputModel->getInputValue(InputConstants::ACTION_MOVE_RIGHT),
-                                                     -m_inputModel->getInputValue(InputConstants::ACTION_MOVE_UP));
-        const cocos2d::Vec2 targetPosition = m_cameraModel->getTargetPosition() + cocos2d::Vec2(inputDir.x, -inputDir.y) * 4.f;
+                                                     m_inputModel->getInputValue(InputConstants::ACTION_MOVE_UP));
+        const bool run = m_inputModel->getInputValue(InputConstants::ACTION_RUN) > 0.9f;
+        const cocos2d::Vec2 targetPosition = m_cameraModel->getTargetPosition() + cocos2d::Vec2(inputDir.x, -inputDir.y) * (run ? 6.f : 4.f);
         m_cameraModel->setTargetPosition(targetPosition);
     }
 
