@@ -35,6 +35,8 @@ public:
     bool connect(const Net::Address& address);
     void disconnect();
 
+    bool isConnected() const { return m_state == State::CONNECTED; }
+    
     void update(const float deltaTime);
     
     void requestGameList(const uint32_t startRange,

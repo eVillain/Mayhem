@@ -45,6 +45,8 @@ public:
     virtual void sendMessages() = 0;
     
     virtual const std::shared_ptr<Net::Transport> getTransport() = 0;
+    virtual float getSentBandwidth(const Net::NodeID nodeID) = 0;
+    virtual float getAckedBandwidth(const Net::NodeID nodeID) = 0;
     virtual float getRoundTripTime(const Net::NodeID nodeID) = 0;
     virtual const Net::NodeID getLocalNodeID() const = 0;
 

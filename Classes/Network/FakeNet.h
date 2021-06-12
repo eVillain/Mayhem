@@ -60,6 +60,9 @@ private:
     size_t m_totalServerBytes;
     size_t m_lastFrameClientBytes;
     size_t m_lastFrameServerBytes;
+
+    float m_clientBandwidth;
+    float m_serverBandwidth;
 };
 
 #endif /* FakeNet_h */

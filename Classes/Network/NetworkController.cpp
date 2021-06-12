@@ -175,7 +175,7 @@ Net::MessageID NetworkController::sendMessage(const Net::NodeID nodeID,
                                               bool reliable /*= false*/)
 {
     if (m_mode == NetworkMode::HOST &&
-        nodeID == m_drudgeNet->getTransport()->GetLocalNodeId())
+        nodeID == 0)
     {
         // local client loopback
         onMessageReceived(message, nodeID);
@@ -197,6 +197,15 @@ void NetworkController::sendMessages()
 void NetworkController::setDeltaDataCallback(std::function<const SnapshotData&(const uint32_t)> dataCallback)
 {
     m_messageFactory->setDeltaDataCallback(dataCallback);
+}
+
+float NetworkController::getSentBandwidth(const Net::NodeID nodeID)
+{
+    return m_drudgeNet->getTransport()->GetReliability(nodeID)->GetSentBandwidth();
+}
+float NetworkController::getAckedBandwidth(const Net::NodeID nodeID)
+{
+    return m_drudgeNet->getTransport()->GetReliability(nodeID)->GetAckedBandwidth();
 }
 
 float NetworkController::getRoundTripTime(const Net::NodeID nodeID)

@@ -73,6 +73,16 @@ void FakeNetworkController::update(const float deltaTime)
     }
 }
 
+float FakeNetworkController::getSentBandwidth(const Net::NodeID nodeID)
+{
+    return m_sentBandwidth;
+}
+
+float FakeNetworkController::getAckedBandwidth(const Net::NodeID nodeID)
+{
+    return m_ackedBandwidth;
+}
+
 float FakeNetworkController::getRoundTripTime(const Net::NodeID nodeID)
 {
     return m_fakeNet->getInputDelay() + m_fakeNet->getServerDelay();
@@ -103,10 +113,12 @@ Net::MessageID FakeNetworkController::sendMessage(const Net::NodeID nodeID,
     return 0;
 }
 
-void FakeNetworkController::onClientDataReceived(const uint8_t playerID, const unsigned char *data, const size_t dataSize)
+void FakeNetworkController::onClientDataReceived(const uint8_t playerID, const unsigned char* data, const size_t dataSize)
 {
     memcpy(m_readBuffer, data, dataSize);
     
+    m_sentBytes += dataSize;
+
     std::shared_ptr<Net::Message> message = m_messageFactory->create(*m_readStream.get());
     if (!message)
     {
@@ -137,6 +149,8 @@ void FakeNetworkController::onServerDataReceived(const unsigned char *data, cons
 {
     memcpy(m_readBuffer, data, dataSize);
     
+    m_ackedBytes += dataSize;
+
     std::shared_ptr<Net::Message> message = m_messageFactory->create(*m_readStream.get());
     if (!message)
     {

@@ -51,8 +51,9 @@ void NetworkClientViewController::terminate()
     m_networkController->setNodeDisconnectedCallback(nullptr);
 
     cocos2d::Director::getInstance()->getScheduler()->unscheduleUpdate(this);
-    
-    m_networkController->terminate();
+    Dispatcher::globalDispatcher().removeListener<InputActionEvent>(this);
+
+    m_networkController->terminate();    
 }
 
 void NetworkClientViewController::update(float deltaTime)
@@ -177,6 +178,7 @@ void NetworkClientViewController::unregisterNetworkCallbacks()
 {
     m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_LOAD_LEVEL);
     m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_CHAT_MESSAGE);
+    m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_SERVER_INFO);
 }
 
 void NetworkClientViewController::onConnected(const Net::NodeID nodeID)

@@ -38,6 +38,8 @@ public:
     void sendMessages() override {};
 
     const std::shared_ptr<Net::Transport> getTransport() override { return nullptr; }
+    float getSentBandwidth(const Net::NodeID nodeID) override;
+    float getAckedBandwidth(const Net::NodeID nodeID) override;
     float getRoundTripTime(const Net::NodeID nodeID) override;
     const Net::NodeID getLocalNodeID() const override { return 0; };
 
@@ -55,7 +57,11 @@ private:
     std::shared_ptr<Net::ReadStream> m_readStream;
     std::shared_ptr<Net::WriteStream> m_writeStream;
     std::shared_ptr<Net::MessageFactory> m_messageFactory;
-    
+    float m_sentBytes;
+    float m_ackedBytes;
+    float m_sentBandwidth;
+    float m_ackedBandwidth;
+
     std::function<void(const uint8_t playerID, const std::shared_ptr<Net::Message> data)> m_clientCallback;
     std::function<void(const std::shared_ptr<Net::Message> data)> m_serverCallback;
 

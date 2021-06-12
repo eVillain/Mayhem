@@ -94,13 +94,6 @@ namespace Net
         ackedQueue.VerifySorted(max_sequence);
     }
     
-//    bool ReliabilitySystem::IsSequenceMoreRecent(PacketSequenceID s1,
-//                                                 PacketSequenceID s2,
-//                                                 PacketSequenceID max_sequence)
-//    {
-//        return ((s1 > s2) && (s1 - s2 <= max_sequence/2)) || (((s2 > s1) && (s2 - s1 > max_sequence/2)));
-//    }
-    
     int32_t ReliabilitySystem::BitIndexForSequence(PacketSequenceID sequence,
                                                    uint32_t ack,
                                                    PacketSequenceID max_sequence)

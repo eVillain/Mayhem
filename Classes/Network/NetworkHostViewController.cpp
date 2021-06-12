@@ -67,10 +67,10 @@ void NetworkHostViewController::initialize()
 void NetworkHostViewController::terminate()
 {
     cocos2d::Director::getInstance()->getScheduler()->unscheduleUpdate(this);
+    Dispatcher::globalDispatcher().removeListener<InputActionEvent>(this);
+    m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_CLIENT_INFO);
     m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_CLIENT_READY);
     m_networkController->removeMessageCallback(MessageTypes::MESSAGE_TYPE_CLIENT_CHAT_MESSAGE);
-    
-    m_networkController->terminate();
 }
 
 void NetworkHostViewController::update(float deltaTime)

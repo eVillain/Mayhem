@@ -37,18 +37,19 @@ namespace Net
 #else
                 std::string errorString = gai_strerror(status);
 #endif
-                printf("Socket::getAddressForHost error %s", errorString.c_str());
+                printf("AddressResolver::getAddressForHost error %s", errorString.c_str());
+                return Address();
             }
             
             char _address[INET6_ADDRSTRLEN];
             if (addrs->ai_family != AF_INET)
             {
-                printf("Socket::getAddressForHost error wrong family for %s", host.c_str());
+                printf("AddressResolver::getAddressForHost error wrong family for %s", host.c_str());
                 return Address();
             }
             if (inet_ntop(AF_INET, &((struct sockaddr_in*)addrs->ai_addr)->sin_addr, _address, sizeof(_address)) == nullptr)
              {
-               printf("Socket::getAddressForHost error getting address for %s", host.c_str());
+               printf("AddressResolver::getAddressForHost error getting address for %s", host.c_str());
                return Address();
              }
             
@@ -65,7 +66,7 @@ namespace Net
                 size_t nextDot = address.find(".", dotPos);
                 if (nextDot == 0)
                 {
-                    printf("Address::initWithIPAddress error address cant start with a dot %s", address.c_str());
+                    printf("AddressResolver::initWithIPAddress error address cant start with a dot %s", address.c_str());
                     return 0;
                 }
                 

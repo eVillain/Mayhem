@@ -334,7 +334,8 @@ namespace Net
     {
         m_tickAccumulator++;
         
-        if (m_masterServerConnection)
+        if (m_masterServerConnection &&
+            m_masterServerConnection->isConnected())
         {
             m_masterServerConnection->update(deltaTime);
         }

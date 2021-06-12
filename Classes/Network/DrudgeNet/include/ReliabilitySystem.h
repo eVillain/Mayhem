@@ -31,17 +31,15 @@ namespace Net
         void Validate();
         
         // utility functions
-        
-//        static bool IsSequenceMoreRecent(PacketSequenceID s1, PacketSequenceID s2, PacketSequenceID max_sequence);
-        
-        static int32_t BitIndexForSequence( uint32_t sequence, uint32_t ack, uint32_t max_sequence );
+                
+        static int32_t BitIndexForSequence(uint32_t sequence, uint32_t ack, uint32_t max_sequence);
         
         static uint32_t GenerateAckBits( uint32_t ack, const PacketQueue & received_queue, uint32_t max_sequence );
         
-        static void ProcessAck( uint32_t ack, uint32_t ack_bits,
-                                PacketQueue & pending_ack_queue, PacketQueue & acked_queue,
-                                std::vector<uint32_t> & acks, uint32_t & acked_packets,
-                                float & rtt, uint32_t max_sequence );
+        static void ProcessAck(uint32_t ack, uint32_t ack_bits,
+                               PacketQueue & pending_ack_queue, PacketQueue & acked_queue,
+                               std::vector<uint32_t> & acks, uint32_t & acked_packets,
+                               float & rtt, uint32_t max_sequence );
         
         // data accessors
         
@@ -92,19 +90,19 @@ namespace Net
         uint32_t lost_packets;			// total number of packets lost
         uint32_t acked_packets;			// total number of packets acked
         
-        float sent_bandwidth;				// approximate sent bandwidth over the last second
-        float acked_bandwidth;				// approximate acked bandwidth over the last second
-        float rtt;							// estimated round trip time
-        float rtt_maximum;					// maximum expected round trip time (hard coded to one second for the moment)
-        int32_t sent_bytes_total;               // total bandwidth sent
-        int32_t recv_bytes_total;               // total bandwidth received
+        float sent_bandwidth;		    // approximate sent bandwidth over the last second
+        float acked_bandwidth;		    // approximate acked bandwidth over the last second
+        float rtt;					    // estimated round trip time
+        float rtt_maximum;			    // maximum expected round trip time (hard coded to one second for the moment)
+        int32_t sent_bytes_total;       // total bandwidth sent
+        int32_t recv_bytes_total;       // total bandwidth received
         
-        std::vector<uint32_t> acks;		    // acked packets from last set of packet receives. cleared each update!
+        std::vector<uint32_t> acks;	    // acked packets from last set of packet receives. cleared each update!
         
-        PacketQueue sentQueue;              // sent packets used to calculate sent bandwidth (kept until rtt_maximum)
-        PacketQueue pendingAckQueue;		// sent packets which have not been acked yet (kept until rtt_maximum * 2 )
-        PacketQueue receivedQueue;          // received packets for determining acks to send (kept up to most recent recv sequence - 32)
-        PacketQueue ackedQueue;             // acked packets (kept until rtt_maximum * 2)
+        PacketQueue sentQueue;          // sent packets used to calculate sent bandwidth (kept until rtt_maximum)
+        PacketQueue pendingAckQueue;    // sent packets which have not been acked yet (kept until rtt_maximum * 2 )
+        PacketQueue receivedQueue;      // received packets for determining acks to send (kept up to most recent recv sequence - 32)
+        PacketQueue ackedQueue;         // acked packets (kept until rtt_maximum * 2)
     };
 }
 

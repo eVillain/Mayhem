@@ -16,6 +16,7 @@ bool ShutdownNetworkHostCommand::run()
 {
     Injector& injector = Injector::globalInjector();
 
+    injector.getInstance<NetworkController>()->terminate();
     injector.removeMapping<NetworkModel>();
     injector.removeMapping<NetworkController>();
     injector.removeMapping<INetworkController>();
