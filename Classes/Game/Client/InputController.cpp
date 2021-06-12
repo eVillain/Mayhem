@@ -40,6 +40,7 @@ void InputController::shutdown()
     m_parent = nullptr;
     m_keyListener = nullptr;
     m_mouseListener = nullptr;
+    m_joystickHandler = nullptr;
 }
 
 void InputController::setupKeyboardListener(cocos2d::EventDispatcher* dispatcher)
@@ -101,10 +102,10 @@ void InputController::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode,
     {
         return;
     }
+    setActiveInput(-1);
     const InputAction& action = it->second;
     const float value = m_model->getInputValue(action.action);
     m_model->setInputValue(action.action, value + action.value);
-    setActiveInput(-1);
 }
 
 void InputController::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event)
@@ -113,10 +114,10 @@ void InputController::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, coc
     const auto& it = map.find(keyCode);
     if (it != map.end())
     {
+        setActiveInput(-1);
         const InputAction& action = it->second;
         const float value = m_model->getInputValue(action.action);
         m_model->setInputValue(action.action, value - action.value);
-        setActiveInput(-1);
         return;
     }
     
@@ -149,10 +150,10 @@ void InputController::onMouseMoved(cocos2d::EventMouse* event)
 //        m_model->setInputValue(action.action, 1.f * action.value);
 //        return;
 //    }
-    if (m_model->getActiveGamepad() != -1)
-    {
-        return;
-    }
+//    if (m_model->getActiveGamepad() != -1)
+//    {
+//        return;
+//    }
     const cocos2d::Size winSize = cocos2d::Director::getInstance()->getWinSize();
     const cocos2d::Vec2 delta = event->getLocationInView() - m_prevMouseCoord;
     m_prevMouseCoord = event->getLocationInView();
@@ -172,7 +173,6 @@ void InputController::onMouseDown(cocos2d::EventMouse* event)
     }
     const InputAction& action = it->second;
     m_model->setInputValue(action.action, 1.f * action.value);
-    setActiveInput(-1);
 }
 
 void InputController::onMouseUp(cocos2d::EventMouse* event)
@@ -185,7 +185,6 @@ void InputController::onMouseUp(cocos2d::EventMouse* event)
     }
     const InputAction& action = it->second;
     m_model->setInputValue(action.action, 0.f);
-    setActiveInput(-1);
 }
 
 void InputController::onControllerConnected(const int joystickID, const std::string& name)
