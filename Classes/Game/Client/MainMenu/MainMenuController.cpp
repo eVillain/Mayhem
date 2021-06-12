@@ -137,7 +137,7 @@ void MainMenuController::hostGameCallback(cocos2d::Ref* ref,
         return;
     }
 
-    removeChild(m_view);
+    detach();
 
     m_networkHostView = new NetworkHostView();
     m_networkHostView->init();
@@ -155,7 +155,7 @@ void MainMenuController::joinGameCallback(cocos2d::Ref* ref,
         return;
     }
 
-    removeChild(m_view);
+    detach();
 
     m_networkClientView = new NetworkClientView();
     m_networkClientView->init();
@@ -173,8 +173,8 @@ void MainMenuController::settingsCallback(cocos2d::Ref* ref,
         return;
     }
     
-    removeChild(m_view);
-
+    detach();
+    
     auto settingsView = new SettingsView(Injector::globalInjector().getInstance<GameSettings>());
     settingsView->initialize();
     addChild(settingsView->getLayer());
@@ -213,9 +213,6 @@ void MainMenuController::exitGameCallback(cocos2d::Ref* ref,
 void MainMenuController::onBackToMainMenu(const BackToMainMenuEvent& event)
 {
     removeAllChildren();
-    
-    addChild(m_view);
-
     if (m_networkHostView)
     {
         m_networkHostView = nullptr;
@@ -225,6 +222,8 @@ void MainMenuController::onBackToMainMenu(const BackToMainMenuEvent& event)
     {
         m_networkClientView = nullptr;
     }
+    
+    reattach();
 }
 
 void MainMenuController::onInputAction(const InputActionEvent& event)
@@ -248,4 +247,18 @@ void MainMenuController::exitGame()
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
 #endif
+}
+
+void MainMenuController::detach()
+{
+    removeChild(m_view);
+    Dispatcher::globalDispatcher().removeListener<InputActionEvent>(this);
+}
+
+void MainMenuController::reattach()
+{
+    addChild(m_view);
+    Dispatcher::globalDispatcher().addListener<InputActionEvent>(std::bind(&MainMenuController::onInputAction,
+                                                                                 this, std::placeholders::_1),
+                                                                       this);
 }

@@ -41,6 +41,8 @@ private:
     void onBackToMainMenu(const BackToMainMenuEvent& event);
     void onInputAction(const InputActionEvent& event);
     void exitGame();
+    void detach();
+    void reattach();
 };
 
 #endif /* MAIN_MENU_CONTROLLER_H */
