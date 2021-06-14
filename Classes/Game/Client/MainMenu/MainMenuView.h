@@ -17,6 +17,8 @@ public:
 
     virtual bool init();
 
+    void refreshPositions();
+    
     cocos2d::Label* getTitle() const { return m_title; }
     cocos2d::Label* getPlayerName() const { return m_playerName; }
     cocos2d::ui::Button* getStartGameButton() const { return m_startGameButton; }
@@ -43,6 +45,9 @@ private:
     
     std::shared_ptr<EntityView> m_playerView;
     std::shared_ptr<InputView> m_inputView;
+    
+    void createButtons();
+    void createPlayerNode();
 };
 
 #endif // MAIN_MENU_VIEW_H
