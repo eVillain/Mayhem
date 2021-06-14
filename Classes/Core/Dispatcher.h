@@ -35,9 +35,14 @@ public:
     {
         static const std::size_t eventHash = typeid(EventType).hash_code();
         const std::size_t listenerHash = std::hash<void*>{}(listener);
-        auto& eventListeners = m_listeners[eventHash];
+        auto& eventListeners = m_listenersToAdd[eventHash];
         auto listenerContainer = std::make_shared<CallbackContainer<EventType>>(callback);
         eventListeners[listenerHash] = listenerContainer;
+
+        if (!m_isDispatching)
+        {
+            addListeners();
+        }
     }
     
     template<typename EventType>
@@ -46,11 +51,17 @@ public:
         static const std::size_t eventHash = typeid(EventType).hash_code();
         const std::size_t listenerHash = std::hash<void*>{}(listener);
         m_listenersToRemove[eventHash].push_back(listenerHash);
+        
+        if (!m_isDispatching)
+        {
+            removeListeners();
+        }
     }
 
     template<typename EventType>
     void dispatch(EventType& event)
     {
+        m_isDispatching = true;
         static const std::size_t eventHash = typeid(EventType).hash_code();
         auto& eventListeners = m_listeners[eventHash];
         for (auto& pair : eventListeners)
@@ -62,7 +73,39 @@ public:
             }
             container->callback(event);
         }
-        
+        removeListeners();
+        addListeners();
+        m_isDispatching = false;
+    }
+
+private:
+    static Dispatcher g_dispatcher;
+    // Key is the event type hash, inner key is the listener pointer hash
+    std::unordered_map<std::size_t, std::unordered_map<std::size_t, std::shared_ptr<ICallbackContainer>>> m_listeners;
+    // Key is the event type hash, vector contains listener pointer hashes
+    std::unordered_map<std::size_t, std::unordered_map<std::size_t, std::shared_ptr<ICallbackContainer>>> m_listenersToAdd;
+    std::unordered_map<std::size_t, std::vector<std::size_t>> m_listenersToRemove;
+    bool m_isDispatching;
+    
+    void addListeners()
+    {
+        for (const auto& pair : m_listenersToAdd)
+        {
+            const std::size_t eventHash = pair.first;
+            auto& eventListeners = m_listeners[eventHash];
+
+            const auto& addedListeners = pair.second;
+            for (const auto& pair2 : addedListeners)
+            {
+                const std::size_t listenerHash = pair2.first;
+                eventListeners[listenerHash] = pair2.second;
+            }
+        }
+        m_listenersToAdd.clear();
+    }
+
+    void removeListeners()
+    {
         for (const auto& pair : m_listenersToRemove)
         {
             const std::size_t eventHash = pair.first;
@@ -81,12 +124,5 @@ public:
         m_listenersToRemove.clear();
     }
 
-private:
-    static Dispatcher g_dispatcher;
-    // Key is the event type hash, inner key is the listener pointer hash
-    std::unordered_map<std::size_t, std::unordered_map<std::size_t, std::shared_ptr<ICallbackContainer>>> m_listeners;
-    // Key is the event type hash, vector contains listener pointer hashes
-    std::unordered_map<std::size_t, std::vector<std::size_t>> m_listenersToRemove;
-    
 };
 #endif /* Dispatcher_h */
