@@ -20,6 +20,7 @@ MainMenuController::MainMenuController()
 : m_view(nullptr)
 , m_networkHostView(nullptr)
 , m_networkClientView(nullptr)
+, m_windowResizeListener(nullptr)
 {
     printf("MainMenuController:: constructor: %p\n", this);
 }
@@ -52,6 +53,11 @@ bool MainMenuController::init()
                                                                                  this, std::placeholders::_1),
                                                                        this);
 
+    auto dispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
+    m_windowResizeListener = dispatcher->addCustomEventListener(cocos2d::GLViewImpl::EVENT_WINDOW_RESIZED,
+                                                                std::bind(&MainMenuController::onWindowResized,
+                                                                          this, std::placeholders::_1));
+    
     addChild(m_view);
 
     auto glview = cocos2d::Director::getInstance()->getOpenGLView();
@@ -72,6 +78,7 @@ void MainMenuController::shutdown()
 
     Dispatcher::globalDispatcher().removeListener<BackToMainMenuEvent>(this);
     Dispatcher::globalDispatcher().removeListener<InputActionEvent>(this);
+    cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(m_windowResizeListener);
     
     ShutdownMainMenuCommand shutdownMainMenu;
     shutdownMainMenu.run();
@@ -236,6 +243,18 @@ void MainMenuController::onInputAction(const InputActionEvent& event)
     {
         exitGameCallback(nullptr, cocos2d::ui::Widget::TouchEventType::ENDED);
     }
+}
+
+void MainMenuController::onWindowResized(cocos2d::EventCustom*)
+{
+    auto director = cocos2d::Director::getInstance();
+    cocos2d::GLView* glview = director->getOpenGLView();
+//    cocos2d::GLViewImpl* viewImpl = dynamic_cast<cocos2d::GLViewImpl*>(glview);
+//    viewImpl->setFrameZoomFactor(1.f);
+    const cocos2d::Size dynamicSize = glview->getFrameSize();
+    glview->setDesignResolutionSize(dynamicSize.width, dynamicSize.height, ResolutionPolicy::NO_BORDER);
+    
+    m_view->refreshPositions();
 }
 
 void MainMenuController::exitGame()

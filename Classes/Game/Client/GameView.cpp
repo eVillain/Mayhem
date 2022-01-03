@@ -49,9 +49,9 @@ void GameView::initialize()
     setSpriteBatch(batch);
     
     auto director = cocos2d::Director::getInstance();
-    cocos2d::Size designSize = director->getWinSize() * director->getContentScaleFactor();
-//    cocos2d::Size renderSize = cocos2d::Director::getInstance()->getWinSizeInPixels();
-// TODO: Use actual render size here
+    cocos2d::Size designSize = director->getWinSize();
+    //    cocos2d::Size renderSize = cocos2d::Director::getInstance()->getWinSizeInPixels();
+    // TODO: Use actual render size here
     const cocos2d::Value& deferredRenderSetting = m_gameSettings->getValue(GameViewConstants::SETTING_RENDER_DEFERRED, cocos2d::Value(true));
     if (deferredRenderSetting.asBool())
     {
@@ -169,6 +169,15 @@ void GameView::createPseudo3DSprite(const std::string& spriteName,
     m_gameRootNode->addChild(sprite, GameViewConstants::Z_ORDER_GAME_SPRITES);
     auto pseudoSprite = std::make_shared<Pseudo3DSprite>(sprite, position, positionZ, velocity, velocityZ, lifeTime, elasticity);
     m_pseudo3DItems.push_back(pseudoSprite);
+}
+
+void GameView::createRenderTexture()
+{
+    auto director = cocos2d::Director::getInstance();
+    cocos2d::Size designSize = director->getWinSize();
+    m_renderTexture = cocos2d::RenderTexture::create(designSize.width, designSize.height,
+                                                     cocos2d::Texture2D::PixelFormat::RGBA8888,
+                                                     GL_DEPTH24_STENCIL8);
 }
 
 void GameView::renderToTexture()

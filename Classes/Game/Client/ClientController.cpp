@@ -26,6 +26,7 @@
 #include "Utils/CollisionUtils.h"
 #include "WeaponConstants.h"
 #include "InputConstants.h"
+#include "Utils/NumberFormatter.h"
 
 #include "ShutdownClientCommand.h"
 #include "ShutdownLocalServerCommand.h"
@@ -260,11 +261,12 @@ void ClientController::updateGame(const float deltaTime, const bool processInput
     const uint32_t ticksToBuffer = m_clientModel->getTicksToBuffer() + 2;
     const auto& latestSnapshot = snapshots.back();
     const uint32_t latestSnapshotTick = latestSnapshot.serverTick;
-    if (latestSnapshotTick > m_gameModel->getCurrentTick() + ticksToBuffer)
+    const uint32_t oldestTickToBuffer = latestSnapshotTick - ticksToBuffer;
+    if (m_gameModel->getCurrentTick() < oldestTickToBuffer)
     {
-        printf("server is ahead - fast-forwarding from tick %u to %u\n", m_gameModel->getCurrentTick(), latestSnapshotTick);
+        printf("server is ahead - fast-forwarding game from tick %u to %u\n", m_gameModel->getCurrentTick(), oldestTickToBuffer);
         // Game server is ahead too much, we should fast-forward the client
-        m_gameModel->setCurrentTick(latestSnapshotTick - ticksToBuffer);
+        m_gameModel->setCurrentTick(oldestTickToBuffer);
     }
     
     const float currentTickStartTime = m_gameModel->getCurrentTick() * m_gameModel->getFrameTime();
@@ -313,6 +315,11 @@ void ClientController::updateGame(const float deltaTime, const bool processInput
     
     if (m_gameView->getDebugDrawNode()->isVisible())
     {
+        m_gameView->addDebugLabel("CLIENT",
+                                  "FPS: " + NumberFormatter::toString(1.f / deltaTime) +
+                                  "("  + NumberFormatter::toString(deltaTime * 1000.f) +
+                                  "ms) game time: " + NumberFormatter::toString(targetTime));
+
         debugSnapshots(targetTimeSnapshotIndex, alphaTime);
     }
 }
@@ -354,6 +361,11 @@ void ClientController::predictLocalMovement(SnapshotData& snapshot)
                                   ", "  + std::to_string(toEntitySnapshot.positionY) +
                                   " at tick: " + std::to_string(snapshot.serverTick) +
                                   " Last received: " + std::to_string(snapshot.lastReceivedInput));
+        m_gameView->addDebugLabel("CONNECTION",
+                                  "Latency: " + std::to_string(m_networkController->getRoundTripTime(0)) +
+                                  "ms, "  + std::to_string(m_networkController->getSentBandwidth(0)) +
+                                  "kb/s up," + std::to_string(m_networkController->getAckedBandwidth(0)) +
+                                  "kb/s down");
     }
 
     // Replay all remaining inputs on local client

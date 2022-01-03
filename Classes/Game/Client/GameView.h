@@ -16,6 +16,7 @@ public:
     void initialize();
     void shutdown();
     
+    void createRenderTexture();
     void renderToTexture();
     
     void addDebugLabel(const std::string& labelID, const std::string& text);

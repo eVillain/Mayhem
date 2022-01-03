@@ -21,7 +21,7 @@ using namespace CocosDenshion;
 
 USING_NS_CC;
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(640, 360);
+static cocos2d::Size designResolutionSize = cocos2d::Size(960, 540);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(640, 360);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1280, 720);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(1920, 1080);
@@ -80,7 +80,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0f / 60);
 
     // Set the design resolution
-    glview->setDesignResolutionSize(dynamicSize.width, dynamicSize.height, ResolutionPolicy::NO_BORDER);
+    glview->setDesignResolutionSize(dynamicSize.width, dynamicSize.height, ResolutionPolicy::SHOW_ALL);
     //auto frameSize = glview->getFrameSize();
     // if the frame's height is larger than the height of medium size.
     //if (frameSize.height > mediumResolutionSize.height)

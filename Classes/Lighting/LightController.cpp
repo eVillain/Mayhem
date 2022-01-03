@@ -26,6 +26,9 @@ LightController::LightController(std::shared_ptr<LightModel> model,
 , m_minimumDistanceShader(nullptr)
 , m_shadowMapNoBlurShader(nullptr)
 , m_lightShader(nullptr)
+, m_windowResizeListener(nullptr)
+, m_enabled(false)
+, m_drawDebug(false)
 {
     printf("LightController:: constructor: %p\n", this);
 }
@@ -44,6 +47,11 @@ void LightController::initialize()
                                                                            this, std::placeholders::_1),
                                                                  this);
 
+    auto dispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
+    m_windowResizeListener = dispatcher->addCustomEventListener(cocos2d::GLViewImpl::EVENT_WINDOW_RESIZED,
+                                                                std::bind(&LightController::onWindowResized,
+                                                                          this, std::placeholders::_1));
+
     const cocos2d::Value& renderLightingSetting = m_gameSettings->getValue(SETTING_RENDER_LIGHTING, cocos2d::Value(true));
     if (renderLightingSetting.asBool())
     {
@@ -55,7 +63,8 @@ void LightController::shutdown()
 {
     Dispatcher::globalDispatcher().removeListener<AddLightEvent>(this);
     Dispatcher::globalDispatcher().removeListener<RemoveLightEvent>(this);
-    
+    cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(m_windowResizeListener);
+
     m_occluderTexture = nullptr;
     m_occluderSliceTexture = nullptr;
     m_distortedTexture = nullptr;
@@ -65,6 +74,10 @@ void LightController::shutdown()
     m_minimumDistanceShader = nullptr;
     m_shadowMapNoBlurShader = nullptr;
     m_lightShader = nullptr;
+    m_windowResizeListener = nullptr;
+    
+    m_enabled = false;
+    m_drawDebug = false;
 }
 
 void LightController::enable()
@@ -112,6 +125,9 @@ void LightController::enable()
     m_minimumDistanceShader = cocos2d::GLProgram::createWithFilenames("res/shaders/vertex.vsh", "res/shaders/minimum_distance.fsh");
     m_shadowMapNoBlurShader = cocos2d::GLProgram::createWithFilenames("res/shaders/vertex.vsh", "res/shaders/shadow_map_noblur.fsh");
     m_lightShader = cocos2d::GLProgram::createWithFilenames("res/shaders/vertex.vsh", "res/shaders/light_noshadow.fsh");
+    
+    m_enabled = true;
+    printf("LightController:: enabled with resolution: %f, %f\n", winSize.width, winSize.height);
 }
 
 void LightController::renderStaticLights()
@@ -444,4 +460,12 @@ void LightController::onAddLight(const AddLightEvent& event)
 void LightController::onRemoveLight(const RemoveLightEvent& event)
 {
     m_model->removeLight(event.getLightID());
+}
+
+void LightController::onWindowResized(cocos2d::EventCustom*)
+{
+    if (m_enabled)
+    {
+        enable();
+    }
 }

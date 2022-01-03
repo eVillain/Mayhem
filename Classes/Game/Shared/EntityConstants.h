@@ -4,19 +4,13 @@
 #include "cocos2d.h"
 #include <string>
 
-static constexpr float BULLET_PISTOL_VELOCITY = 1400.0f;
-static constexpr float BULLET_MACHINEGUN_VELOCITY = 1200.0f;
-static constexpr float BULLET_SHOTGUN_VELOCITY = 1000.0f;
-static constexpr float BULLET_ROCKET_VELOCITY = 400.0f;
-static constexpr int RAILGUN_DAMAGE = 100.0f;
-
 static constexpr float PLAYER_WALK_VEL = 120.f;
 static constexpr float PLAYER_RUN_VEL = 180.f;
 static constexpr float PLAYER_MAX_VEL = 200.f;
 static constexpr float PLAYER_IDLE_VEL_THRESHOLD = 60.f;
 static constexpr float PLAYER_DEFAULT_HEALTH = 100.f;
 
-typedef enum
+enum EntityType
 {
     NoEntity = 0,
     
@@ -62,9 +56,9 @@ typedef enum
     
     PlayerEntity = 254,
     Death = 255
-} EntityType;
+};
 
-typedef enum
+enum WeaponType
 {
     Weapon_Type_None = 0,
     Weapon_Type_Pistol,
@@ -74,23 +68,23 @@ typedef enum
     Weapon_Type_Sniper,
     Weapon_Type_Launcher,
     Weapon_Type_Throwable,
-} WeaponType;
+};
 
-typedef enum
+enum DamageType
 {
     Damage_Type_None = 0,
     Damage_Type_Hitscan,
     Damage_Type_Projectile,
     Damage_Type_Explosion,
-} DamageType;
+};
 
-typedef enum
+enum ArmorType
 {
     Armor_Type_Helmet = 0,
     Armor_Type_Vest,
-} ArmorType;
+};
 
-typedef enum
+enum AmmoType
 {
     Ammo_Type_None = 0,
     Ammo_Type_9mm = Item_Ammo_9mm,
@@ -102,15 +96,15 @@ typedef enum
     Ammo_Type_Slug = Item_Ammo_Slugs,
     Ammo_Type_Frag = Item_Nade_Frag,
     Ammo_Type_Smoke = Item_Nade_Smoke,
-} AmmoType;
+};
 
-typedef enum
+enum FireModeType
 {
     Fire_Mode_Type_None = 0,
     Fire_Mode_Type_Single,
     Fire_Mode_Type_Burst,
     Fire_Mode_Type_Auto,
-} FireModeType;
+};
 
 enum CharacterType
 {

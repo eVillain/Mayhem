@@ -47,3 +47,7 @@ bool EntityDataModel::isProjectileType(const EntityType type)
 {
     return (type >= EntityType::Projectile_Bullet && type <= EntityType::Projectile_Smoke);
 }
+bool EntityDataModel::isAmmoType(const EntityType type)
+{
+    return (type >= EntityType::Item_Ammo_9mm && type < EntityType::Item_Last_Placeholder);
+}

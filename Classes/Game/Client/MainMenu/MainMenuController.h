@@ -28,6 +28,7 @@ private:
     cocos2d::RefPtr<MainMenuView> m_view;
     cocos2d::RefPtr<NetworkHostView> m_networkHostView;
     cocos2d::RefPtr<NetworkClientView> m_networkClientView;
+    cocos2d::EventListenerCustom* m_windowResizeListener;
     
     const std::string getPlayerName() const;
     
@@ -40,7 +41,9 @@ private:
 
     void onBackToMainMenu(const BackToMainMenuEvent& event);
     void onInputAction(const InputActionEvent& event);
+    void onWindowResized(cocos2d::EventCustom*);
     void exitGame();
+    
     void detach();
     void reattach();
 };

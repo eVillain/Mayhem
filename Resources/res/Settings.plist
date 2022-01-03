@@ -9,13 +9,13 @@
 	<key>RenderLineOfSight</key>
 	<false/>
 	<key>RenderLighting</key>
-	<false/>
+	<true/>
 	<key>UsePositionalAudio</key>
 	<false/>
 	<key>SaveSettingsOnExit</key>
 	<true/>
 	<key>SaveReplay</key>
-	<false/>
+	<true/>
 	<key>NetworkEnabled</key>
 	<true/>
 	<key>NetworkType</key>
@@ -35,7 +35,7 @@
 	<key>NetworkMaxNodes</key>
 	<integer>100</integer>
 	<key>MasterServerAddress</key>
-	<string>127.0.0.1:12345</string>
+	<string>mayhem.zapto.org:12345</string>
 	<key>MasterServerConnectPort</key>
 	<integer>12346</integer>
 </dict>

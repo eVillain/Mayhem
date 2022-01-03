@@ -4,6 +4,7 @@
 #include <queue>
 #include <functional>
 #include "Network/NetworkMessages.h"
+#include "ReliabilitySystem.h"
 
 class FakeNet
 {
@@ -24,11 +25,6 @@ public:
     void setInputDelay(const float delay) { m_inputDelay = delay; }
     void setServerDelay(const float delay) { m_serverDelay = delay; }
     
-    size_t getTotalClientBytes() const { return m_totalClientBytes; }
-    size_t getTotalServerBytes() const { return m_totalServerBytes; }
-    size_t getLastFrameClientBytes() const { return m_lastFrameClientBytes; }
-    size_t getLastFrameServerBytes() const { return m_lastFrameServerBytes; }
-
     float getInputDelay() const { return m_inputDelay; }
     float getServerDelay() const { return m_serverDelay; }
 
@@ -55,14 +51,6 @@ private:
     float m_inputDelay;
     float m_serverDelay;
     float m_packetLoss;
-    
-    size_t m_totalClientBytes;
-    size_t m_totalServerBytes;
-    size_t m_lastFrameClientBytes;
-    size_t m_lastFrameServerBytes;
-
-    float m_clientBandwidth;
-    float m_serverBandwidth;
 };
 
 #endif /* FakeNet_h */

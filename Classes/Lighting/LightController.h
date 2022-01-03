@@ -50,6 +50,9 @@ private:
     cocos2d::RefPtr<cocos2d::GLProgram> m_shadowMapNoBlurShader;
     cocos2d::RefPtr<cocos2d::GLProgram> m_lightShader;
 
+    cocos2d::EventListenerCustom* m_windowResizeListener;
+
+    bool m_enabled;
     bool m_drawDebug;
     
     void renderStaticLights();
@@ -75,6 +78,8 @@ private:
 
     void onAddLight(const AddLightEvent& event);
     void onRemoveLight(const RemoveLightEvent& event);
+    
+    void onWindowResized(cocos2d::EventCustom*);
 };
 
 #endif /* LightController_h */

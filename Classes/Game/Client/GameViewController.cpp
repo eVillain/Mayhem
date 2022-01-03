@@ -49,6 +49,7 @@ GameViewController::GameViewController(std::shared_ptr<GameSettings> gameSetting
 , m_audioController(audioController)
 , m_postProcessShader(nullptr)
 , m_postProcessNoLightShader(nullptr)
+, m_windowResizeListener(nullptr)
 , m_shotHitLastFrame(false)
 {
     m_cameraModel = std::make_shared<CameraModel>();
@@ -56,11 +57,17 @@ GameViewController::GameViewController(std::shared_ptr<GameSettings> gameSetting
     
     m_postProcessShader = cocos2d::GLProgram::createWithFilenames("res/shaders/vertex_p.vsh", "res/shaders/post_process.fsh");
     m_postProcessNoLightShader = cocos2d::GLProgram::createWithFilenames("res/shaders/vertex_p.vsh", "res/shaders/post_process_nolight.fsh");
+    
+    auto dispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
+    m_windowResizeListener = dispatcher->addCustomEventListener(cocos2d::GLViewImpl::EVENT_WINDOW_RESIZED,
+                                                                std::bind(&GameViewController::onWindowResized,
+                                                                          this, std::placeholders::_1));
     printf("GameViewController:: constructor: %p\n", this);
 }
 
 GameViewController::~GameViewController()
 {
+    cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(m_windowResizeListener);
     printf("GameViewController:: destructor: %p\n", this);
 }
 
@@ -637,6 +644,19 @@ void GameViewController::updateView(const float deltaTime)
         if (renderLightingSetting.asBool())
         {
             m_lightController->update(deltaTime);
+//            if (m_lightController->getLightMapTexture())
+//            {
+//                const cocos2d::Value& postProcessSetting = m_gameSettings->getValue(GameViewConstants::SETTING_RENDER_POSTPROCESS, cocos2d::Value(true));
+//                if (!postProcessSetting.asBool())
+//                {
+//                    // Removed because it may have been resized and changed in between frames
+//                    if (!m_lightController->getLightMapTexture()->getParent())
+//                    {
+//                        // No post-processing, apply lighting directly on top of game scene
+//                        m_gameView->getParent()->addChild(m_lightController->getLightMapTexture(), 2);
+//                    }
+//                }
+//            }
             m_lightController->getLightMapTexture()->getSprite()->setScale(zoom / director->getContentScaleFactor());
             m_lightController->getLightMapTexture()->getSprite()->setPosition(midWindow);
         }
@@ -1300,6 +1320,13 @@ void GameViewController::renderPlayerDeath(const cocos2d::Vec2& position,
                                            10.f,
                                            0.f);
     }
+}
+
+void GameViewController::onWindowResized(cocos2d::EventCustom*)
+{
+//    auto director = cocos2d::Director::getInstance();
+//    cocos2d::GLView* view = director->getOpenGLView();
+//    view->setContentScaleFactor(1.f);
 }
 
 cocos2d::Vec2 GameViewController::getWorldPosition(const cocos2d::Vec2& screenCoord) const

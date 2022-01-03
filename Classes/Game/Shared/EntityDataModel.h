@@ -14,6 +14,7 @@ public:
     static bool isItemType(const EntityType type);
     static bool isWeaponType(const EntityType type);
     static bool isProjectileType(const EntityType type);
+    static bool isAmmoType(const EntityType type);
 
 private:
     static std::map<const int, StaticEntityData> g_staticEntityData;

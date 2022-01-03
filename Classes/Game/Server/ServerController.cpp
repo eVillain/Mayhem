@@ -374,12 +374,6 @@ void ServerController::onEntityCollision(const CollisionData& collisionData)
     {
         return;
     }
-    const auto projectile = std::dynamic_pointer_cast<Projectile>(entity->second);
-    if (!projectile)
-    {
-        return;
-    }
-    
     std::shared_ptr<Entity> colliderEntity = nullptr;
     if (!collisionData.isStaticCollider)
     {
@@ -389,8 +383,27 @@ void ServerController::onEntityCollision(const CollisionData& collisionData)
             colliderEntity = colliderEntityIt->second;
         }
     }
+    const auto projectile = std::dynamic_pointer_cast<Projectile>(entity->second);
+    if (projectile)
+    {
+        onProjectileHit(colliderEntity, projectile, collisionData.hitShapeIndex);
+
+        return;
+    }
     
-    onProjectileHit(colliderEntity, projectile, collisionData.hitShapeIndex);
+    const auto item = std::dynamic_pointer_cast<Item>(entity->second);
+    if (item &&
+        EntityDataModel::isAmmoType(item->getEntityType()) &&
+        colliderEntity && colliderEntity->getEntityType() == EntityType::PlayerEntity)
+    {
+        const auto player = std::dynamic_pointer_cast<Player>(colliderEntity);
+        if (player)
+        {
+            onItemPickedUp(player.get(), item.get());
+        }
+        return;
+    }
+
 }
 
 bool ServerController::onItemPickedUp(Player* player, Item* item)

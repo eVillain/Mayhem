@@ -98,6 +98,7 @@ private:
     void renderPlayerDeath(const cocos2d::Vec2& position,
                            const cocos2d::Vec2& direction,
                            const bool headShot);
+    void onWindowResized(cocos2d::EventCustom*);
     
     std::shared_ptr<GameSettings> m_gameSettings;
     std::shared_ptr<LevelModel> m_levelModel;
@@ -112,6 +113,7 @@ private:
     cocos2d::RefPtr<cocos2d::GLProgram> m_postProcessShader;
     cocos2d::RefPtr<cocos2d::GLProgram> m_postProcessNoLightShader;
 
+    cocos2d::EventListenerCustom* m_windowResizeListener;
     bool m_shotHitLastFrame;
     
     std::map<uint32_t, std::shared_ptr<EntityView>> m_entityViews;

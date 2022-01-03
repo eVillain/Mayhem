@@ -227,6 +227,8 @@ namespace Net
         int processedBytes = 0;
         while (processedBytes < receivedBytes)
         {
+            printf("DrudgeNet::processReadStream received %i bytes, processed %i from: %i\n", receivedBytes, processedBytes, senderNode);
+
             std::shared_ptr<Message> message = m_messageFactory->create(*m_readStream.get());
             if (!message)
             {

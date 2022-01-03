@@ -49,10 +49,13 @@ bool InitClientCommand::run()
     
     mapDependencies();
 
+    Injector& injector = Injector::globalInjector();
+    auto lightController = injector.getInstance<LightController>();
+    lightController->initialize();
+    
     LoadLevelCommand loadLevel(m_config.level);
     loadLevel.run();
     
-    Injector& injector = Injector::globalInjector();
     auto levelModel = injector.getInstance<LevelModel>();
 
     auto gameModel = injector.getInstance<GameModel>();
@@ -71,8 +74,6 @@ bool InitClientCommand::run()
     auto audioController = injector.getInstance<AudioController>();
     audioController->initialize();
 
-    auto lightController = injector.getInstance<LightController>();
-    lightController->initialize();
     
     auto clientController = injector.getInstance<ClientController>();
 
@@ -112,12 +113,12 @@ bool InitClientCommand::run()
 //        gameScene->addChild(lightController->getMinimumDistanceTexture(), 3);
 //        gameScene->addChild(lightController->getShadowTexture(), 2);
         // The actual lightmap, this needs to be added here for lighting to work
-        const cocos2d::Value& postProcessSetting = gameSettings->getValue(GameViewConstants::SETTING_RENDER_POSTPROCESS, cocos2d::Value(true));
-        if (!postProcessSetting.asBool())
-        {
-            // No post-processing, apply lighting directly on top of game scene
-            gameScene->addChild(lightController->getLightMapTexture(), 2);
-        }
+//        const cocos2d::Value& postProcessSetting = gameSettings->getValue(GameViewConstants::SETTING_RENDER_POSTPROCESS, cocos2d::Value(true));
+//        if (!postProcessSetting.asBool())
+//        {
+//            // No post-processing, apply lighting directly on top of game scene
+//            gameScene->addChild(lightController->getLightMapTexture(), 2);
+//        }
     }
     
     gameView->getSelfLightingNode()->removeFromParent();

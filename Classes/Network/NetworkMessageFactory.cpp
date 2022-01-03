@@ -63,6 +63,7 @@ std::shared_ptr<Net::Message> NetworkMessageFactory::create(const Net::MessageTy
     {
         return std::make_shared<ServerGameOverMessage>();
     }
+    
     assert(false);
 
     return nullptr;
@@ -72,7 +73,7 @@ std::shared_ptr<Net::Message> NetworkMessageFactory::create(Net::ReadStream& str
 {
     Net::MessageType type = MESSAGE_TYPES_COUNT;
     stream.SerializeByte(type);
-    
+//    printf("NetworkMessageFactory::create type: %i(%s)\n", type, getNameForType(type).c_str());
     std::shared_ptr<Net::Message> message = create(type);
     
     if (message)
@@ -94,9 +95,13 @@ void NetworkMessageFactory::setDeltaDataCallback(std::function<const SnapshotDat
 
 const std::string NetworkMessageFactory::getNameForType(const Net::MessageType type)
 {
-    if (type == MESSAGE_TYPE_CLIENT_READY)
+    if (type == MESSAGE_TYPE_CLIENT_INFO)
     {
-        return "Player Ready";
+        return "Client Info";
+    }
+    else if (type == MESSAGE_TYPE_CLIENT_READY)
+    {
+        return "Client Ready";
     }
     else if (type == MESSAGE_TYPE_CLIENT_STATE_UPDATE)
     {
@@ -104,15 +109,19 @@ const std::string NetworkMessageFactory::getNameForType(const Net::MessageType t
     }
     else if (type == MESSAGE_TYPE_CLIENT_INPUT)
     {
-        return "Player Input";
+        return "Client Input";
     }
     else if (type == MESSAGE_TYPE_CLIENT_CHAT_MESSAGE)
     {
-        return "Player Chat Message";
+        return "Client Chat Message";
     }
     else if (type == MESSAGE_TYPE_SERVER_CHAT_MESSAGE)
     {
         return "Server Chat Message";
+    }
+    else if (type == MESSAGE_TYPE_SERVER_INFO)
+    {
+        return "Server Info";
     }
     else if (type == MESSAGE_TYPE_SERVER_LOAD_LEVEL)
     {
@@ -125,6 +134,10 @@ const std::string NetworkMessageFactory::getNameForType(const Net::MessageType t
     else if (type == MESSAGE_TYPE_SERVER_SNAPSHOT)
     {
         return "Server Snapshot";
+    }
+    else if (type == MESSAGE_TYPE_SERVER_SNAPSHOT_DIFF)
+    {
+        return "Server Snapshot Diff";
     }
     else if (type == MESSAGE_TYPE_SERVER_PLAYER_DEATH)
     {
