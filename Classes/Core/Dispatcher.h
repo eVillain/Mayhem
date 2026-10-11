@@ -2,7 +2,7 @@
 #define Dispatcher_h
 
 #include <functional>
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <vector>
 

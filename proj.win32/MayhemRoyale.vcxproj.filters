@@ -24,16 +24,10 @@
     <ClCompile Include="..\Classes\Core\Dispatcher.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Core\Event.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Core\Injector.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Core\Timer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Client\BackButtonPressedEvent.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Client\CameraController.cpp">
@@ -105,9 +99,6 @@
     <ClCompile Include="..\Classes\Game\Client\LevelView.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Game\Client\MainMenu\BackToMainMenuEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Game\Client\MainMenu\InitMainMenuCommand.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -150,28 +141,7 @@
     <ClCompile Include="..\Classes\Game\Client\ReplayModel.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Game\Client\ShowInventoryEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Game\Client\SnapshotModel.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Client\SpawnParticlesEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Client\SpawnTextBlimpEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Client\ToggleClientPredictionEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Client\ToggleInventoryEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Client\TogglePhysicsDebugEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Client\ToggleSlowMotionEvent.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Server\BaseAI.cpp">
@@ -243,16 +213,10 @@
     <ClCompile Include="..\Classes\Game\Shared\PlayerLogic.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Lighting\AddLightEvent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Lighting\LightController.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Lighting\LightModel.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Lighting\RemoveLightEvent.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Network\DrudgeNet\src\Beacon.cpp">
@@ -408,6 +372,21 @@
     <ClCompile Include="..\Classes\Game\Client\ShutdownLocalServerCommand.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Game\Client\InputView.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Client\GLFWJoystickHandler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Client\MainMenu\ShutdownMainMenuCommand.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Network\ShutdownNetworkClientCommand.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Network\ShutdownNetworkHostCommand.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -426,9 +405,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Core\Dispatcher.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Core\Event.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Core\Injector.h">
@@ -566,9 +542,6 @@
     <ClInclude Include="..\Classes\Game\Client\ReplayModel.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Game\Client\ShowInventoryEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Game\Client\SnapshotModel.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -576,18 +549,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Client\SpawnTextBlimpEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Game\Client\ToggleClientPredictionEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Game\Client\ToggleInventoryEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Game\Client\TogglePhysicsDebugEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Game\Client\ToggleSlowMotionEvent.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Client\ViewLayer.h">
@@ -888,6 +849,21 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Client\ShutdownLocalServerCommand.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Client\InputView.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Client\GLFWJoystickHandler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Client\MainMenu\ShutdownMainMenuCommand.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Network\ShutdownNetworkClientCommand.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Network\ShutdownNetworkHostCommand.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

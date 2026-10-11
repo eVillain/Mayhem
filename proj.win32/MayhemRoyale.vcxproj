@@ -24,7 +24,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v120_xp</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v140_xp</PlatformToolset>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -33,7 +33,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v120_xp</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v140_xp</PlatformToolset>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -110,6 +110,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
       <Outputs>$(TargetName).cab</Outputs>
       <Inputs>$(TargetFileName)</Inputs>
     </CustomBuildStep>
+    <Link>
+      <ImageHasSafeExceptionHandlers Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ImageHasSafeExceptionHandlers>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -150,10 +153,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Audio\AudioController.cpp" />
     <ClCompile Include="..\Classes\Audio\AudioModel.cpp" />
     <ClCompile Include="..\Classes\Core\Dispatcher.cpp" />
-    <ClCompile Include="..\Classes\Core\Event.cpp" />
     <ClCompile Include="..\Classes\Core\Injector.cpp" />
     <ClCompile Include="..\Classes\Core\Timer.cpp" />
-    <ClCompile Include="..\Classes\Game\Client\BackButtonPressedEvent.cpp" />
     <ClCompile Include="..\Classes\Game\Client\CameraController.cpp" />
     <ClCompile Include="..\Classes\Game\Client\CameraModel.cpp" />
     <ClCompile Include="..\Classes\Game\Client\ClientController.cpp" />
@@ -166,6 +167,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Game\Client\GameScene.cpp" />
     <ClCompile Include="..\Classes\Game\Client\GameView.cpp" />
     <ClCompile Include="..\Classes\Game\Client\GameViewController.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\GLFWJoystickHandler.cpp" />
     <ClCompile Include="..\Classes\Game\Client\HUD\HUDHelper.cpp" />
     <ClCompile Include="..\Classes\Game\Client\HUD\HUDView.cpp" />
     <ClCompile Include="..\Classes\Game\Client\HUD\HUDWeapon.cpp" />
@@ -177,13 +179,14 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Game\Client\InitServerCommand.cpp" />
     <ClCompile Include="..\Classes\Game\Client\InputController.cpp" />
     <ClCompile Include="..\Classes\Game\Client\InputModel.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\InputView.cpp" />
     <ClCompile Include="..\Classes\Game\Client\InventoryLayer.cpp" />
     <ClCompile Include="..\Classes\Game\Client\KillFeed.cpp" />
     <ClCompile Include="..\Classes\Game\Client\LevelView.cpp" />
-    <ClCompile Include="..\Classes\Game\Client\MainMenu\BackToMainMenuEvent.cpp" />
     <ClCompile Include="..\Classes\Game\Client\MainMenu\InitMainMenuCommand.cpp" />
     <ClCompile Include="..\Classes\Game\Client\MainMenu\MainMenuController.cpp" />
     <ClCompile Include="..\Classes\Game\Client\MainMenu\MainMenuView.cpp" />
+    <ClCompile Include="..\Classes\Game\Client\MainMenu\ShutdownMainMenuCommand.cpp" />
     <ClCompile Include="..\Classes\Game\Client\ParticlesController.cpp" />
     <ClCompile Include="..\Classes\Game\Client\Pseudo3DItem.cpp" />
     <ClCompile Include="..\Classes\Game\Client\Pseudo3DParticle.cpp" />
@@ -195,16 +198,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Game\Client\ReplayEditor\ReplayEditorView.cpp" />
     <ClCompile Include="..\Classes\Game\Client\ReplayEditor\TimeLineView.cpp" />
     <ClCompile Include="..\Classes\Game\Client\ReplayModel.cpp" />
-    <ClCompile Include="..\Classes\Game\Client\ShowInventoryEvent.cpp" />
     <ClCompile Include="..\Classes\Game\Client\ShutdownClientCommand.cpp" />
     <ClCompile Include="..\Classes\Game\Client\ShutdownLocalServerCommand.cpp" />
     <ClCompile Include="..\Classes\Game\Client\SnapshotModel.cpp" />
-    <ClCompile Include="..\Classes\Game\Client\SpawnParticlesEvent.cpp" />
-    <ClCompile Include="..\Classes\Game\Client\SpawnTextBlimpEvent.cpp" />
-    <ClCompile Include="..\Classes\Game\Client\ToggleClientPredictionEvent.cpp" />
-    <ClCompile Include="..\Classes\Game\Client\ToggleInventoryEvent.cpp" />
-    <ClCompile Include="..\Classes\Game\Client\TogglePhysicsDebugEvent.cpp" />
-    <ClCompile Include="..\Classes\Game\Client\ToggleSlowMotionEvent.cpp" />
     <ClCompile Include="..\Classes\Game\Server\BaseAI.cpp" />
     <ClCompile Include="..\Classes\Game\Server\EntitiesController.cpp" />
     <ClCompile Include="..\Classes\Game\Server\EntitiesModel.cpp" />
@@ -229,10 +225,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Game\Shared\LoadStaticEntityDataCommand.cpp" />
     <ClCompile Include="..\Classes\Game\Shared\MovementIntegrator.cpp" />
     <ClCompile Include="..\Classes\Game\Shared\PlayerLogic.cpp" />
-    <ClCompile Include="..\Classes\Lighting\AddLightEvent.cpp" />
     <ClCompile Include="..\Classes\Lighting\LightController.cpp" />
     <ClCompile Include="..\Classes\Lighting\LightModel.cpp" />
-    <ClCompile Include="..\Classes\Lighting\RemoveLightEvent.cpp" />
     <ClCompile Include="..\Classes\Network\DrudgeNet\src\Beacon.cpp" />
     <ClCompile Include="..\Classes\Network\DrudgeNet\src\BitPacker.cpp" />
     <ClCompile Include="..\Classes\Network\DrudgeNet\src\ChannelUnreliable.cpp" />
@@ -271,6 +265,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Network\NetworkMessageFactory.cpp" />
     <ClCompile Include="..\Classes\Network\NetworkModel.cpp" />
     <ClCompile Include="..\Classes\Network\NetworkView.cpp" />
+    <ClCompile Include="..\Classes\Network\ShutdownNetworkClientCommand.cpp" />
+    <ClCompile Include="..\Classes\Network\ShutdownNetworkHostCommand.cpp" />
     <ClCompile Include="..\Classes\Utils\ActionUtils.cpp" />
     <ClCompile Include="..\Classes\Utils\ButtonUtils.cpp" />
     <ClCompile Include="..\Classes\Utils\CollisionUtils.cpp" />
@@ -285,7 +281,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Audio\AudioModel.h" />
     <ClInclude Include="..\Classes\Core\Command.h" />
     <ClInclude Include="..\Classes\Core\Dispatcher.h" />
-    <ClInclude Include="..\Classes\Core\Event.h" />
     <ClInclude Include="..\Classes\Core\Injector.h" />
     <ClInclude Include="..\Classes\Core\Timer.h" />
     <ClInclude Include="..\Classes\Game\Client\BackButtonPressedEvent.h" />
@@ -302,6 +297,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Game\Client\GameView.h" />
     <ClInclude Include="..\Classes\Game\Client\GameViewConstants.h" />
     <ClInclude Include="..\Classes\Game\Client\GameViewController.h" />
+    <ClInclude Include="..\Classes\Game\Client\GLFWJoystickHandler.h" />
     <ClInclude Include="..\Classes\Game\Client\HideInventoryEvent.h" />
     <ClInclude Include="..\Classes\Game\Client\HUD\HUDConstants.h" />
     <ClInclude Include="..\Classes\Game\Client\HUD\HUDHelper.h" />
@@ -315,6 +311,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Game\Client\InitServerCommand.h" />
     <ClInclude Include="..\Classes\Game\Client\InputController.h" />
     <ClInclude Include="..\Classes\Game\Client\InputModel.h" />
+    <ClInclude Include="..\Classes\Game\Client\InputView.h" />
     <ClInclude Include="..\Classes\Game\Client\InventoryLayer.h" />
     <ClInclude Include="..\Classes\Game\Client\KillFeed.h" />
     <ClInclude Include="..\Classes\Game\Client\LevelView.h" />
@@ -322,6 +319,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Game\Client\MainMenu\InitMainMenuCommand.h" />
     <ClInclude Include="..\Classes\Game\Client\MainMenu\MainMenuController.h" />
     <ClInclude Include="..\Classes\Game\Client\MainMenu\MainMenuView.h" />
+    <ClInclude Include="..\Classes\Game\Client\MainMenu\ShutdownMainMenuCommand.h" />
     <ClInclude Include="..\Classes\Game\Client\ParticleConstants.h" />
     <ClInclude Include="..\Classes\Game\Client\ParticlesController.h" />
     <ClInclude Include="..\Classes\Game\Client\Pseudo3DItem.h" />
@@ -334,16 +332,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Game\Client\ReplayEditor\ReplayEditorView.h" />
     <ClInclude Include="..\Classes\Game\Client\ReplayEditor\TimeLineView.h" />
     <ClInclude Include="..\Classes\Game\Client\ReplayModel.h" />
-    <ClInclude Include="..\Classes\Game\Client\ShowInventoryEvent.h" />
     <ClInclude Include="..\Classes\Game\Client\ShutdownClientCommand.h" />
     <ClInclude Include="..\Classes\Game\Client\ShutdownLocalServerCommand.h" />
     <ClInclude Include="..\Classes\Game\Client\SnapshotModel.h" />
     <ClInclude Include="..\Classes\Game\Client\SpawnParticlesEvent.h" />
     <ClInclude Include="..\Classes\Game\Client\SpawnTextBlimpEvent.h" />
-    <ClInclude Include="..\Classes\Game\Client\ToggleClientPredictionEvent.h" />
-    <ClInclude Include="..\Classes\Game\Client\ToggleInventoryEvent.h" />
-    <ClInclude Include="..\Classes\Game\Client\TogglePhysicsDebugEvent.h" />
-    <ClInclude Include="..\Classes\Game\Client\ToggleSlowMotionEvent.h" />
     <ClInclude Include="..\Classes\Game\Client\ViewLayer.h" />
     <ClInclude Include="..\Classes\Game\Server\BaseAI.h" />
     <ClInclude Include="..\Classes\Game\Server\EntitiesController.h" />
@@ -431,6 +424,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Network\NetworkMessages.h" />
     <ClInclude Include="..\Classes\Network\NetworkModel.h" />
     <ClInclude Include="..\Classes\Network\NetworkView.h" />
+    <ClInclude Include="..\Classes\Network\ShutdownNetworkClientCommand.h" />
+    <ClInclude Include="..\Classes\Network\ShutdownNetworkHostCommand.h" />
     <ClInclude Include="..\Classes\Utils\ActionUtils.h" />
     <ClInclude Include="..\Classes\Utils\ButtonUtils.h" />
     <ClInclude Include="..\Classes\Utils\CollisionUtils.h" />
